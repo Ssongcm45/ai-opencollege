@@ -63,10 +63,22 @@ export default async function HomePage() {
             </div>
             <div className="why-cards">
               {[
-                ["100% 실습 기반", "이론 없이 내 업무 케이스에 바로 적용합니다. 슬라이드가 아닌 결과물을 만드는 수업입니다."],
-                ["10개 트랙 맞춤 설계", "사무직·크리에이터·리더·교육자·시니어·취준생까지. 역할에 맞는 AI 활용법을 배웁니다."],
-                ["AIRO 플랫폼 기반", "LMS·앱·시각 가이드를 갖춘 AIRO 플랫폼으로 출강 후에도 학습을 이어갑니다."]
-              ].map(([title, desc]) => <div className="wcard" key={title}><div className="wcard-icon" /><div><h4>{title}</h4><p>{desc}</p></div></div>)}
+                {
+                  title: "100% 실습 기반",
+                  desc: "이론 없이 내 업무 케이스에 바로 적용합니다. 슬라이드가 아닌 결과물을 만드는 수업입니다.",
+                  icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L12 7H17L13.5 10L15 15L10 12L5 15L6.5 10L3 7H8L10 2Z" stroke="white" strokeWidth="1.6" strokeLinejoin="round"/></svg>
+                },
+                {
+                  title: "10개 트랙 맞춤 설계",
+                  desc: "사무직·크리에이터·리더·교육자·시니어·취준생까지. 역할에 맞는 AI 활용법을 배웁니다.",
+                  icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/><rect x="11" y="2" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/><rect x="2" y="11" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/><rect x="11" y="11" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/></svg>
+                },
+                {
+                  title: "AIRO 플랫폼 기반",
+                  desc: "LMS·앱·시각 가이드를 갖춘 AIRO 플랫폼으로 출강 후에도 학습을 이어갑니다.",
+                  icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2C5.58 2 2 5.58 2 10C2 14.42 5.58 18 10 18" stroke="white" strokeWidth="1.6" strokeLinecap="round"/><path d="M10 18C14.42 18 18 14.42 18 10" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeDasharray="2 3"/><circle cx="10" cy="10" r="2" fill="white"/></svg>
+                }
+              ].map(({ title, desc, icon }) => <div className="wcard" key={title}><div className="wcard-icon">{icon}</div><div><h4>{title}</h4><p>{desc}</p></div></div>)}
             </div>
           </div>
         </section>
@@ -215,11 +227,6 @@ export default async function HomePage() {
               <div>
                 <h2>지금 바로<br />문의하세요.</h2>
                 <p>교육 목적과 인원만 알려주시면<br />24시간 내 맞춤 제안서를 드립니다.<br />출강·온라인·커스텀 모두 가능합니다.</p>
-                <div className="cta-acts" style={{ marginTop: 28 }}>
-                  <a href="tel:02-0000-0000" className="btn bw btn-pill">전화 상담</a>
-                  <a href="mailto:edu@opencollege.co.kr" className="btn bow btn-pill">이메일 문의</a>
-                </div>
-                <p className="cta-note">평일 09:00 ~ 18:00 · 주말·공휴일은 이메일로</p>
               </div>
               <InquiryForm />
             </div>

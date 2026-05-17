@@ -14,7 +14,7 @@ export function InquiryForm() {
       <input className="input" name="phone" placeholder="연락처" />
       <input className="input" name="audience" placeholder="교육 대상/인원" />
       <textarea className="textarea" name="message" placeholder="교육 목적, 희망 일정, 필요한 과정" required />
-      <button className="btn bw btn-lg btn-pill" disabled={pending}>{pending ? "접수 중..." : "교육 문의 접수"}</button>
+      <button className="btn bn btn-lg btn-pill" style={{ width: "100%" }} disabled={pending}>{pending ? "접수 중..." : "교육 문의 접수 →"}</button>
       {state?.message ? <p className="cta-note">{state.message}</p> : null}
     </form>
   );

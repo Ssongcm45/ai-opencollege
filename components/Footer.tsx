@@ -30,7 +30,7 @@ export function Footer() {
           <div className="fcol">
             <h4>연락처</h4>
             <ul>
-              <li><a href="tel:02-0000-0000">02-0000-0000</a></li>
+              <li><a href="tel:0507-1369-9224">0507-1369-9224</a></li>
               <li><a href="mailto:edu@opencollege.co.kr">edu@opencollege.co.kr</a></li>
               <li>경기도 평택시</li>
             </ul>
