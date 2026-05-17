@@ -6,6 +6,7 @@ import { z } from "zod";
 import { getDb, hasDatabase } from "@/lib/db";
 import { blogPosts, fieldCases, inquiries } from "@/lib/db/schema";
 import { upsertCase, upsertPost } from "@/lib/content";
+import { Resend } from "resend";
 
 const inquirySchema = z.object({
   name: z.string().min(1),
@@ -27,6 +28,26 @@ export async function createInquiry(_: unknown, formData: FormData) {
       phone: data.phone,
       audience: data.audience,
       message: data.message
+    });
+  }
+
+  if (process.env.RESEND_API_KEY) {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: "AI OpenCollege <onboarding@resend.dev>",
+      to: "edu@opencollege.co.kr",
+      subject: `[AI OpenCollege] 새 교육 문의: ${data.name}`,
+      html: `
+        <h2>새 교육 문의가 접수되었습니다</h2>
+        <table cellpadding="8" style="border-collapse:collapse">
+          <tr><td><strong>이름</strong></td><td>${data.name}</td></tr>
+          <tr><td><strong>소속</strong></td><td>${data.organization || "-"}</td></tr>
+          <tr><td><strong>이메일</strong></td><td>${data.email || "-"}</td></tr>
+          <tr><td><strong>전화</strong></td><td>${data.phone || "-"}</td></tr>
+          <tr><td><strong>교육대상</strong></td><td>${data.audience || "-"}</td></tr>
+          <tr><td><strong>문의내용</strong></td><td style="white-space:pre-wrap">${data.message}</td></tr>
+        </table>
+      `
     });
   }
 
