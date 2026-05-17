@@ -2,13 +2,11 @@ export function Header() {
   return (
     <>
       <div className="util">
-        <div className="wrap">
-          <div><span className="badge bdw"><span className="dot" />온라인평생교육원 설립 준비 중</span></div>
-          <div className="util-links">
-            <a href="/#curriculum">커리큘럼</a>
-            <a href="/#cert">자격증</a>
-            <a href="/#contact" className="ulbtn">교육 문의 →</a>
-          </div>
+        <div><span className="badge bdw"><span className="dot" />온라인평생교육원 설립 준비 중</span></div>
+        <div className="util-links">
+          <a href="/#curriculum">커리큘럼</a>
+          <a href="/#cert">자격증</a>
+          <a href="/#contact" className="ulbtn">교육 문의 →</a>
         </div>
       </div>
       <header className="site-header">
