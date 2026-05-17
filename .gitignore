@@ -1,0 +1,9 @@
+.next
+node_modules
+.env
+.env.local
+drizzle
+dist
+*.log
+*.pdf
+.claude
