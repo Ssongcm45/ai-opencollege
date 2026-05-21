@@ -3,10 +3,26 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import crypto from "crypto";
+import { eq } from "drizzle-orm";
 import { getDb, hasDatabase } from "@/lib/db";
-import { blogPosts, fieldCases, inquiries } from "@/lib/db/schema";
+import { adminConfig, blogPosts, fieldCases, inquiries } from "@/lib/db/schema";
 import { upsertCase, upsertPost } from "@/lib/content";
 import { Resend } from "resend";
+
+const ADMIN_EMAIL = "jaemscm8445@gmail.com";
+
+function hashPassword(password: string): string {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+  return `${salt}:${hash}`;
+}
+
+function verifyPassword(password: string, stored: string): boolean {
+  const [salt, hash] = stored.split(":");
+  const derived = crypto.scryptSync(password, salt, 64).toString("hex");
+  return crypto.timingSafeEqual(Buffer.from(hash, "hex"), Buffer.from(derived, "hex"));
+}
 
 const inquirySchema = z.object({
   name: z.string().min(1),
@@ -54,11 +70,49 @@ export async function createInquiry(_: unknown, formData: FormData) {
   return { ok: true, message: "문의가 접수되었습니다. 24시간 내 회신드리겠습니다." };
 }
 
-export async function loginAdmin(formData: FormData) {
+export async function setupAdminPassword(formData: FormData) {
+  if (!hasDatabase) redirect("/admin/login?error=nodb");
+  const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
-  if (!process.env.ADMIN_PASSWORD || password !== process.env.ADMIN_PASSWORD) {
-    redirect("/admin/login?error=1");
+  const confirm = String(formData.get("confirm") ?? "");
+
+  if (email !== ADMIN_EMAIL) redirect("/admin/login?error=email");
+  if (password.length < 8) redirect("/admin/login?setup=1&error=short");
+  if (password !== confirm) redirect("/admin/login?setup=1&error=mismatch");
+
+  const db = getDb();
+  const existing = await db.select().from(adminConfig).where(eq(adminConfig.id, 1));
+  if (existing.length > 0 && existing[0].passwordHash) redirect("/admin/login?error=1");
+
+  const passwordHash = hashPassword(password);
+  if (existing.length === 0) {
+    await db.insert(adminConfig).values({ id: 1, passwordHash });
+  } else {
+    await db.update(adminConfig).set({ passwordHash }).where(eq(adminConfig.id, 1));
   }
+
+  const jar = await cookies();
+  jar.set("admin_session", "ok", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 8
+  });
+  redirect("/admin");
+}
+
+export async function loginAdmin(formData: FormData) {
+  if (!hasDatabase) redirect("/admin/login?error=nodb");
+  const email = String(formData.get("email") ?? "");
+  const password = String(formData.get("password") ?? "");
+
+  if (email !== ADMIN_EMAIL) redirect("/admin/login?error=1");
+
+  const db = getDb();
+  const rows = await db.select().from(adminConfig).where(eq(adminConfig.id, 1));
+  const stored = rows[0]?.passwordHash;
+  if (!stored || !verifyPassword(password, stored)) redirect("/admin/login?error=1");
 
   const jar = await cookies();
   jar.set("admin_session", "ok", {

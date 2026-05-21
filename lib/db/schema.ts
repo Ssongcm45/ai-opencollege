@@ -8,6 +8,12 @@ import {
   varchar
 } from "drizzle-orm/pg-core";
 
+export const adminConfig = pgTable("admin_config", {
+  id: integer("id").primaryKey().default(1),
+  passwordHash: text("password_hash"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+});
+
 export const blogPosts = pgTable("blog_posts", {
   id: uuid("id").primaryKey().defaultRandom(),
   title: varchar("title", { length: 180 }).notNull(),
