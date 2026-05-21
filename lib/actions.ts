@@ -76,7 +76,7 @@ export async function setupAdminPassword(formData: FormData) {
   const password = String(formData.get("password") ?? "");
   const confirm = String(formData.get("confirm") ?? "");
 
-  if (email !== ADMIN_EMAIL) redirect("/admin/login?error=email");
+  if (email.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()) redirect("/admin/login?error=email");
   if (password.length < 8) redirect("/admin/login?setup=1&error=short");
   if (password !== confirm) redirect("/admin/login?setup=1&error=mismatch");
 
@@ -107,7 +107,7 @@ export async function loginAdmin(formData: FormData) {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
 
-  if (email !== ADMIN_EMAIL) redirect("/admin/login?error=1");
+  if (email.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()) redirect("/admin/login?error=1");
 
   const db = getDb();
   const rows = await db.select().from(adminConfig).where(eq(adminConfig.id, 1));
