@@ -10,7 +10,7 @@ import { adminConfig, blogPosts, fieldCases, inquiries } from "@/lib/db/schema";
 import { upsertCase, upsertPost } from "@/lib/content";
 import { Resend } from "resend";
 
-const ADMIN_EMAIL = "jaemscm8445@gmail.com";
+const ADMIN_EMAIL = "jamescm8445@gmail.com";
 
 function hashPassword(password: string): string {
   const salt = crypto.randomBytes(16).toString("hex");
