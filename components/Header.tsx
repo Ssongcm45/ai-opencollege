@@ -19,7 +19,6 @@ export function Header() {
               <a href="/#blog">블로그</a>
               <a href="/#faq">FAQ</a>
               <a href="/#contact">교육 신청</a>
-              <a href="/admin">CMS</a>
             </nav>
             <div className="hcta">
               <a href="/#courses" className="btn bo btn-pill">교육과정 보기</a>

@@ -54,8 +54,20 @@ export const inquiries = pgTable("inquiries", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
 });
 
+export const siteSettings = pgTable("site_settings", {
+  id: integer("id").primaryKey().default(1),
+  siteTitle: varchar("site_title", { length: 120 }),
+  siteDescription: text("site_description"),
+  ogImageUrl: varchar("og_image_url", { length: 500 }),
+  faviconUrl: varchar("favicon_url", { length: 500 }),
+  naverVerification: varchar("naver_verification", { length: 300 }),
+  googleVerification: varchar("google_verification", { length: 300 }),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+});
+
 export type BlogPost = typeof blogPosts.$inferSelect;
 export type NewBlogPost = typeof blogPosts.$inferInsert;
 export type FieldCase = typeof fieldCases.$inferSelect;
 export type NewFieldCase = typeof fieldCases.$inferInsert;
 export type Inquiry = typeof inquiries.$inferSelect;
+export type SiteSettings = typeof siteSettings.$inferSelect;

@@ -6,12 +6,12 @@ import { redirect } from "next/navigation";
 import { Resend } from "resend";
 import { z } from "zod";
 import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } from "@/lib/auth";
-import { upsertCase, upsertPost } from "@/lib/content";
 import { getDb, hasDatabase } from "@/lib/db";
-import { adminConfig, inquiries } from "@/lib/db/schema";
+import { adminConfig, blogPosts, fieldCases, inquiries, siteSettings } from "@/lib/db/schema";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com";
 
+// ── Helpers ──────────────────────────────────────────────
 function hashPassword(password: string): string {
   const salt = crypto.randomBytes(16).toString("hex");
   const hash = crypto.scryptSync(password, salt, 64).toString("hex");
@@ -21,34 +21,27 @@ function hashPassword(password: string): string {
 function verifyPassword(password: string, stored: string): boolean {
   const [salt, hash] = stored.split(":");
   if (!salt || !hash) return false;
-
   const derived = crypto.scryptSync(password, salt, 64).toString("hex");
-  const storedBuffer = Buffer.from(hash, "hex");
-  const derivedBuffer = Buffer.from(derived, "hex");
-  return storedBuffer.length === derivedBuffer.length && crypto.timingSafeEqual(storedBuffer, derivedBuffer);
+  const a = Buffer.from(hash, "hex");
+  const b = Buffer.from(derived, "hex");
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
 function escapeHtml(value: string | undefined): string {
-  return (value || "-").replace(/[&<>"']/g, (char) => {
-    switch (char) {
-      case "&":
-        return "&amp;";
-      case "<":
-        return "&lt;";
-      case ">":
-        return "&gt;";
-      case '"':
-        return "&quot;";
-      default:
-        return "&#39;";
-    }
-  });
+  return (value || "-").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] ?? c)
+  );
 }
 
 function safeSubject(value: string): string {
   return value.replace(/[\r\n]/g, " ").trim();
 }
 
+function ensureDb() {
+  if (!hasDatabase) throw new Error("데이터베이스 연결이 필요합니다.");
+}
+
+// ── Public: Inquiry ──────────────────────────────────────
 const inquirySchema = z.object({
   name: z.string().min(1),
   organization: z.string().optional(),
@@ -99,9 +92,9 @@ export async function createInquiry(_: unknown, formData: FormData) {
   return { ok: true, message: "문의가 접수되었습니다. 24시간 내 회신드리겠습니다." };
 }
 
+// ── Admin: Auth ──────────────────────────────────────────
 export async function setupAdminPassword(formData: FormData) {
   if (!hasDatabase) redirect("/admin/login?error=nodb");
-
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
   const confirm = String(formData.get("confirm") ?? "");
@@ -120,14 +113,12 @@ export async function setupAdminPassword(formData: FormData) {
   } else {
     await db.update(adminConfig).set({ passwordHash }).where(eq(adminConfig.id, 1));
   }
-
   await setAdminSessionCookie();
   redirect("/admin");
 }
 
 export async function loginAdmin(formData: FormData) {
   if (!hasDatabase) redirect("/admin/login?error=nodb");
-
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
 
@@ -147,28 +138,57 @@ export async function logoutAdmin() {
   redirect("/admin/login");
 }
 
-export async function savePost(formData: FormData) {
+// ── Admin: Blog ──────────────────────────────────────────
+export async function createPost(formData: FormData) {
   await requireAdminSession();
-  ensureDbForCms();
-
-  await upsertPost({
+  ensureDb();
+  const published = formData.get("published") === "on";
+  const now = new Date();
+  await getDb().insert(blogPosts).values({
     title: String(formData.get("title") ?? ""),
     slug: String(formData.get("slug") ?? ""),
     category: String(formData.get("category") ?? "METHOD"),
     excerpt: String(formData.get("excerpt") ?? ""),
     content: String(formData.get("content") ?? ""),
-    published: formData.get("published") === "on",
+    published,
     featured: formData.get("featured") === "on",
-    publishedAt: formData.get("published") === "on" ? new Date() : null
+    publishedAt: published ? now : null,
+    updatedAt: now
   });
-  redirect("/admin");
+  redirect("/admin/blog");
 }
 
-export async function saveCase(formData: FormData) {
+export async function updatePost(id: string, formData: FormData) {
   await requireAdminSession();
-  ensureDbForCms();
+  ensureDb();
+  const published = formData.get("published") === "on";
+  await getDb().update(blogPosts).set({
+    title: String(formData.get("title") ?? ""),
+    slug: String(formData.get("slug") ?? ""),
+    category: String(formData.get("category") ?? ""),
+    excerpt: String(formData.get("excerpt") ?? ""),
+    content: String(formData.get("content") ?? ""),
+    published,
+    featured: formData.get("featured") === "on",
+    publishedAt: published ? new Date() : null,
+    updatedAt: new Date()
+  }).where(eq(blogPosts.id, id));
+  redirect("/admin/blog");
+}
 
-  await upsertCase({
+export async function deletePost(id: string) {
+  await requireAdminSession();
+  ensureDb();
+  await getDb().delete(blogPosts).where(eq(blogPosts.id, id));
+  redirect("/admin/blog");
+}
+
+// ── Admin: Portfolio ─────────────────────────────────────
+export async function createCase(formData: FormData) {
+  await requireAdminSession();
+  ensureDb();
+  const now = new Date();
+  await getDb().insert(fieldCases).values({
     title: String(formData.get("title") ?? ""),
     slug: String(formData.get("slug") ?? ""),
     clientType: String(formData.get("clientType") ?? ""),
@@ -176,13 +196,60 @@ export async function saveCase(formData: FormData) {
     summary: String(formData.get("summary") ?? ""),
     content: String(formData.get("content") ?? ""),
     order: Number(formData.get("order") ?? 0),
-    published: formData.get("published") === "on"
+    published: formData.get("published") === "on",
+    updatedAt: now
   });
-  redirect("/admin");
+  redirect("/admin/portfolio");
 }
 
-function ensureDbForCms() {
-  if (!hasDatabase) {
-    throw new Error("CMS 저장 기능은 DATABASE_URL 연결 후 사용할 수 있습니다.");
-  }
+export async function updateCase(id: string, formData: FormData) {
+  await requireAdminSession();
+  ensureDb();
+  await getDb().update(fieldCases).set({
+    title: String(formData.get("title") ?? ""),
+    slug: String(formData.get("slug") ?? ""),
+    clientType: String(formData.get("clientType") ?? ""),
+    hours: String(formData.get("hours") ?? ""),
+    summary: String(formData.get("summary") ?? ""),
+    content: String(formData.get("content") ?? ""),
+    order: Number(formData.get("order") ?? 0),
+    published: formData.get("published") === "on",
+    updatedAt: new Date()
+  }).where(eq(fieldCases.id, id));
+  redirect("/admin/portfolio");
+}
+
+export async function deleteCase(id: string) {
+  await requireAdminSession();
+  ensureDb();
+  await getDb().delete(fieldCases).where(eq(fieldCases.id, id));
+  redirect("/admin/portfolio");
+}
+
+// ── Admin: Inquiry status ────────────────────────────────
+export async function markInquiryRead(id: string) {
+  await requireAdminSession();
+  ensureDb();
+  await getDb().update(inquiries).set({ status: "read" }).where(eq(inquiries.id, id));
+  redirect("/admin/inquiries");
+}
+
+// ── Admin: Settings ──────────────────────────────────────
+export async function saveSettings(formData: FormData) {
+  await requireAdminSession();
+  ensureDb();
+  const data = {
+    siteTitle: String(formData.get("siteTitle") ?? ""),
+    siteDescription: String(formData.get("siteDescription") ?? ""),
+    ogImageUrl: String(formData.get("ogImageUrl") ?? ""),
+    faviconUrl: String(formData.get("faviconUrl") ?? ""),
+    naverVerification: String(formData.get("naverVerification") ?? ""),
+    googleVerification: String(formData.get("googleVerification") ?? ""),
+    updatedAt: new Date()
+  };
+  await getDb()
+    .insert(siteSettings)
+    .values({ id: 1, ...data })
+    .onConflictDoUpdate({ target: siteSettings.id, set: data });
+  redirect("/admin/settings?saved=1");
 }
