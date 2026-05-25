@@ -4,7 +4,7 @@ export function Footer() {
       <div className="wrap">
         <div className="foot-grid">
           <div>
-            <div className="fmark">AI</div>
+            <div className="fmark"><img src="/logo.png" alt="AI OpenCollege" style={{ width: "100%", height: "100%", objectFit: "contain" }} /></div>
             <div className="fname">AI OpenCollege</div>
             <div className="fsub">opencollege.co.kr</div>
             <p className="fdesc">공공기관·기업·대학을 위한 AI 실무교육 전문기관. AIRO 플랫폼 기반 10개 트랙 교육. 이러닝 인증 보유 · 온라인평생교육원 설립 준비 중.</p>

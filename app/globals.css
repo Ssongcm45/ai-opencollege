@@ -259,7 +259,7 @@ button { border: 0; background: none; cursor: pointer; }
 
 footer { background: var(--navy); color: #fff; padding: 60px 0 30px; }
 .foot-grid { border-bottom: 1px solid rgba(255,255,255,.1); display: grid; gap: 44px; grid-template-columns: 2fr 1fr 1fr 1fr; padding-bottom: 52px; }
-.fmark { background: rgba(255,255,255,.12); border-radius: 8px; display: grid; height: 38px; margin-bottom: 12px; place-items: center; width: 38px; }
+.fmark { display: grid; height: 48px; margin-bottom: 12px; place-items: center; width: 48px; overflow: hidden; }
 .fname { color: #fff; font-size: 14px; font-weight: 900; margin-bottom: 3px; }
 .fsub { color: rgba(255,255,255,.35); font-size: 11px; margin-bottom: 12px; }
 .fdesc, .fcol li { color: rgba(255,255,255,.55); font-size: 13px; line-height: 1.7; }
