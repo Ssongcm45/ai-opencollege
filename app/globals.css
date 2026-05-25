@@ -275,6 +275,7 @@ footer { background: var(--navy); color: #fff; padding: 60px 0 30px; }
 .article-card { border-top: 2px solid var(--navy); padding-top: 20px; }
 .article-body { color: var(--t2); font-size: 17px; line-height: 1.8; white-space: pre-line; }
 .admin-layout { background: var(--cream); min-height: 100vh; padding: 60px 0; }
+.form-card { padding: 32px; }
 .form-grid { display: grid; gap: 12px; }
 .input, .textarea { background: #fff; border: 1px solid var(--bd); border-radius: 8px; color: var(--navy); padding: 12px 14px; width: 100%; box-sizing: border-box; }
 .textarea { min-height: 150px; resize: vertical; }
