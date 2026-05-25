@@ -54,6 +54,12 @@ export const inquiries = pgTable("inquiries", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
 });
 
+export const blogCategories = pgTable("blog_categories", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 60 }).notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+});
+
 export const siteSettings = pgTable("site_settings", {
   id: integer("id").primaryKey().default(1),
   siteTitle: varchar("site_title", { length: 120 }),

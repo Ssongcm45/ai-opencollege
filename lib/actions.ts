@@ -7,7 +7,7 @@ import { Resend } from "resend";
 import { z } from "zod";
 import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } from "@/lib/auth";
 import { getDb, hasDatabase } from "@/lib/db";
-import { adminConfig, blogPosts, fieldCases, inquiries, siteSettings } from "@/lib/db/schema";
+import { adminConfig, blogCategories, blogPosts, fieldCases, inquiries, siteSettings } from "@/lib/db/schema";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com";
 
@@ -232,6 +232,23 @@ export async function markInquiryRead(id: string) {
   ensureDb();
   await getDb().update(inquiries).set({ status: "read" }).where(eq(inquiries.id, id));
   redirect("/admin/inquiries");
+}
+
+// ── Admin: Categories ────────────────────────────────────
+export async function createCategory(formData: FormData) {
+  await requireAdminSession();
+  ensureDb();
+  const name = String(formData.get("name") ?? "").trim().toUpperCase();
+  if (!name) redirect("/admin/categories");
+  await getDb().insert(blogCategories).values({ name }).onConflictDoNothing();
+  redirect("/admin/categories");
+}
+
+export async function deleteCategory(id: string) {
+  await requireAdminSession();
+  ensureDb();
+  await getDb().delete(blogCategories).where(eq(blogCategories.id, id));
+  redirect("/admin/categories");
 }
 
 // ── Admin: Settings ──────────────────────────────────────

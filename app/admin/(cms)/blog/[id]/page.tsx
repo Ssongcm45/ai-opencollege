@@ -1,15 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { updatePost, deletePost } from "@/lib/actions";
-import { getPostById } from "@/lib/content";
+import { getPostById, getCategories } from "@/lib/content";
 import { TuiEditor } from "@/components/admin/TuiEditor";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 
-const CATEGORIES = ["METHOD", "FIELD NOTE", "TECH DOC", "CASE", "NEWS"];
-
 export default async function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const post = await getPostById(id);
+  const [post, categories] = await Promise.all([getPostById(id), getCategories()]);
   if (!post) notFound();
 
   const updateAction = updatePost.bind(null, id);
@@ -41,7 +39,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
           <div className="cms-field">
             <label className="cms-label">카테고리</label>
             <select className="cms-input" name="category" defaultValue={post.category}>
-              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              {categories.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
           <div className="cms-field">

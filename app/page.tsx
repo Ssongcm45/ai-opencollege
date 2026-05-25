@@ -152,7 +152,7 @@ export default async function HomePage() {
         <section className="blog-sec sec" id="blog">
           <div className="wrap">
             <div className="sec-hd"><div className="ey">BLOG</div><h2 className="sh2">교육을 설계하고<br />현장을 기록하는 글</h2><p className="sdesc">출강 준비, 교육 운영, 출강 후 회고, 기술 문서까지. 우리가 어떻게 교육을 설계하고 검증하는지 기록합니다.</p></div>
-            <div className="blog-grid">{posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug}><div><div className="blog-meta">{post.category}</div><h3>{post.title}</h3><p>{post.excerpt}</p></div><Link href={`/blog/${post.slug}`} className="blog-more">교육 방법 보기 →</Link></article>)}</div>
+            <div className="blog-grid">{posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug}><div><div className="blog-meta">{post.category}</div><h3>{post.title}</h3><p>{post.excerpt}</p></div><Link href={`/blog/${post.slug}`} className="blog-more">상세 보기 →</Link></article>)}</div>
           </div>
         </section>
 

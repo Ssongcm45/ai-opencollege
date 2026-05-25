@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { getDb, hasDatabase } from "@/lib/db";
-import { blogPosts, fieldCases, inquiries, siteSettings, type NewBlogPost, type NewFieldCase } from "@/lib/db/schema";
+import { blogCategories, blogPosts, fieldCases, inquiries, siteSettings, type NewBlogPost, type NewFieldCase } from "@/lib/db/schema";
 
 export const fallbackPosts = [
   {
@@ -135,6 +135,14 @@ export async function getCaseById(id: string) {
 export async function getAllInquiries() {
   if (!hasDatabase) return [];
   return getDb().select().from(inquiries).orderBy(desc(inquiries.createdAt));
+}
+
+export const DEFAULT_CATEGORIES = ["METHOD", "FIELD NOTE", "TECH DOC", "CASE", "NEWS"];
+
+export async function getCategories(): Promise<string[]> {
+  if (!hasDatabase) return DEFAULT_CATEGORIES;
+  const rows = await getDb().select().from(blogCategories).orderBy(blogCategories.name);
+  return rows.length ? rows.map((r) => r.name) : DEFAULT_CATEGORIES;
 }
 
 export async function getSiteSettings() {

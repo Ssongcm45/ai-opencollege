@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { createPost } from "@/lib/actions";
+import { getCategories } from "@/lib/content";
 import { TuiEditor } from "@/components/admin/TuiEditor";
 
-const CATEGORIES = ["METHOD", "FIELD NOTE", "TECH DOC", "CASE", "NEWS"];
-
-export default function NewPostPage() {
+export default async function NewPostPage() {
+  const categories = await getCategories();
   return (
     <>
       <div className="cms-header">
@@ -28,7 +28,7 @@ export default function NewPostPage() {
           <div className="cms-field">
             <label className="cms-label">카테고리 <em>*</em></label>
             <select className="cms-input" name="category" required>
-              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              {categories.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
           <div className="cms-field">

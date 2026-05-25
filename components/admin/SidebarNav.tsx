@@ -5,8 +5,10 @@ import { usePathname } from "next/navigation";
 const nav = [
   { href: "/admin", label: "대시보드", icon: "▣", exact: true },
   { href: "/admin/blog", label: "블로그", icon: "✦" },
-  { href: "/admin/portfolio", label: "수강생 포트폴리오", icon: "◈" },
-  { href: "/admin/inquiries", label: "문의 관리", icon: "◉" },
+  { href: "/admin/categories", label: "카테고리", icon: "⊞" },
+  { href: "/admin/cases", label: "출강사례", icon: "◈" },
+  { href: "/admin/portfolio", label: "수강생 포트폴리오", icon: "◉" },
+  { href: "/admin/inquiries", label: "문의 관리", icon: "✉" },
   { href: "/admin/settings", label: "설정", icon: "◎" }
 ];
 
