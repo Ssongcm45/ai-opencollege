@@ -62,7 +62,7 @@ button { border: 0; background: none; cursor: pointer; }
 .site-header { background: rgba(255,255,255,.94); backdrop-filter: blur(20px); border-bottom: 1px solid var(--bd); position: sticky; top: 0; z-index: 100; }
 .header-in { align-items: center; display: flex; height: 72px; justify-content: space-between; }
 .logo { align-items: center; display: flex; gap: 12px; }
-.lmark { align-items: center; background: var(--navy); border-radius: 8px; color: #fff; display: grid; font-weight: 900; height: 40px; justify-content: center; width: 40px; }
+.lmark { align-items: center; display: grid; height: 40px; justify-content: center; width: 40px; overflow: hidden; }
 .lname { color: var(--navy); font-size: 15px; font-weight: 800; letter-spacing: -.02em; }
 .lsub { color: var(--t3); font-size: 11px; margin-top: 2px; }
 .nav-links { align-items: center; display: flex; gap: 2px; }
