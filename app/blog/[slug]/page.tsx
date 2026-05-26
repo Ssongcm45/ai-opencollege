@@ -21,7 +21,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         </section>
         <article className="sec">
           <div className="wrap" style={{ maxWidth: 860 }}>
-            <div className="article-body">{post.content}</div>
+            <div className="article-body" dangerouslySetInnerHTML={{ __html: post.content }} />
           </div>
         </article>
       </main>

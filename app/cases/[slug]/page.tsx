@@ -21,7 +21,7 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ slu
         </section>
         <article className="sec">
           <div className="wrap" style={{ maxWidth: 860 }}>
-            <div className="article-body">{item.content}</div>
+            <div className="article-body" dangerouslySetInnerHTML={{ __html: item.content }} />
           </div>
         </article>
       </main>
