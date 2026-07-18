@@ -106,7 +106,7 @@ button { border: 0; background: none; cursor: pointer; }
 .why-cards { display: flex; flex-direction: column; gap: 14px; }
 .wcard, .tcard, .rcard, .work-card, .faq-list, .admin-card, .form-card { background: #fff; border: 1px solid var(--bd); border-radius: 16px; }
 .wcard { background: var(--cream); display: grid; gap: 14px; grid-template-columns: 42px 1fr; padding: 20px 22px; }
-.wcard-icon { background: var(--navy); border-radius: 8px; height: 42px; width: 42px; }
+.wcard-icon { align-items: center; background: var(--navy); border-radius: 8px; display: flex; height: 42px; justify-content: center; width: 42px; }
 .wcard h4, .tcard h3, .work-body h3, .faq-q { color: var(--navy); font-weight: 900; letter-spacing: -.03em; }
 .wcard p, .tcard p, .work-body p, .faq-a { color: var(--t2); font-size: 13.5px; line-height: 1.65; }
 

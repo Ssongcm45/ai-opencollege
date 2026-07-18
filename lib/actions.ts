@@ -69,8 +69,9 @@ export async function createInquiry(_: unknown, formData: FormData) {
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
-        from: "AI OpenCollege <onboarding@resend.dev>",
+        from: process.env.RESEND_FROM ?? "AI OpenCollege <edu@opencollege.co.kr>",
         to: ADMIN_EMAIL,
+        replyTo: data.email,
         subject: `[AI OpenCollege] 교육 문의: ${safeSubject(data.name)}`,
         html: `
           <h2>새 교육 문의가 접수되었습니다</h2>
