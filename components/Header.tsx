@@ -15,10 +15,9 @@ export function Header() {
               <a href="/#courses">교육과정</a>
               <a href="/#curriculum">커리큘럼</a>
               <a href="/#clients">출강사례</a>
-              <a href="/#portfolio">작품</a>
               <a href="/#blog">블로그</a>
+              <a href="/#portfolio">수강생작품</a>
               <a href="/#faq">FAQ</a>
-              <a href="/#contact">교육 신청</a>
             </nav>
             <div className="hcta">
               <a href="/#courses" className="btn bo btn-pill">교육과정 보기</a>
