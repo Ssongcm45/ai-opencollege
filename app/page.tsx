@@ -176,7 +176,7 @@ export default async function HomePage() {
                     ) : (
                       <div className="work-thumb" />
                     )}
-                    <div className="work-body"><div className="work-type">{item.type}</div><h3>{item.title}</h3><div className="work-desc" dangerouslySetInnerHTML={{ __html: item.description }} /></div>
+                    <div className="work-body"><div className="work-type">{item.type}</div><h3>{item.title}</h3></div>
                   </Link>
                 );
               })}
