@@ -23,6 +23,7 @@ export const blogPosts = pgTable("blog_posts", {
   category: varchar("category", { length: 60 }).notNull(),
   excerpt: text("excerpt").notNull(),
   content: text("content").notNull(),
+  thumbnailUrl: varchar("thumbnail_url", { length: 500 }),
   published: boolean("published").notNull().default(false),
   featured: boolean("featured").notNull().default(false),
   publishedAt: timestamp("published_at", { withTimezone: true }),
@@ -38,6 +39,20 @@ export const fieldCases = pgTable("field_cases", {
   hours: varchar("hours", { length: 40 }).notNull(),
   summary: text("summary").notNull(),
   content: text("content").notNull(),
+  videoUrl: varchar("video_url", { length: 500 }),
+  thumbnailUrl: varchar("thumbnail_url", { length: 500 }),
+  order: integer("order").notNull().default(0),
+  published: boolean("published").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+});
+
+export const portfolioItems = pgTable("portfolio_items", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  type: varchar("type", { length: 40 }).notNull(),
+  title: varchar("title", { length: 180 }).notNull(),
+  description: text("description").notNull(),
+  thumbnailUrl: varchar("thumbnail_url", { length: 500 }),
   videoUrl: varchar("video_url", { length: 500 }),
   order: integer("order").notNull().default(0),
   published: boolean("published").notNull().default(true),
@@ -78,5 +93,6 @@ export type BlogPost = typeof blogPosts.$inferSelect;
 export type NewBlogPost = typeof blogPosts.$inferInsert;
 export type FieldCase = typeof fieldCases.$inferSelect;
 export type NewFieldCase = typeof fieldCases.$inferInsert;
+export type PortfolioItem = typeof portfolioItems.$inferSelect;
 export type Inquiry = typeof inquiries.$inferSelect;
 export type SiteSettings = typeof siteSettings.$inferSelect;

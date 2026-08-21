@@ -9,7 +9,7 @@ import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
 import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } from "@/lib/auth";
 import { getDb, hasDatabase } from "@/lib/db";
-import { adminConfig, blogCategories, blogPosts, fieldCases, inquiries, siteSettings } from "@/lib/db/schema";
+import { adminConfig, blogCategories, blogPosts, fieldCases, inquiries, portfolioItems, siteSettings } from "@/lib/db/schema";
 
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com").trim();
 
@@ -203,6 +203,7 @@ export async function createPost(formData: FormData) {
     category: String(formData.get("category") ?? "METHOD"),
     excerpt: String(formData.get("excerpt") ?? ""),
     content: sanitizeContent(String(formData.get("content") ?? "")),
+    thumbnailUrl: String(formData.get("thumbnailUrl") ?? "").trim() || null,
     published,
     featured: formData.get("featured") === "on",
     publishedAt: published ? now : null,
@@ -223,6 +224,7 @@ export async function updatePost(id: string, formData: FormData) {
     category: String(formData.get("category") ?? ""),
     excerpt: String(formData.get("excerpt") ?? ""),
     content: sanitizeContent(String(formData.get("content") ?? "")),
+    thumbnailUrl: String(formData.get("thumbnailUrl") ?? "").trim() || null,
     published,
     featured: formData.get("featured") === "on",
     publishedAt: published ? (existing?.publishedAt ?? new Date()) : null,
@@ -240,7 +242,7 @@ export async function deletePost(id: string) {
   redirect("/admin/blog");
 }
 
-// ── Admin: Portfolio ─────────────────────────────────────
+// ── Admin: Cases (출강사례) ───────────────────────────────
 export async function createCase(formData: FormData) {
   await requireAdminSession();
   ensureDb();
@@ -253,12 +255,13 @@ export async function createCase(formData: FormData) {
     summary: String(formData.get("summary") ?? ""),
     content: sanitizeContent(String(formData.get("content") ?? "")),
     videoUrl: String(formData.get("videoUrl") ?? "").trim() || null,
+    thumbnailUrl: String(formData.get("thumbnailUrl") ?? "").trim() || null,
     order: Number(formData.get("order") ?? 0),
     published: formData.get("published") === "on",
     updatedAt: now
   });
   revalidatePublic();
-  redirect("/admin/portfolio");
+  redirect("/admin/cases");
 }
 
 export async function updateCase(id: string, formData: FormData) {
@@ -272,18 +275,63 @@ export async function updateCase(id: string, formData: FormData) {
     summary: String(formData.get("summary") ?? ""),
     content: sanitizeContent(String(formData.get("content") ?? "")),
     videoUrl: String(formData.get("videoUrl") ?? "").trim() || null,
+    thumbnailUrl: String(formData.get("thumbnailUrl") ?? "").trim() || null,
     order: Number(formData.get("order") ?? 0),
     published: formData.get("published") === "on",
     updatedAt: new Date()
   }).where(eq(fieldCases.id, id));
   revalidatePublic();
-  redirect("/admin/portfolio");
+  redirect("/admin/cases");
 }
 
 export async function deleteCase(id: string) {
   await requireAdminSession();
   ensureDb();
   await getDb().delete(fieldCases).where(eq(fieldCases.id, id));
+  revalidatePublic();
+  redirect("/admin/cases");
+}
+
+// ── Admin: Portfolio (수강생 포트폴리오) ──────────────────
+export async function createPortfolioItem(formData: FormData) {
+  await requireAdminSession();
+  ensureDb();
+  const now = new Date();
+  await getDb().insert(portfolioItems).values({
+    type: String(formData.get("type") ?? "").trim(),
+    title: String(formData.get("title") ?? "").trim(),
+    description: String(formData.get("description") ?? "").trim(),
+    thumbnailUrl: String(formData.get("thumbnailUrl") ?? "").trim() || null,
+    videoUrl: String(formData.get("videoUrl") ?? "").trim() || null,
+    order: Number(formData.get("order") ?? 0),
+    published: formData.get("published") === "on",
+    updatedAt: now
+  });
+  revalidatePublic();
+  redirect("/admin/portfolio");
+}
+
+export async function updatePortfolioItem(id: string, formData: FormData) {
+  await requireAdminSession();
+  ensureDb();
+  await getDb().update(portfolioItems).set({
+    type: String(formData.get("type") ?? "").trim(),
+    title: String(formData.get("title") ?? "").trim(),
+    description: String(formData.get("description") ?? "").trim(),
+    thumbnailUrl: String(formData.get("thumbnailUrl") ?? "").trim() || null,
+    videoUrl: String(formData.get("videoUrl") ?? "").trim() || null,
+    order: Number(formData.get("order") ?? 0),
+    published: formData.get("published") === "on",
+    updatedAt: new Date()
+  }).where(eq(portfolioItems.id, id));
+  revalidatePublic();
+  redirect("/admin/portfolio");
+}
+
+export async function deletePortfolioItem(id: string) {
+  await requireAdminSession();
+  ensureDb();
+  await getDb().delete(portfolioItems).where(eq(portfolioItems.id, id));
   revalidatePublic();
   redirect("/admin/portfolio");
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createCase } from "@/lib/actions";
 import { TuiEditor } from "@/components/admin/TuiEditor";
+import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
 
 const CLIENT_TYPES = ["공공", "기업", "청년", "크리에이터", "대학", "기타"];
 
@@ -46,6 +47,16 @@ export default function NewCasePage() {
             <label className="cms-label">요약 <em>*</em><span style={{ color: "#9ca3af", fontWeight: 400 }}> (SEO meta description 자동 사용)</span></label>
             <input className="cms-input" name="summary" placeholder="한 줄 요약" required />
           </div>
+        </div>
+
+        <div className="cms-field">
+          <label className="cms-label">영상 링크 <span style={{ color: "#9ca3af", fontWeight: 400 }}>(YouTube 또는 Vimeo URL, 선택)</span></label>
+          <input className="cms-input" name="videoUrl" placeholder="예: https://www.youtube.com/watch?v=... 또는 https://vimeo.com/..." />
+        </div>
+
+        <div className="cms-field">
+          <label className="cms-label">대표 이미지 (썸네일)</label>
+          <ThumbnailUpload />
         </div>
 
         <div className="cms-field">

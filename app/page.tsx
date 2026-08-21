@@ -3,10 +3,15 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { InquiryForm } from "@/components/InquiryForm";
 import { CourseTabs, CurriculumTabs } from "@/components/Tabs";
-import { getPublishedCases, getPublishedPosts } from "@/lib/content";
+import { getPublishedCases, getPublishedPortfolio, getPublishedPosts } from "@/lib/content";
+import { getVideoEmbed } from "@/lib/video";
 
 export default async function HomePage() {
-  const [posts, cases] = await Promise.all([getPublishedPosts(), getPublishedCases()]);
+  const [posts, cases, portfolio] = await Promise.all([
+    getPublishedPosts(),
+    getPublishedCases(),
+    getPublishedPortfolio()
+  ]);
 
   return (
     <>
@@ -152,7 +157,7 @@ export default async function HomePage() {
         <section className="blog-sec sec" id="blog">
           <div className="wrap">
             <div className="sec-hd"><div className="ey">BLOG</div><h2 className="sh2">교육을 설계하고<br />현장을 기록하는 글</h2><p className="sdesc">출강 준비, 교육 운영, 출강 후 회고, 기술 문서까지. 우리가 어떻게 교육을 설계하고 검증하는지 기록합니다.</p></div>
-            <div className="blog-grid">{posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug}><div><div className="blog-meta">{post.category}</div><h3>{post.title}</h3><p>{post.excerpt}</p></div><Link href={`/blog/${post.slug}`} className="blog-more">상세 보기 →</Link></article>)}</div>
+            <div className="blog-grid">{posts.slice(0, 3).map((post) => <article className="blog-card" key={post.slug}><div>{post.thumbnailUrl ? <img className="card-thumb" src={post.thumbnailUrl} alt={post.title} loading="lazy" /> : null}<div className="blog-meta">{post.category}</div><h3>{post.title}</h3><p>{post.excerpt}</p></div><Link href={`/blog/${post.slug}`} className="blog-more">상세 보기 →</Link></article>)}</div>
           </div>
         </section>
 
@@ -160,11 +165,21 @@ export default async function HomePage() {
           <div className="wrap">
             <div className="sec-hd"><div className="ey">STUDENT PORTFOLIO</div><h2 className="sh2">수강생 작품<br />포트폴리오</h2><p className="sdesc">교육은 결과물로 남아야 합니다. 수강생은 과정 안에서 실제 업무와 연결되는 산출물을 완성합니다.</p></div>
             <div className="portfolio-grid">
-              {[
-                ["OFFICE", "AI 업무 자동화 템플릿", "회의록 요약, 이메일 초안, 보고서 구조화를 하나의 반복 흐름으로 정리한 결과물입니다."],
-                ["CREATIVE", "AI 카드뉴스·영상 패키지", "콘셉트, 카피, 이미지, 숏폼 영상까지 연결한 홍보 콘텐츠 포트폴리오입니다."],
-                ["AGENT", "업무 에이전트 설계서", "목표, 입력값, 실행 단계, 검증 기준을 갖춘 직접 구축형 에이전트 설계 결과물입니다."]
-              ].map(([type, title, desc]) => <article className="work-card" key={title}><div className="work-thumb" /><div className="work-body"><div className="work-type">{type}</div><h3>{title}</h3><p>{desc}</p></div></article>)}
+              {portfolio.map((item) => {
+                const embed = getVideoEmbed(item.videoUrl);
+                return (
+                  <article className="work-card" key={item.id}>
+                    {embed ? (
+                      <div className="video-embed work-thumb-media"><iframe src={embed.embedUrl} title={item.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" /></div>
+                    ) : item.thumbnailUrl ? (
+                      <img className="work-thumb-img" src={item.thumbnailUrl} alt={item.title} loading="lazy" />
+                    ) : (
+                      <div className="work-thumb" />
+                    )}
+                    <div className="work-body"><div className="work-type">{item.type}</div><h3>{item.title}</h3><p>{item.description}</p></div>
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>

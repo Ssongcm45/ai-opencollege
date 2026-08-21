@@ -10,6 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const item = await getCaseBySlug(slug);
   if (!item) return {};
   const settings = await getSiteSettings().catch(() => null);
+  const ogImage = item.thumbnailUrl ?? settings?.ogImageUrl ?? null;
   return {
     title: `${item.title} · AI OpenCollege`,
     description: item.summary,
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: item.title,
       description: item.summary,
       type: "article",
-      ...(settings?.ogImageUrl ? { images: [settings.ogImageUrl] } : {})
+      ...(ogImage ? { images: [ogImage] } : {})
     }
   };
 }

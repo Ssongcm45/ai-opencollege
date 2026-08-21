@@ -9,6 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = await getPostBySlug(slug);
   if (!post) return {};
   const settings = await getSiteSettings().catch(() => null);
+  const ogImage = post.thumbnailUrl ?? settings?.ogImageUrl ?? null;
   return {
     title: `${post.title} · AI OpenCollege`,
     description: post.excerpt,
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: post.excerpt,
       type: "article",
       publishedTime: post.publishedAt?.toISOString(),
-      ...(settings?.ogImageUrl ? { images: [settings.ogImageUrl] } : {})
+      ...(ogImage ? { images: [ogImage] } : {})
     }
   };
 }

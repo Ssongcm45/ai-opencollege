@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createPost } from "@/lib/actions";
 import { getCategories } from "@/lib/content";
 import { TuiEditor } from "@/components/admin/TuiEditor";
+import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
 
 export default async function NewPostPage() {
   const categories = await getCategories();
@@ -35,6 +36,11 @@ export default async function NewPostPage() {
             <label className="cms-label">요약 <em>*</em><span style={{ color: "#9ca3af", fontWeight: 400 }}> (SEO meta description 자동 사용)</span></label>
             <input className="cms-input" name="excerpt" placeholder="한 줄 요약 (검색 노출에 사용됩니다)" required />
           </div>
+        </div>
+
+        <div className="cms-field">
+          <label className="cms-label">대표 이미지 (썸네일)</label>
+          <ThumbnailUpload />
         </div>
 
         <div className="cms-field">

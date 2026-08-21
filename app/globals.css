@@ -457,3 +457,9 @@ footer { background: var(--navy); color: #fff; padding: 60px 0 30px; }
 .video-embed iframe { border: 0; height: 100%; left: 0; position: absolute; top: 0; width: 100%; }
 .video-sec { padding-bottom: 0; }
 .field-item .video-embed { grid-column: 1 / -1; }
+
+/* Thumbnails */
+.card-thumb { aspect-ratio: 16 / 9; border-radius: 12px; display: block; margin-bottom: 16px; object-fit: cover; width: 100%; }
+.field-item .card-thumb { grid-column: 1 / -1; margin-bottom: 0; }
+.work-thumb-img { display: block; height: 160px; object-fit: cover; width: 100%; }
+.work-thumb-media { aspect-ratio: auto; border-radius: 0; height: 160px; }

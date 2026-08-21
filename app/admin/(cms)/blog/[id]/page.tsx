@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { updatePost, deletePost } from "@/lib/actions";
 import { getPostById, getCategories } from "@/lib/content";
 import { TuiEditor } from "@/components/admin/TuiEditor";
+import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 
 export default async function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
@@ -46,6 +47,11 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
             <label className="cms-label">요약 <em>*</em><span style={{ color: "#9ca3af", fontWeight: 400 }}> (SEO meta description 자동 사용)</span></label>
             <input className="cms-input" name="excerpt" defaultValue={post.excerpt} required />
           </div>
+        </div>
+
+        <div className="cms-field">
+          <label className="cms-label">대표 이미지 (썸네일)</label>
+          <ThumbnailUpload defaultValue={post.thumbnailUrl} />
         </div>
 
         <div className="cms-field">

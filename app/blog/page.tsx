@@ -21,6 +21,7 @@ export default async function BlogPage() {
           <div className="wrap article-grid">
             {posts.map((post) => (
               <article className="article-card" key={post.slug}>
+                {post.thumbnailUrl ? <img className="card-thumb" src={post.thumbnailUrl} alt={post.title} loading="lazy" /> : null}
                 <div className="blog-meta">{post.category}</div>
                 <h2 className="tp-h">{post.title}</h2>
                 <p className="tp-p">{post.excerpt}</p>
