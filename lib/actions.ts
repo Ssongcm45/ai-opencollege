@@ -252,6 +252,7 @@ export async function createCase(formData: FormData) {
     hours: String(formData.get("hours") ?? ""),
     summary: String(formData.get("summary") ?? ""),
     content: sanitizeContent(String(formData.get("content") ?? "")),
+    videoUrl: String(formData.get("videoUrl") ?? "").trim() || null,
     order: Number(formData.get("order") ?? 0),
     published: formData.get("published") === "on",
     updatedAt: now
@@ -270,6 +271,7 @@ export async function updateCase(id: string, formData: FormData) {
     hours: String(formData.get("hours") ?? ""),
     summary: String(formData.get("summary") ?? ""),
     content: sanitizeContent(String(formData.get("content") ?? "")),
+    videoUrl: String(formData.get("videoUrl") ?? "").trim() || null,
     order: Number(formData.get("order") ?? 0),
     published: formData.get("published") === "on",
     updatedAt: new Date()

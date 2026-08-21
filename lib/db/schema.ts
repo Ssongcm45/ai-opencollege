@@ -38,6 +38,7 @@ export const fieldCases = pgTable("field_cases", {
   hours: varchar("hours", { length: 40 }).notNull(),
   summary: text("summary").notNull(),
   content: text("content").notNull(),
+  videoUrl: varchar("video_url", { length: 500 }),
   order: integer("order").notNull().default(0),
   published: boolean("published").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

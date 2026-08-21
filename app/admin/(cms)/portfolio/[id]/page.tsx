@@ -62,6 +62,11 @@ export default async function EditCasePage({ params }: { params: Promise<{ id: s
         </div>
 
         <div className="cms-field">
+          <label className="cms-label">영상 링크 <span style={{ color: "#9ca3af", fontWeight: 400 }}>(YouTube 또는 Vimeo URL, 선택)</span></label>
+          <input className="cms-input" name="videoUrl" defaultValue={item.videoUrl ?? ""} placeholder="예: https://www.youtube.com/watch?v=... 또는 https://vimeo.com/..." />
+        </div>
+
+        <div className="cms-field">
           <label className="cms-label">본문</label>
           <TuiEditor name="content" defaultValue={item.content} />
         </div>

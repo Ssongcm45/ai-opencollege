@@ -451,3 +451,9 @@ footer { background: var(--navy); color: #fff; padding: 60px 0 30px; }
 .inquiry-modal-card h3 { color: var(--navy); font-size: 24px; font-weight: 900; letter-spacing: -.04em; margin-bottom: 10px; }
 .inquiry-modal-card p { color: var(--t2); font-size: 15px; line-height: 1.65; margin-bottom: 24px; }
 .inquiry-modal-card .btn { min-width: 120px; }
+
+/* Video embed (YouTube/Vimeo) */
+.video-embed { aspect-ratio: 16 / 9; background: #0b1220; border-radius: 12px; overflow: hidden; position: relative; width: 100%; }
+.video-embed iframe { border: 0; height: 100%; left: 0; position: absolute; top: 0; width: 100%; }
+.video-sec { padding-bottom: 0; }
+.field-item .video-embed { grid-column: 1 / -1; }

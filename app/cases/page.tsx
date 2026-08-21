@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getPublishedCases } from "@/lib/content";
+import { getVideoEmbed } from "@/lib/video";
 
 export default async function CasesPage() {
   const cases = await getPublishedCases();
@@ -19,13 +20,22 @@ export default async function CasesPage() {
         </section>
         <section className="field-sec sec">
           <div className="wrap field-list">
-            {cases.map((item, index) => (
-              <Link href={`/cases/${item.slug}`} className="field-item" key={item.slug}>
+            {cases.map((item, index) => {
+              const embed = getVideoEmbed(item.videoUrl);
+
+              return (
+                <Link href={`/cases/${item.slug}`} className="field-item" key={item.slug}>
+                  {embed ? (
+                    <div className="video-embed">
+                      <iframe src={embed.embedUrl} title={item.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" />
+                    </div>
+                  ) : null}
                 <div className="field-no">CASE {String(index + 1).padStart(2, "0")}</div>
                 <div className="field-main"><h3>{item.title}</h3><p>{item.summary}</p></div>
                 <div className="field-tags"><span>{item.clientType}</span><span>{item.hours}</span><span>실습형</span></div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </section>
       </main>
