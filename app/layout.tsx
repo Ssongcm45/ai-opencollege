@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getSiteSettings } from "@/lib/content";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const defaultTitle = "AI OpenCollege · AI 실무교육 전문기관";
@@ -23,9 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
         icon: faviconUrl,
         apple: faviconUrl
       },
-      metadataBase: new URL(
-        process.env.NEXT_PUBLIC_SITE_URL ?? "https://opencollege.co.kr"
-      ),
+      metadataBase: new URL(siteUrl),
       openGraph: {
         title,
         description,
@@ -51,9 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
         icon: defaultIcon,
         apple: defaultIcon
       },
-      metadataBase: new URL(
-        process.env.NEXT_PUBLIC_SITE_URL ?? "https://opencollege.co.kr"
-      ),
+      metadataBase: new URL(siteUrl),
       openGraph: {
         title: defaultTitle,
         description: defaultDescription,

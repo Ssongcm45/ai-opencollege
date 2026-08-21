@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getPublishedCases, getPublishedPosts } from "@/lib/content";
+import { siteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://opencollege.co.kr";
+  const baseUrl = siteUrl;
   const staticEntries: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/`,

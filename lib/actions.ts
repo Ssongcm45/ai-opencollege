@@ -11,7 +11,7 @@ import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } f
 import { getDb, hasDatabase } from "@/lib/db";
 import { adminConfig, blogCategories, blogPosts, fieldCases, inquiries, siteSettings } from "@/lib/db/schema";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com";
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com").trim();
 
 // ── Helpers ──────────────────────────────────────────────
 function hashPassword(password: string): string {
