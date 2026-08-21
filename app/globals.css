@@ -66,7 +66,7 @@ button { border: 0; background: none; cursor: pointer; }
 .lname { color: var(--navy); font-size: 15px; font-weight: 800; letter-spacing: -.02em; }
 .lsub { color: var(--t3); font-size: 11px; margin-top: 2px; }
 .nav-links { align-items: center; display: flex; gap: 2px; }
-.nav-links a { border-radius: 4px; color: var(--t2); font-size: 14px; font-weight: 600; padding: 8px 12px; }
+.nav-links a { border-radius: 4px; color: var(--t2); font-size: 16px; font-weight: 600; padding: 8px 14px; }
 .nav-links a:hover { background: var(--cream); color: var(--navy); }
 .hcta { display: flex; gap: 8px; }
 
@@ -481,5 +481,6 @@ footer { background: var(--navy); color: #fff; padding: 60px 0 30px; }
 .blog-empty { color: var(--t3); font-size: 15px; padding: 40px 0; text-align: center; }
 @media (max-width: 700px) { .blog-search input { width: 100%; } .blog-toolbar { align-items: stretch; flex-direction: column; } }
 .detail-thumb { border-radius: 12px; display: block; width: 100%; }
+.detail-back { border-top: 1px solid var(--bd); margin-top: 48px; padding-top: 28px; }
 a.work-card { color: inherit; display: block; text-decoration: none; transition: .18s ease; }
 a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: translateY(-3px); }

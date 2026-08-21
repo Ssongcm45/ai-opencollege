@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getCaseBySlug, getSiteSettings } from "@/lib/content";
+import { toHtmlBody } from "@/lib/html";
 import { getVideoEmbed } from "@/lib/video";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -51,7 +52,7 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ slu
         ) : null}
         <article className="sec">
           <div className="wrap" style={{ maxWidth: 860 }}>
-            <div className="article-body" dangerouslySetInnerHTML={{ __html: item.content }} />
+            <div className="article-body" dangerouslySetInnerHTML={{ __html: toHtmlBody(item.content) }} />
           </div>
         </article>
       </main>

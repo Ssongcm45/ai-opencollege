@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getPostBySlug, getSiteSettings } from "@/lib/content";
+import { toHtmlBody } from "@/lib/html";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -41,7 +42,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
         </section>
         <article className="sec">
           <div className="wrap" style={{ maxWidth: 860 }}>
-            <div className="article-body" dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div className="article-body" dangerouslySetInnerHTML={{ __html: toHtmlBody(post.content) }} />
           </div>
         </article>
       </main>

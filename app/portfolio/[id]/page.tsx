@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getPortfolioDetail, getSiteSettings } from "@/lib/content";
+import { toHtmlBody } from "@/lib/html";
 import { getVideoEmbed } from "@/lib/video";
 
 function stripHtml(value: string): string {
@@ -63,12 +64,12 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
         ) : null}
         <article className="sec">
           <div className="wrap" style={{ maxWidth: 860 }}>
-            <div className="article-body" dangerouslySetInnerHTML={{ __html: item.description }} />
+            <div className="article-body" dangerouslySetInnerHTML={{ __html: toHtmlBody(item.description) }} />
+            <div className="detail-back">
+              <Link href="/#portfolio" className="btn bo btn-pill">← 포트폴리오 목록으로</Link>
+            </div>
           </div>
         </article>
-        <div className="wrap" style={{ maxWidth: 860 }}>
-          <p style={{ marginTop: 40 }}><Link href="/#portfolio" className="blog-more">← 포트폴리오 목록으로</Link></p>
-        </div>
       </main>
       <Footer />
     </>
