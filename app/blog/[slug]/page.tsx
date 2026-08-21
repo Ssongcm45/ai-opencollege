@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -40,9 +41,19 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
             <p className="sdesc">{post.excerpt}</p>
           </div>
         </section>
+        {post.thumbnailUrl ? (
+          <section className="sec video-sec">
+            <div className="wrap" style={{ maxWidth: 860 }}>
+              <img className="detail-thumb" src={post.thumbnailUrl} alt={post.title} />
+            </div>
+          </section>
+        ) : null}
         <article className="sec">
           <div className="wrap" style={{ maxWidth: 860 }}>
             <div className="article-body" dangerouslySetInnerHTML={{ __html: toHtmlBody(post.content) }} />
+            <div className="detail-back">
+              <Link href="/blog" className="btn bo btn-pill">← 블로그 목록으로</Link>
+            </div>
           </div>
         </article>
       </main>
