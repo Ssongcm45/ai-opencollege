@@ -2,8 +2,10 @@ import Link from "next/link";
 import { createPortfolioItem } from "@/lib/actions";
 import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
 import { TuiEditor } from "@/components/admin/TuiEditor";
+import { getCategories } from "@/lib/content";
 
-export default function NewPortfolioPage() {
+export default async function NewPortfolioPage() {
+  const types = await getCategories("portfolio");
   return (
     <>
       <div className="cms-header">
@@ -15,7 +17,9 @@ export default function NewPortfolioPage() {
         <div className="cms-row2">
           <div className="cms-field">
             <label className="cms-label">유형 <em>*</em></label>
-            <input className="cms-input" name="type" placeholder="예: OFFICE, CREATIVE, AGENT" required />
+            <select className="cms-input" name="type" required>
+              {types.map((type) => <option key={type} value={type}>{type}</option>)}
+            </select>
           </div>
           <div className="cms-field">
             <label className="cms-label">제목 <em>*</em></label>

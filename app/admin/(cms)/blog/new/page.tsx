@@ -5,7 +5,7 @@ import { TuiEditor } from "@/components/admin/TuiEditor";
 import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
 
 export default async function NewPostPage() {
-  const categories = await getCategories();
+  const categories = await getCategories("blog");
   return (
     <>
       <div className="cms-header">

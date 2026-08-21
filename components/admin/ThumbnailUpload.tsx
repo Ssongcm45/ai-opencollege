@@ -13,6 +13,28 @@ export function ThumbnailUpload({ name = "thumbnailUrl", defaultValue }: Props) 
   const [error, setError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // 스마트폰 원본 사진은 서버 요청 한도(4.5MB)를 넘기 쉬우므로
+  // 브라우저에서 먼저 1600px 이하로 축소해 전송한다. 실패 시 원본을 그대로 보낸다.
+  async function shrinkImage(file: File): Promise<Blob> {
+    try {
+      const bitmap = await createImageBitmap(file);
+      const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+      const width = Math.max(1, Math.round(bitmap.width * scale));
+      const height = Math.max(1, Math.round(bitmap.height * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return file;
+      ctx.drawImage(bitmap, 0, 0, width, height);
+      bitmap.close();
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
+      return blob && blob.size < file.size ? blob : file;
+    } catch {
+      return file;
+    }
+  }
+
   async function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -20,17 +42,22 @@ export function ThumbnailUpload({ name = "thumbnailUrl", defaultValue }: Props) 
     setError("");
     setUploading(true);
     try {
+      const shrunk = await shrinkImage(file);
       const body = new FormData();
-      body.append("file", file);
+      body.append("file", shrunk, shrunk === file ? file.name : "thumbnail.jpg");
       const res = await fetch("/api/admin/upload", { method: "POST", body });
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(() => null);
       if (!res.ok) {
-        setError(data.error ?? "이미지 업로드에 실패했습니다.");
+        if (res.status === 413) {
+          setError("이미지가 너무 큽니다. 4MB 이하로 줄여서 다시 시도해 주세요.");
+        } else {
+          setError(data?.error ?? `이미지 업로드에 실패했습니다. (오류 ${res.status})`);
+        }
         return;
       }
       setUrl(data.url);
     } catch {
-      setError("이미지 업로드에 실패했습니다.");
+      setError("이미지 업로드에 실패했습니다. 네트워크 상태를 확인해 주세요.");
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";

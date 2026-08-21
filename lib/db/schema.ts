@@ -4,6 +4,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
   uuid,
   varchar
 } from "drizzle-orm/pg-core";
@@ -72,11 +73,14 @@ export const inquiries = pgTable("inquiries", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
 });
 
-export const blogCategories = pgTable("blog_categories", {
+export const categories = pgTable("categories", {
   id: uuid("id").primaryKey().defaultRandom(),
-  name: varchar("name", { length: 60 }).notNull().unique(),
+  scope: varchar("scope", { length: 20 }).notNull(),
+  name: varchar("name", { length: 60 }).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
-});
+}, (table) => [
+  unique("categories_scope_name_unique").on(table.scope, table.name)
+]);
 
 export const siteSettings = pgTable("site_settings", {
   id: integer("id").primaryKey().default(1),

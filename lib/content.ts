@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import { getDb, hasDatabase } from "@/lib/db";
-import { blogCategories, blogPosts, fieldCases, inquiries, portfolioItems, siteSettings, type NewBlogPost, type NewFieldCase } from "@/lib/db/schema";
+import { categories, blogPosts, fieldCases, inquiries, portfolioItems, siteSettings, type NewBlogPost, type NewFieldCase } from "@/lib/db/schema";
 
 export const fallbackPosts = [
   {
@@ -167,6 +167,17 @@ export async function getPublishedPortfolio() {
   return rows.length ? rows : fallbackPortfolio;
 }
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+export async function getPortfolioDetail(id: string) {
+  const fallback = fallbackPortfolio.find((item) => item.id === id);
+  if (!hasDatabase) return fallback ?? null;
+  if (fallback) return fallback;
+  if (!UUID_RE.test(id)) return null;
+  const [item] = await getDb().select().from(portfolioItems).where(eq(portfolioItems.id, id)).limit(1);
+  return item ?? null;
+}
+
 // ── Admin ────────────────────────────────────────────────
 export async function getAllPostsAdmin() {
   if (!hasDatabase) return fallbackPosts;
@@ -206,12 +217,23 @@ export async function getAllInquiries() {
   return getDb().select().from(inquiries).orderBy(desc(inquiries.createdAt));
 }
 
-export const DEFAULT_CATEGORIES = ["METHOD", "FIELD NOTE", "TECH DOC", "CASE", "NEWS"];
+export type CategoryScope = "blog" | "case" | "portfolio";
 
-export async function getCategories(): Promise<string[]> {
-  if (!hasDatabase) return DEFAULT_CATEGORIES;
-  const rows = await getDb().select().from(blogCategories).orderBy(blogCategories.name);
-  return rows.length ? rows.map((r) => r.name) : DEFAULT_CATEGORIES;
+export const DEFAULT_CATEGORIES: Record<CategoryScope, string[]> = {
+  blog: ["METHOD", "FIELD NOTE", "TECH DOC", "CASE", "NEWS"],
+  case: ["공공", "기업", "청년", "크리에이터", "대학", "기타"],
+  portfolio: ["OFFICE", "CREATIVE", "AGENT"]
+};
+
+export async function getCategories(scope: CategoryScope = "blog"): Promise<string[]> {
+  if (!hasDatabase) return DEFAULT_CATEGORIES[scope];
+  const rows = await getDb().select().from(categories).where(eq(categories.scope, scope)).orderBy(categories.name);
+  return rows.length ? rows.map((row) => row.name) : DEFAULT_CATEGORIES[scope];
+}
+
+export async function getCategoryRows(scope: CategoryScope) {
+  if (!hasDatabase) return [];
+  return getDb().select({ id: categories.id, name: categories.name }).from(categories).where(eq(categories.scope, scope)).orderBy(categories.name);
 }
 
 export async function getSiteSettings() {

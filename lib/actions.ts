@@ -9,7 +9,7 @@ import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
 import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } from "@/lib/auth";
 import { getDb, hasDatabase } from "@/lib/db";
-import { adminConfig, blogCategories, blogPosts, fieldCases, inquiries, portfolioItems, siteSettings } from "@/lib/db/schema";
+import { adminConfig, categories, blogPosts, fieldCases, inquiries, portfolioItems, siteSettings } from "@/lib/db/schema";
 
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com").trim();
 
@@ -348,16 +348,18 @@ export async function markInquiryRead(id: string) {
 export async function createCategory(formData: FormData) {
   await requireAdminSession();
   ensureDb();
-  const name = String(formData.get("name") ?? "").trim().toUpperCase();
+  const scope = String(formData.get("scope") ?? "");
+  if (scope !== "blog" && scope !== "case" && scope !== "portfolio") redirect("/admin/categories");
+  const name = String(formData.get("name") ?? "").trim();
   if (!name) redirect("/admin/categories");
-  await getDb().insert(blogCategories).values({ name }).onConflictDoNothing();
+  await getDb().insert(categories).values({ scope, name }).onConflictDoNothing();
   redirect("/admin/categories");
 }
 
 export async function deleteCategory(id: string) {
   await requireAdminSession();
   ensureDb();
-  await getDb().delete(blogCategories).where(eq(blogCategories.id, id));
+  await getDb().delete(categories).where(eq(categories.id, id));
   redirect("/admin/categories");
 }
 

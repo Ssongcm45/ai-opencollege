@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { updatePortfolioItem, deletePortfolioItem } from "@/lib/actions";
-import { getPortfolioById } from "@/lib/content";
+import { getPortfolioById, getCategories } from "@/lib/content";
 import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
 import { TuiEditor } from "@/components/admin/TuiEditor";
 import { DeleteButton } from "@/components/admin/DeleteButton";
@@ -10,6 +10,8 @@ export default async function EditPortfolioPage({ params }: { params: Promise<{ 
   const { id } = await params;
   const item = await getPortfolioById(id);
   if (!item) notFound();
+  const types = await getCategories("portfolio");
+  const typeOptions = types.includes(item.type) ? types : [item.type, ...types];
 
   const updateAction = updatePortfolioItem.bind(null, id);
   const deleteAction = deletePortfolioItem.bind(null, id);
@@ -28,7 +30,9 @@ export default async function EditPortfolioPage({ params }: { params: Promise<{ 
         <div className="cms-row2">
           <div className="cms-field">
             <label className="cms-label">유형 <em>*</em></label>
-            <input className="cms-input" name="type" defaultValue={item.type} placeholder="예: OFFICE, CREATIVE, AGENT" required />
+            <select className="cms-input" name="type" defaultValue={item.type} required>
+              {typeOptions.map((type) => <option key={type} value={type}>{type}</option>)}
+            </select>
           </div>
           <div className="cms-field">
             <label className="cms-label">제목 <em>*</em></label>

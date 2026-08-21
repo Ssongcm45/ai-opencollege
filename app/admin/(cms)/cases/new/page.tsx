@@ -2,10 +2,10 @@ import Link from "next/link";
 import { createCase } from "@/lib/actions";
 import { TuiEditor } from "@/components/admin/TuiEditor";
 import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
+import { getCategories } from "@/lib/content";
 
-const CLIENT_TYPES = ["공공", "기업", "청년", "크리에이터", "대학", "기타"];
-
-export default function NewCasePage() {
+export default async function NewCasePage() {
+  const clientTypes = await getCategories("case");
   return (
     <>
       <div className="cms-header">
@@ -29,7 +29,7 @@ export default function NewCasePage() {
           <div className="cms-field">
             <label className="cms-label">유형 <em>*</em></label>
             <select className="cms-input" name="clientType" required>
-              {CLIENT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+              {clientTypes.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
           </div>
           <div className="cms-field">

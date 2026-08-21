@@ -8,7 +8,7 @@ import { DeleteButton } from "@/components/admin/DeleteButton";
 
 export default async function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const [post, categories] = await Promise.all([getPostById(id), getCategories()]);
+  const [post, categories] = await Promise.all([getPostById(id), getCategories("blog")]);
   if (!post) notFound();
 
   const updateAction = updatePost.bind(null, id);

@@ -168,7 +168,7 @@ export default async function HomePage() {
               {portfolio.map((item) => {
                 const embed = getVideoEmbed(item.videoUrl);
                 return (
-                  <article className="work-card" key={item.id}>
+                  <Link href={`/portfolio/${item.id}`} className="work-card" key={item.id}>
                     {embed ? (
                       <div className="video-embed work-thumb-media"><iframe src={embed.embedUrl} title={item.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" /></div>
                     ) : item.thumbnailUrl ? (
@@ -177,7 +177,7 @@ export default async function HomePage() {
                       <div className="work-thumb" />
                     )}
                     <div className="work-body"><div className="work-type">{item.type}</div><h3>{item.title}</h3><div className="work-desc" dangerouslySetInnerHTML={{ __html: item.description }} /></div>
-                  </article>
+                  </Link>
                 );
               })}
             </div>

@@ -480,3 +480,6 @@ footer { background: var(--navy); color: #fff; padding: 60px 0 30px; }
 .blog-count { color: var(--t3); font-size: 13px; font-weight: 700; margin-bottom: 16px; }
 .blog-empty { color: var(--t3); font-size: 15px; padding: 40px 0; text-align: center; }
 @media (max-width: 700px) { .blog-search input { width: 100%; } .blog-toolbar { align-items: stretch; flex-direction: column; } }
+.detail-thumb { border-radius: 12px; display: block; width: 100%; }
+a.work-card { color: inherit; display: block; text-decoration: none; transition: .18s ease; }
+a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: translateY(-3px); }

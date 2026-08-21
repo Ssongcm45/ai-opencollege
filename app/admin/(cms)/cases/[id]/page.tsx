@@ -1,17 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { updateCase, deleteCase } from "@/lib/actions";
-import { getCaseById } from "@/lib/content";
+import { getCaseById, getCategories } from "@/lib/content";
 import { TuiEditor } from "@/components/admin/TuiEditor";
 import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
 import { DeleteButton } from "@/components/admin/DeleteButton";
-
-const CLIENT_TYPES = ["공공", "기업", "청년", "크리에이터", "대학", "기타"];
 
 export default async function EditCasePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const item = await getCaseById(id);
   if (!item) notFound();
+  const clientTypes = await getCategories("case");
+  const typeOptions = clientTypes.includes(item.clientType) ? clientTypes : [item.clientType, ...clientTypes];
 
   const updateAction = updateCase.bind(null, id);
   const deleteAction = deleteCase.bind(null, id);
@@ -42,7 +42,7 @@ export default async function EditCasePage({ params }: { params: Promise<{ id: s
           <div className="cms-field">
             <label className="cms-label">유형</label>
             <select className="cms-input" name="clientType" defaultValue={item.clientType}>
-              {CLIENT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+              {typeOptions.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
           </div>
           <div className="cms-field">
