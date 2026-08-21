@@ -1,10 +1,17 @@
-import Link from "next/link";
+import { BlogExplorer } from "@/components/BlogExplorer";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getPublishedPosts } from "@/lib/content";
 
 export default async function BlogPage() {
   const posts = await getPublishedPosts();
+  const items = posts.map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    category: p.category,
+    thumbnailUrl: p.thumbnailUrl ?? null,
+  }));
 
   return (
     <>
@@ -18,16 +25,8 @@ export default async function BlogPage() {
           </div>
         </section>
         <section className="sec">
-          <div className="wrap article-grid">
-            {posts.map((post) => (
-              <article className="article-card" key={post.slug}>
-                {post.thumbnailUrl ? <img className="card-thumb" src={post.thumbnailUrl} alt={post.title} loading="lazy" /> : null}
-                <div className="blog-meta">{post.category}</div>
-                <h2 className="tp-h">{post.title}</h2>
-                <p className="tp-p">{post.excerpt}</p>
-                <Link className="blog-more" href={`/blog/${post.slug}`}>자세히 보기 →</Link>
-              </article>
-            ))}
+          <div className="wrap">
+            <BlogExplorer posts={items} />
           </div>
         </section>
       </main>

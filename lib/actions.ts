@@ -300,7 +300,7 @@ export async function createPortfolioItem(formData: FormData) {
   await getDb().insert(portfolioItems).values({
     type: String(formData.get("type") ?? "").trim(),
     title: String(formData.get("title") ?? "").trim(),
-    description: String(formData.get("description") ?? "").trim(),
+    description: sanitizeContent(String(formData.get("description") ?? "")).trim(),
     thumbnailUrl: String(formData.get("thumbnailUrl") ?? "").trim() || null,
     videoUrl: String(formData.get("videoUrl") ?? "").trim() || null,
     order: Number(formData.get("order") ?? 0),
@@ -317,7 +317,7 @@ export async function updatePortfolioItem(id: string, formData: FormData) {
   await getDb().update(portfolioItems).set({
     type: String(formData.get("type") ?? "").trim(),
     title: String(formData.get("title") ?? "").trim(),
-    description: String(formData.get("description") ?? "").trim(),
+    description: sanitizeContent(String(formData.get("description") ?? "")).trim(),
     thumbnailUrl: String(formData.get("thumbnailUrl") ?? "").trim() || null,
     videoUrl: String(formData.get("videoUrl") ?? "").trim() || null,
     order: Number(formData.get("order") ?? 0),

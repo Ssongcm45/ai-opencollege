@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createPortfolioItem } from "@/lib/actions";
 import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
+import { TuiEditor } from "@/components/admin/TuiEditor";
 
 export default function NewPortfolioPage() {
   return (
@@ -22,9 +23,15 @@ export default function NewPortfolioPage() {
           </div>
         </div>
 
-        <div className="cms-field">
-          <label className="cms-label">설명 <em>*</em></label>
-          <textarea className="cms-input cms-textarea" name="description" placeholder="포트폴리오 설명" required />
+        <div className="cms-row2">
+          <div className="cms-field">
+            <label className="cms-label">정렬 순서</label>
+            <input className="cms-input" name="order" type="number" defaultValue={0} />
+          </div>
+          <div className="cms-field">
+            <label className="cms-label">영상 링크 <span style={{ color: "#9ca3af", fontWeight: 400 }}>(YouTube 또는 Vimeo URL, 선택)</span></label>
+            <input className="cms-input" name="videoUrl" placeholder="예: https://www.youtube.com/watch?v=... 또는 https://vimeo.com/..." />
+          </div>
         </div>
 
         <div className="cms-field">
@@ -33,13 +40,8 @@ export default function NewPortfolioPage() {
         </div>
 
         <div className="cms-field">
-          <label className="cms-label">영상 링크 <span style={{ color: "#9ca3af", fontWeight: 400 }}>(YouTube 또는 Vimeo URL, 선택)</span></label>
-          <input className="cms-input" name="videoUrl" placeholder="예: https://www.youtube.com/watch?v=... 또는 https://vimeo.com/..." />
-        </div>
-
-        <div className="cms-field">
-          <label className="cms-label">정렬 순서</label>
-          <input className="cms-input" name="order" type="number" defaultValue={0} />
+          <label className="cms-label">설명 <em>*</em></label>
+          <TuiEditor name="description" />
         </div>
 
         <div className="cms-checks">

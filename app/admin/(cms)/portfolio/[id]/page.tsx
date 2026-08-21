@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { updatePortfolioItem, deletePortfolioItem } from "@/lib/actions";
 import { getPortfolioById } from "@/lib/content";
 import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
+import { TuiEditor } from "@/components/admin/TuiEditor";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 
 export default async function EditPortfolioPage({ params }: { params: Promise<{ id: string }> }) {
@@ -35,9 +36,15 @@ export default async function EditPortfolioPage({ params }: { params: Promise<{ 
           </div>
         </div>
 
-        <div className="cms-field">
-          <label className="cms-label">설명 <em>*</em></label>
-          <textarea className="cms-input cms-textarea" name="description" defaultValue={item.description} required />
+        <div className="cms-row2">
+          <div className="cms-field">
+            <label className="cms-label">정렬 순서</label>
+            <input className="cms-input" name="order" type="number" defaultValue={item.order} />
+          </div>
+          <div className="cms-field">
+            <label className="cms-label">영상 링크 <span style={{ color: "#9ca3af", fontWeight: 400 }}>(YouTube 또는 Vimeo URL, 선택)</span></label>
+            <input className="cms-input" name="videoUrl" defaultValue={item.videoUrl ?? ""} placeholder="예: https://www.youtube.com/watch?v=... 또는 https://vimeo.com/..." />
+          </div>
         </div>
 
         <div className="cms-field">
@@ -46,13 +53,8 @@ export default async function EditPortfolioPage({ params }: { params: Promise<{ 
         </div>
 
         <div className="cms-field">
-          <label className="cms-label">영상 링크 <span style={{ color: "#9ca3af", fontWeight: 400 }}>(YouTube 또는 Vimeo URL, 선택)</span></label>
-          <input className="cms-input" name="videoUrl" defaultValue={item.videoUrl ?? ""} placeholder="예: https://www.youtube.com/watch?v=... 또는 https://vimeo.com/..." />
-        </div>
-
-        <div className="cms-field">
-          <label className="cms-label">정렬 순서</label>
-          <input className="cms-input" name="order" type="number" defaultValue={item.order} />
+          <label className="cms-label">설명 <em>*</em></label>
+          <TuiEditor name="description" defaultValue={item.description} />
         </div>
 
         <div className="cms-checks">
