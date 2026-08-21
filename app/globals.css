@@ -436,3 +436,18 @@ footer { background: var(--navy); color: #fff; padding: 60px 0 30px; }
 @media (prefers-reduced-motion: reduce) {
   .ai-orbit::after, .orbit-card, .hero-beam { animation: none; }
 }
+
+.privacy-box { border: 1px solid var(--bd); border-radius: 8px; padding: 12px 14px; }
+.privacy-check { align-items: center; color: var(--t2); cursor: pointer; display: flex; font-size: 13px; gap: 9px; line-height: 1.5; }
+.privacy-detail { margin-top: 8px; }
+.privacy-detail summary { color: var(--t3); cursor: pointer; font-size: 12px; }
+.privacy-detail p { color: var(--t3); font-size: 12px; line-height: 1.6; margin: 6px 0 0; }
+.privacy-check input { accent-color: var(--verm); flex: 0 0 auto; height: 16px; width: 16px; }
+.privacy-check em { color: var(--verm); font-style: normal; font-weight: 800; }
+.cta-note.err { color: #b42318; }
+.inquiry-modal { align-items: center; background: rgba(14,27,60,.55); display: flex; inset: 0; justify-content: center; padding: 24px; position: fixed; z-index: 300; }
+.inquiry-modal-card { background: #fff; border-radius: 16px; box-shadow: 0 24px 64px rgba(14,27,60,.28); max-width: 400px; padding: 36px 32px 32px; text-align: center; width: 100%; }
+.inquiry-modal-icon { align-items: center; background: var(--verm); border-radius: 50%; color: #fff; display: grid; font-size: 24px; font-weight: 900; height: 52px; margin: 0 auto 18px; place-items: center; width: 52px; }
+.inquiry-modal-card h3 { color: var(--navy); font-size: 24px; font-weight: 900; letter-spacing: -.04em; margin-bottom: 10px; }
+.inquiry-modal-card p { color: var(--t2); font-size: 15px; line-height: 1.65; margin-bottom: 24px; }
+.inquiry-modal-card .btn { min-width: 120px; }

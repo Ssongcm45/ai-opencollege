@@ -65,11 +65,16 @@ const inquirySchema = z.object({
   email: z.string().email().min(1),
   phone: z.string().min(1),
   audience: z.string().optional(),
-  message: z.string().min(1)
+  message: z.string().min(1),
+  privacy: z.literal("on")
 });
 
 export async function createInquiry(_: unknown, formData: FormData) {
-  const data = inquirySchema.parse(Object.fromEntries(formData));
+  const result = inquirySchema.safeParse(Object.fromEntries(formData));
+  if (!result.success) {
+    return { ok: false, message: "필수 입력 항목과 개인정보 수집 및 이용 동의 여부를 확인해주세요." };
+  }
+  const data = result.data;
 
   if (hasDatabase) {
     await getDb().insert(inquiries).values({
