@@ -100,7 +100,7 @@ export function ThumbnailUpload({ name = "thumbnailUrl", defaultValue }: Props) 
         <p style={{ color: "#dc2626", fontSize: 13, marginTop: 6 }}>{error}</p>
       ) : null}
       <p style={{ color: "#9ca3af", fontSize: 12, marginTop: 6 }}>
-        JPG/PNG 등 어떤 형식이든 WebP로 자동 변환됩니다. 권장 비율 16:9, 최대 4MB.
+        JPG/PNG 등 어떤 형식이든 WebP로 자동 변환됩니다. 권장 비율: 포트폴리오 4:3, 블로그·출강사례 16:9. 최대 4MB.
       </p>
     </div>
   );
