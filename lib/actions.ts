@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Resend } from "resend";
+import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
 import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } from "@/lib/auth";
 import { getDb, hasDatabase } from "@/lib/db";
@@ -36,6 +37,15 @@ function escapeHtml(value: string | undefined): string {
 
 function safeSubject(value: string): string {
   return value.replace(/[\r\n]/g, " ").trim();
+}
+
+function sanitizeContent(html: string): string {
+  return sanitizeHtml(html, {
+    allowedTags: ["p", "br", "hr", "h1", "h2", "h3", "h4", "h5", "h6", "strong", "b", "em", "i", "del", "s", "u", "ul", "ol", "li", "blockquote", "a", "code", "pre", "span", "table", "thead", "tbody", "tr", "th", "td", "img"],
+    allowedAttributes: { a: ["href", "target", "rel"], img: ["src", "alt"], "*": ["class"] },
+    allowedSchemes: ["http", "https", "mailto"],
+    disallowedTagsMode: "discard"
+  });
 }
 
 function ensureDb() {
@@ -125,18 +135,48 @@ export async function setupAdminPassword(formData: FormData) {
   redirect("/admin");
 }
 
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_MINUTES = 10;
+
 export async function loginAdmin(formData: FormData) {
   if (!hasDatabase) redirect("/admin/login?error=nodb");
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
 
-  if (email.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()) redirect("/admin/login?error=1");
-
   const db = getDb();
   const rows = await db.select().from(adminConfig).where(eq(adminConfig.id, 1));
-  const stored = rows[0]?.passwordHash;
-  if (!stored || !verifyPassword(password, stored)) redirect("/admin/login?error=1");
+  const config = rows[0];
 
+  // 잠금 상태면 비밀번호 검증 없이 차단한다.
+  if (config?.lockedUntil && config.lockedUntil.getTime() > Date.now()) {
+    redirect("/admin/login?error=locked");
+  }
+
+  const emailOk = email.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  const stored = config?.passwordHash;
+  const passwordOk = !!stored && verifyPassword(password, stored);
+
+  if (!emailOk || !passwordOk) {
+    // 설정 행이 존재할 때만 실패 카운터를 증가시킨다.
+    if (config) {
+      const nextAttempts = (config.failedAttempts ?? 0) + 1;
+      let justLocked = false;
+      if (nextAttempts >= MAX_LOGIN_ATTEMPTS) {
+        await db
+          .update(adminConfig)
+          .set({ failedAttempts: 0, lockedUntil: new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000) })
+          .where(eq(adminConfig.id, 1));
+        justLocked = true;
+      } else {
+        await db.update(adminConfig).set({ failedAttempts: nextAttempts }).where(eq(adminConfig.id, 1));
+      }
+      redirect(justLocked ? "/admin/login?error=locked" : "/admin/login?error=1");
+    }
+    redirect("/admin/login?error=1");
+  }
+
+  // 성공: 실패 카운터/잠금 초기화 후 세션 발급.
+  await db.update(adminConfig).set({ failedAttempts: 0, lockedUntil: null }).where(eq(adminConfig.id, 1));
   await setAdminSessionCookie();
   redirect("/admin");
 }
@@ -157,7 +197,7 @@ export async function createPost(formData: FormData) {
     slug: String(formData.get("slug") ?? ""),
     category: String(formData.get("category") ?? "METHOD"),
     excerpt: String(formData.get("excerpt") ?? ""),
-    content: String(formData.get("content") ?? ""),
+    content: sanitizeContent(String(formData.get("content") ?? "")),
     published,
     featured: formData.get("featured") === "on",
     publishedAt: published ? now : null,
@@ -177,7 +217,7 @@ export async function updatePost(id: string, formData: FormData) {
     slug: String(formData.get("slug") ?? ""),
     category: String(formData.get("category") ?? ""),
     excerpt: String(formData.get("excerpt") ?? ""),
-    content: String(formData.get("content") ?? ""),
+    content: sanitizeContent(String(formData.get("content") ?? "")),
     published,
     featured: formData.get("featured") === "on",
     publishedAt: published ? (existing?.publishedAt ?? new Date()) : null,
@@ -206,7 +246,7 @@ export async function createCase(formData: FormData) {
     clientType: String(formData.get("clientType") ?? ""),
     hours: String(formData.get("hours") ?? ""),
     summary: String(formData.get("summary") ?? ""),
-    content: String(formData.get("content") ?? ""),
+    content: sanitizeContent(String(formData.get("content") ?? "")),
     order: Number(formData.get("order") ?? 0),
     published: formData.get("published") === "on",
     updatedAt: now
@@ -224,7 +264,7 @@ export async function updateCase(id: string, formData: FormData) {
     clientType: String(formData.get("clientType") ?? ""),
     hours: String(formData.get("hours") ?? ""),
     summary: String(formData.get("summary") ?? ""),
-    content: String(formData.get("content") ?? ""),
+    content: sanitizeContent(String(formData.get("content") ?? "")),
     order: Number(formData.get("order") ?? 0),
     published: formData.get("published") === "on",
     updatedAt: new Date()

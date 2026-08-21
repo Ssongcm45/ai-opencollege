@@ -22,6 +22,7 @@ export default async function AdminLoginPage({
     params.error === "short" ? "비밀번호는 8자 이상이어야 합니다." :
     params.error === "email" ? "등록된 이메일이 아닙니다." :
     params.error === "nodb" ? "데이터베이스 연결이 필요합니다." :
+    params.error === "locked" ? "로그인 시도가 너무 많습니다. 10분 후 다시 시도해 주세요." :
     params.error === "1" ? "이메일 또는 비밀번호가 올바르지 않습니다." :
     null;
 

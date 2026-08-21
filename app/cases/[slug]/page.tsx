@@ -2,19 +2,21 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { getCaseBySlug } from "@/lib/content";
+import { getCaseBySlug, getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const item = await getCaseBySlug(slug);
   if (!item) return {};
+  const settings = await getSiteSettings().catch(() => null);
   return {
     title: `${item.title} · AI OpenCollege`,
     description: item.summary,
     openGraph: {
       title: item.title,
       description: item.summary,
-      type: "article"
+      type: "article",
+      ...(settings?.ogImageUrl ? { images: [settings.ogImageUrl] } : {})
     }
   };
 }

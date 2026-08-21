@@ -11,6 +11,8 @@ import {
 export const adminConfig = pgTable("admin_config", {
   id: integer("id").primaryKey().default(1),
   passwordHash: text("password_hash"),
+  failedAttempts: integer("failed_attempts").notNull().default(0),
+  lockedUntil: timestamp("locked_until", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
 });
 

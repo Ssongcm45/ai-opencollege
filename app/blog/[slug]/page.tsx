@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { getPostBySlug } from "@/lib/content";
+import { getPostBySlug, getSiteSettings } from "@/lib/content";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) return {};
+  const settings = await getSiteSettings().catch(() => null);
   return {
     title: `${post.title} · AI OpenCollege`,
     description: post.excerpt,
@@ -15,7 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: post.title,
       description: post.excerpt,
       type: "article",
-      publishedTime: post.publishedAt?.toISOString()
+      publishedTime: post.publishedAt?.toISOString(),
+      ...(settings?.ogImageUrl ? { images: [settings.ogImageUrl] } : {})
     }
   };
 }
