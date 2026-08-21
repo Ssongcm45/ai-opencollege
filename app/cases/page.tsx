@@ -25,12 +25,12 @@ export default async function CasesPage() {
 
               return (
                 <Link href={`/cases/${item.slug}`} className="field-item" key={item.slug}>
-                  {embed ? (
+                  {item.thumbnailUrl ? (
+                    <img className="card-thumb field-thumb" src={item.thumbnailUrl} alt={item.title} loading="lazy" />
+                  ) : embed ? (
                     <div className="video-embed">
                       <iframe src={embed.embedUrl} title={item.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" />
                     </div>
-                  ) : item.thumbnailUrl ? (
-                    <img className="card-thumb field-thumb" src={item.thumbnailUrl} alt={item.title} loading="lazy" />
                   ) : null}
                 <div className="field-no">CASE {String(index + 1).padStart(2, "0")}</div>
                 <div className="field-main"><h3>{item.title}</h3><p>{item.summary}</p></div>

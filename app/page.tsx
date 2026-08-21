@@ -169,10 +169,10 @@ export default async function HomePage() {
                 const embed = getVideoEmbed(item.videoUrl);
                 return (
                   <Link href={`/portfolio/${item.id}`} className="work-card" key={item.id}>
-                    {embed ? (
-                      <div className="video-embed work-thumb-media"><iframe src={embed.embedUrl} title={item.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" /></div>
-                    ) : item.thumbnailUrl ? (
+                    {item.thumbnailUrl ? (
                       <img className="work-thumb-img" src={item.thumbnailUrl} alt={item.title} loading="lazy" />
+                    ) : embed ? (
+                      <div className="video-embed work-thumb-media"><iframe src={embed.embedUrl} title={item.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin" /></div>
                     ) : (
                       <div className="work-thumb" />
                     )}
