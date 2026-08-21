@@ -2,6 +2,7 @@
 
 import crypto from "crypto";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Resend } from "resend";
 import { z } from "zod";
@@ -39,6 +40,12 @@ function safeSubject(value: string): string {
 
 function ensureDb() {
   if (!hasDatabase) throw new Error("데이터베이스 연결이 필요합니다.");
+}
+
+// 정적으로 프리렌더된 공개 페이지(홈·목록·사이트맵)에 CMS 변경을 즉시 반영한다.
+function revalidatePublic() {
+  revalidatePath("/", "layout");
+  revalidatePath("/sitemap.xml");
 }
 
 // ── Public: Inquiry ──────────────────────────────────────
@@ -156,6 +163,7 @@ export async function createPost(formData: FormData) {
     publishedAt: published ? now : null,
     updatedAt: now
   });
+  revalidatePublic();
   redirect("/admin/blog");
 }
 
@@ -163,6 +171,7 @@ export async function updatePost(id: string, formData: FormData) {
   await requireAdminSession();
   ensureDb();
   const published = formData.get("published") === "on";
+  const [existing] = await getDb().select().from(blogPosts).where(eq(blogPosts.id, id)).limit(1);
   await getDb().update(blogPosts).set({
     title: String(formData.get("title") ?? ""),
     slug: String(formData.get("slug") ?? ""),
@@ -171,9 +180,10 @@ export async function updatePost(id: string, formData: FormData) {
     content: String(formData.get("content") ?? ""),
     published,
     featured: formData.get("featured") === "on",
-    publishedAt: published ? new Date() : null,
+    publishedAt: published ? (existing?.publishedAt ?? new Date()) : null,
     updatedAt: new Date()
   }).where(eq(blogPosts.id, id));
+  revalidatePublic();
   redirect("/admin/blog");
 }
 
@@ -181,6 +191,7 @@ export async function deletePost(id: string) {
   await requireAdminSession();
   ensureDb();
   await getDb().delete(blogPosts).where(eq(blogPosts.id, id));
+  revalidatePublic();
   redirect("/admin/blog");
 }
 
@@ -200,6 +211,7 @@ export async function createCase(formData: FormData) {
     published: formData.get("published") === "on",
     updatedAt: now
   });
+  revalidatePublic();
   redirect("/admin/portfolio");
 }
 
@@ -217,6 +229,7 @@ export async function updateCase(id: string, formData: FormData) {
     published: formData.get("published") === "on",
     updatedAt: new Date()
   }).where(eq(fieldCases.id, id));
+  revalidatePublic();
   redirect("/admin/portfolio");
 }
 
@@ -224,6 +237,7 @@ export async function deleteCase(id: string) {
   await requireAdminSession();
   ensureDb();
   await getDb().delete(fieldCases).where(eq(fieldCases.id, id));
+  revalidatePublic();
   redirect("/admin/portfolio");
 }
 
@@ -269,5 +283,6 @@ export async function saveSettings(formData: FormData) {
     .insert(siteSettings)
     .values({ id: 1, ...data })
     .onConflictDoUpdate({ target: siteSettings.id, set: data });
+  revalidatePublic();
   redirect("/admin/settings?saved=1");
 }

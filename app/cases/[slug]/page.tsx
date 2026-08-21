@@ -1,7 +1,23 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getCaseBySlug } from "@/lib/content";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const item = await getCaseBySlug(slug);
+  if (!item) return {};
+  return {
+    title: `${item.title} · AI OpenCollege`,
+    description: item.summary,
+    openGraph: {
+      title: item.title,
+      description: item.summary,
+      type: "article"
+    }
+  };
+}
 
 export default async function CaseDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

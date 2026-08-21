@@ -13,21 +13,21 @@
     "db:seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
-    "@neondatabase/serverless": "latest",
+    "@neondatabase/serverless": "^1.1.0",
     "@toast-ui/editor": "^3.2.2",
-    "drizzle-orm": "latest",
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest",
+    "drizzle-orm": "^0.45.2",
+    "next": "^16.2.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "resend": "^6.12.3",
-    "zod": "latest"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "drizzle-kit": "latest",
-    "tsx": "latest",
-    "typescript": "latest"
+    "@types/node": "^25.8.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.22.1",
+    "typescript": "^6.0.3"
   }
 }
