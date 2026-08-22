@@ -100,6 +100,8 @@ export const checkGroups = pgTable("check_groups", {
   name: varchar("name", { length: 120 }).notNull(),
   code: varchar("code", { length: 40 }).notNull().unique(),
   active: boolean("active").notNull().default(true),
+  aiSummary: text("ai_summary"),
+  aiSummaryAt: timestamp("ai_summary_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
 });
 

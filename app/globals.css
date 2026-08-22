@@ -641,3 +641,43 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
   @page { margin: 14mm; size: A4; }
   body { background: #fff; }
 }
+
+/* Report — extended sections (recipient, AI summary, comment, curriculum) */
+.report-recipient { color: #0f1623; font-size: 13px; font-weight: 700; margin-top: 12px; }
+.report-summary p { color: #374151; font-size: 13px; line-height: 1.7; margin: 0 0 10px; white-space: pre-wrap; }
+.report-summary p:last-child { margin-bottom: 0; }
+.report-pre { color: #374151; font-size: 13px; line-height: 1.7; margin: 0; white-space: pre-wrap; }
+.report-foot-disclaimer { margin-top: 8px; }
+
+/* Report modal */
+.report-modal-overlay { align-items: flex-start; background: rgba(15, 22, 35, .55); display: flex; inset: 0; justify-content: center; overflow-y: auto; padding: 32px 16px; position: fixed; z-index: 400; }
+.report-modal-panel { background: #fff; border-radius: 14px; box-shadow: 0 24px 64px rgba(0, 0, 0, .3); display: flex; flex-direction: column; max-height: calc(100vh - 64px); max-width: 1000px; overflow-y: auto; width: 100%; }
+.report-modal-controls { border-bottom: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 14px; padding: 24px 28px; }
+.report-modal-controls-head { align-items: center; display: flex; justify-content: space-between; }
+.report-modal-title { color: #0f1623; font-size: 16px; font-weight: 800; }
+.report-modal-row { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+.report-modal-field { display: flex; flex-direction: column; gap: 6px; }
+.report-modal-label { color: #374151; font-size: 12px; font-weight: 700; }
+.report-modal-field textarea.cms-input { font-family: inherit; line-height: 1.6; resize: vertical; }
+.report-modal-summary { align-items: flex-start; display: flex; gap: 12px; }
+.report-modal-summary-preview { background: #f8fafc; border-radius: 8px; color: #374151; flex: 1; font-size: 12px; line-height: 1.6; margin: 0; padding: 10px 12px; }
+.report-modal-small-btn { flex-shrink: 0; font-size: 12px; padding: 8px 14px; }
+.report-modal-error { color: #b91c1c; font-size: 12px; margin: 0; }
+.report-modal-actions { display: flex; gap: 10px; margin-top: 4px; }
+.report-in-modal { padding: 32px; }
+
+/* Print scoping — when a report modal is open, print only the report content.
+   visibility (not display) hides the whole page while keeping the fixed overlay
+   subtree paintable regardless of nesting depth; the overlay is then reset to
+   flow layout so it prints from the top of the page. */
+@media print {
+  body.printing-report * { visibility: hidden; }
+  body.printing-report .report-modal-overlay,
+  body.printing-report .report-modal-overlay * { visibility: visible; }
+  body.printing-report .report-modal-controls { display: none !important; }
+  body.printing-report .report-modal-overlay { background: #fff; display: block; inset: auto; overflow: visible; padding: 0; position: static; }
+  body.printing-report .report-modal-panel { border-radius: 0; box-shadow: none; max-height: none; max-width: none; overflow: visible; }
+  body.printing-report .report-in-modal { padding: 0; }
+}
+
+.report-modal-model { margin-bottom: 8px; }

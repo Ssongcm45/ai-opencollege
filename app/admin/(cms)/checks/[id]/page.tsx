@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ReportModal } from "@/components/admin/ReportModal";
 import { getCheckGroupById, getGroupResponses, getGroupStats } from "@/lib/check-data";
 import { AREAS, MATURITY_LEVELS, type AreaKey } from "@/lib/diagnostic";
 
@@ -24,11 +25,24 @@ export default async function CheckStatsPage({
   if (!group) notFound();
 
   const [stats, responses] = await Promise.all([getGroupStats(group.id), getGroupResponses(group.id)]);
+  const participants = responses.map((response) => ({
+    name: response.name,
+    department: response.department,
+    position: response.position,
+    finalLevel: response.finalLevel,
+    validAverage: response.validAverage
+  }));
 
   return (
     <>
       <div className="cms-header">
-        <a className="cms-btn cms-btn-primary" href={`/admin/report/${group.id}`} target="_blank" rel="noreferrer">PDF 리포트</a>
+        <ReportModal
+          groupName={group.name}
+          groupId={group.id}
+          stats={stats}
+          participants={participants}
+          initialAiSummary={group.aiSummary ?? null}
+        />
         <h1 className="cms-page-title">{group.name} · 조직 역량 통계</h1>
         <Link href="/admin/checks" className="cms-link">← 목록으로</Link>
       </div>
