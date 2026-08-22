@@ -1,13 +1,20 @@
 import { getSiteSettings } from "@/lib/content";
-import { saveSettings } from "@/lib/actions";
+import { changeAdminPassword, saveSettings } from "@/lib/actions";
+
+const PW_ERRORS: Record<string, string> = {
+  current: "현재 비밀번호가 일치하지 않습니다.",
+  short: "새 비밀번호는 8자 이상이어야 합니다.",
+  mismatch: "새 비밀번호와 확인이 일치하지 않습니다."
+};
 
 export default async function SettingsPage({
   searchParams
 }: {
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ saved?: string; pwsaved?: string; pwerror?: string }>;
 }) {
   const params = await searchParams;
   const settings = await getSiteSettings();
+  const pwError = params.pwerror ? PW_ERRORS[params.pwerror] : undefined;
 
   return (
     <>
@@ -111,6 +118,41 @@ export default async function SettingsPage({
 
         <div className="cms-actions">
           <button type="submit" className="cms-btn cms-btn-primary" style={{ minWidth: 120 }}>설정 저장</button>
+        </div>
+      </form>
+
+      {/* 관리자 비밀번호 변경 — 위 설정 폼과 분리된 독립 폼 */}
+      <form action={changeAdminPassword} className="cms-form" style={{ marginTop: 20 }}>
+        <div className="cms-card">
+          <div className="settings-section-title">관리자 비밀번호 변경</div>
+          {params.pwsaved && (
+            <p style={{ background: "#dcfce7", color: "#15803d", borderRadius: 8, fontSize: 13, fontWeight: 700, padding: "8px 16px", margin: "0 0 12px" }}>
+              ✓ 비밀번호가 변경되었습니다. 다른 기기의 세션은 모두 로그아웃되었습니다.
+            </p>
+          )}
+          {pwError && (
+            <p style={{ background: "#fee2e2", color: "#b91c1c", borderRadius: 8, fontSize: 13, fontWeight: 700, padding: "8px 16px", margin: "0 0 12px" }}>
+              {pwError}
+            </p>
+          )}
+          <div className="cms-form">
+            <div className="cms-field">
+              <label className="cms-label">현재 비밀번호</label>
+              <input className="cms-input" type="password" name="currentPassword" autoComplete="current-password" required />
+            </div>
+            <div className="cms-field">
+              <label className="cms-label">새 비밀번호</label>
+              <input className="cms-input" type="password" name="newPassword" autoComplete="new-password" required />
+              <p className="cms-hint">8자 이상 입력하세요.</p>
+            </div>
+            <div className="cms-field">
+              <label className="cms-label">새 비밀번호 확인</label>
+              <input className="cms-input" type="password" name="confirm" autoComplete="new-password" required />
+            </div>
+          </div>
+          <div className="cms-actions">
+            <button type="submit" className="cms-btn cms-btn-primary" style={{ minWidth: 120 }}>비밀번호 변경</button>
+          </div>
         </div>
       </form>
     </>

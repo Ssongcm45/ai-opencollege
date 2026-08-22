@@ -10,6 +10,7 @@ const nav = [
   { href: "/admin/portfolio", label: "수강생 포트폴리오", icon: "◉" },
   { href: "/admin/inquiries", label: "문의 관리", icon: "✉" },
   { href: "/admin/checks", label: "AI학습체크", icon: "✓" },
+  { href: "/admin/security", label: "보안", icon: "⛨" },
   { href: "/admin/settings", label: "설정", icon: "◎" }
 ];
 

@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Resend } from "resend";
 import { z } from "zod";
+import { audit } from "@/lib/audit";
 import { requireAdminSession } from "@/lib/auth";
 import { getGroupStats } from "@/lib/check-data";
 import { isAllowedAiModel } from "@/lib/ai-models";
@@ -404,6 +405,7 @@ export async function createCheckGroup(formData: FormData) {
     code = randomCode();
     await db.insert(checkGroups).values({ name: name.slice(0, 120), code });
   }
+  await audit("check.group-create", name.slice(0, 120));
   revalidatePath("/admin/checks");
   redirect("/admin/checks");
 }
@@ -416,6 +418,7 @@ export async function toggleCheckGroup(id: string) {
   if (group) {
     await db.update(checkGroups).set({ active: !group.active }).where(eq(checkGroups.id, id));
   }
+  await audit("check.group-toggle", id);
   revalidatePath("/admin/checks");
   redirect("/admin/checks");
 }
@@ -426,6 +429,7 @@ export async function deleteCheckGroup(id: string) {
   const db = getDb();
   await db.delete(checkResponses).where(eq(checkResponses.groupId, id));
   await db.delete(checkGroups).where(eq(checkGroups.id, id));
+  await audit("check.group-delete", id);
   revalidatePath("/admin/checks");
   redirect("/admin/checks");
 }
@@ -548,6 +552,7 @@ export async function generateAiSummary(
     return { ok: false, message: "AI 총평 저장에 실패했습니다." };
   }
 
+  await audit("check.ai-summary", `${groupId} · ${model ?? "default"}`);
   revalidatePath(`/admin/checks/${groupId}`);
   return { ok: true, summary };
 }

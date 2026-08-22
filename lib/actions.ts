@@ -3,10 +3,12 @@
 import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Resend } from "resend";
 import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
+import { audit } from "@/lib/audit";
 import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } from "@/lib/auth";
 import { getDb, hasDatabase } from "@/lib/db";
 import { adminConfig, categories, blogPosts, fieldCases, inquiries, portfolioItems, siteSettings } from "@/lib/db/schema";
@@ -133,17 +135,45 @@ export async function setupAdminPassword(formData: FormData) {
   if (existing.length > 0 && existing[0].passwordHash) redirect("/admin/login?error=1");
 
   const passwordHash = hashPassword(password);
+  let sessionVersion = 1;
   if (existing.length === 0) {
     await db.insert(adminConfig).values({ id: 1, passwordHash });
   } else {
+    sessionVersion = existing[0].sessionVersion ?? 1;
     await db.update(adminConfig).set({ passwordHash }).where(eq(adminConfig.id, 1));
   }
-  await setAdminSessionCookie();
+  await audit("password.setup");
+  await setAdminSessionCookie(sessionVersion);
   redirect("/admin");
 }
 
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 10;
+
+// 로그인 알림 이메일 발송(실패해도 로그인 흐름을 막지 않도록 try/catch로 감싸 await).
+async function sendLoginNotification() {
+  if (!process.env.RESEND_API_KEY) return;
+  try {
+    const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() || "-";
+    const kst = new Date().toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    await resend.emails.send({
+      from: process.env.RESEND_FROM ?? "AI OpenCollege <edu@opencollege.co.kr>",
+      to: ADMIN_EMAIL,
+      subject: "[AI OpenCollege] 관리자 로그인 알림",
+      html: `
+        <h2>관리자 계정 로그인이 감지되었습니다</h2>
+        <table cellpadding="8" style="border-collapse:collapse">
+          <tr><td><strong>시각 (KST)</strong></td><td>${escapeHtml(kst)}</td></tr>
+          <tr><td><strong>IP</strong></td><td>${escapeHtml(ip)}</td></tr>
+        </table>
+        <p style="color:#6b7280;font-size:13px">본인이 아니라면 즉시 비밀번호를 변경하고 세션을 폐기하세요.</p>
+      `
+    });
+  } catch (e) {
+    console.error("[Resend] 로그인 알림 발송 실패:", e);
+  }
+}
 
 export async function loginAdmin(formData: FormData) {
   if (!hasDatabase) redirect("/admin/login?error=nodb");
@@ -156,6 +186,7 @@ export async function loginAdmin(formData: FormData) {
 
   // 잠금 상태면 비밀번호 검증 없이 차단한다.
   if (config?.lockedUntil && config.lockedUntil.getTime() > Date.now()) {
+    await audit("login.fail", "locked");
     redirect("/admin/login?error=locked");
   }
 
@@ -177,20 +208,55 @@ export async function loginAdmin(formData: FormData) {
       } else {
         await db.update(adminConfig).set({ failedAttempts: nextAttempts }).where(eq(adminConfig.id, 1));
       }
+      await audit(justLocked ? "login.locked" : "login.fail", "잘못된 자격 증명");
       redirect(justLocked ? "/admin/login?error=locked" : "/admin/login?error=1");
     }
+    await audit("login.fail", "잘못된 자격 증명");
     redirect("/admin/login?error=1");
   }
 
   // 성공: 실패 카운터/잠금 초기화 후 세션 발급.
   await db.update(adminConfig).set({ failedAttempts: 0, lockedUntil: null }).where(eq(adminConfig.id, 1));
-  await setAdminSessionCookie();
+  await audit("login.success");
+  // redirect()는 예외를 던지므로 이메일 발송을 그 전에 완료한다.
+  await sendLoginNotification();
+  await setAdminSessionCookie(config?.sessionVersion ?? 1);
   redirect("/admin");
 }
 
 export async function logoutAdmin() {
+  await audit("logout");
   await clearAdminSessionCookie();
   redirect("/admin/login");
+}
+
+// ── Admin: Change password ───────────────────────────────
+export async function changeAdminPassword(formData: FormData) {
+  await requireAdminSession();
+  ensureDb();
+  const currentPassword = String(formData.get("currentPassword") ?? "");
+  const newPassword = String(formData.get("newPassword") ?? "");
+  const confirm = String(formData.get("confirm") ?? "");
+
+  const db = getDb();
+  const [config] = await db.select().from(adminConfig).where(eq(adminConfig.id, 1)).limit(1);
+  const stored = config?.passwordHash;
+  if (!stored || !verifyPassword(currentPassword, stored)) {
+    redirect("/admin/settings?pwerror=current");
+  }
+  if (newPassword.length < 8) redirect("/admin/settings?pwerror=short");
+  if (newPassword !== confirm) redirect("/admin/settings?pwerror=mismatch");
+
+  // 새 해시 저장 + 세션 버전 증가(현재 브라우저 외 모든 세션 폐기).
+  const nextVersion = (config?.sessionVersion ?? 1) + 1;
+  await db
+    .update(adminConfig)
+    .set({ passwordHash: hashPassword(newPassword), sessionVersion: nextVersion })
+    .where(eq(adminConfig.id, 1));
+  await audit("password.change");
+  // 현재 브라우저는 새 버전으로 재발급해 로그인 유지.
+  await setAdminSessionCookie(nextVersion);
+  redirect("/admin/settings?pwsaved=1");
 }
 
 // ── Admin: Blog ──────────────────────────────────────────
@@ -211,6 +277,7 @@ export async function createPost(formData: FormData) {
     publishedAt: published ? now : null,
     updatedAt: now
   });
+  await audit("post.create", String(formData.get("title") ?? ""));
   revalidatePublic();
   redirect("/admin/blog");
 }
@@ -232,6 +299,7 @@ export async function updatePost(id: string, formData: FormData) {
     publishedAt: published ? (existing?.publishedAt ?? new Date()) : null,
     updatedAt: new Date()
   }).where(eq(blogPosts.id, id));
+  await audit("post.update", String(formData.get("title") ?? id));
   revalidatePublic();
   redirect("/admin/blog");
 }
@@ -240,6 +308,7 @@ export async function deletePost(id: string) {
   await requireAdminSession();
   ensureDb();
   await getDb().delete(blogPosts).where(eq(blogPosts.id, id));
+  await audit("post.delete", id);
   revalidatePublic();
   redirect("/admin/blog");
 }
@@ -262,6 +331,7 @@ export async function createCase(formData: FormData) {
     published: formData.get("published") === "on",
     updatedAt: now
   });
+  await audit("case.create", String(formData.get("title") ?? ""));
   revalidatePublic();
   redirect("/admin/cases");
 }
@@ -282,6 +352,7 @@ export async function updateCase(id: string, formData: FormData) {
     published: formData.get("published") === "on",
     updatedAt: new Date()
   }).where(eq(fieldCases.id, id));
+  await audit("case.update", String(formData.get("title") ?? id));
   revalidatePublic();
   redirect("/admin/cases");
 }
@@ -290,6 +361,7 @@ export async function deleteCase(id: string) {
   await requireAdminSession();
   ensureDb();
   await getDb().delete(fieldCases).where(eq(fieldCases.id, id));
+  await audit("case.delete", id);
   revalidatePublic();
   redirect("/admin/cases");
 }
@@ -309,6 +381,7 @@ export async function createPortfolioItem(formData: FormData) {
     published: formData.get("published") === "on",
     updatedAt: now
   });
+  await audit("portfolio.create", String(formData.get("title") ?? ""));
   revalidatePublic();
   redirect("/admin/portfolio");
 }
@@ -326,6 +399,7 @@ export async function updatePortfolioItem(id: string, formData: FormData) {
     published: formData.get("published") === "on",
     updatedAt: new Date()
   }).where(eq(portfolioItems.id, id));
+  await audit("portfolio.update", String(formData.get("title") ?? id));
   revalidatePublic();
   redirect("/admin/portfolio");
 }
@@ -334,6 +408,7 @@ export async function deletePortfolioItem(id: string) {
   await requireAdminSession();
   ensureDb();
   await getDb().delete(portfolioItems).where(eq(portfolioItems.id, id));
+  await audit("portfolio.delete", id);
   revalidatePublic();
   redirect("/admin/portfolio");
 }
@@ -355,6 +430,7 @@ export async function createCategory(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   if (!name) redirect("/admin/categories");
   await getDb().insert(categories).values({ scope, name }).onConflictDoNothing();
+  await audit("category.create", `${scope}:${name}`);
   redirect("/admin/categories");
 }
 
@@ -362,6 +438,7 @@ export async function deleteCategory(id: string) {
   await requireAdminSession();
   ensureDb();
   await getDb().delete(categories).where(eq(categories.id, id));
+  await audit("category.delete", id);
   redirect("/admin/categories");
 }
 
@@ -382,6 +459,7 @@ export async function saveSettings(formData: FormData) {
     .insert(siteSettings)
     .values({ id: 1, ...data })
     .onConflictDoUpdate({ target: siteSettings.id, set: data });
+  await audit("settings.save");
   revalidatePublic();
   redirect("/admin/settings?saved=1");
 }

@@ -16,6 +16,15 @@ export const adminConfig = pgTable("admin_config", {
   passwordHash: text("password_hash"),
   failedAttempts: integer("failed_attempts").notNull().default(0),
   lockedUntil: timestamp("locked_until", { withTimezone: true }),
+  sessionVersion: integer("session_version").notNull().default(1),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+});
+
+export const adminAuditLog = pgTable("admin_audit_log", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  action: varchar("action", { length: 60 }).notNull(),
+  detail: varchar("detail", { length: 300 }),
+  ip: varchar("ip", { length: 64 }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
 });
 
@@ -148,3 +157,4 @@ export type NewFieldCase = typeof fieldCases.$inferInsert;
 export type PortfolioItem = typeof portfolioItems.$inferSelect;
 export type Inquiry = typeof inquiries.$inferSelect;
 export type SiteSettings = typeof siteSettings.$inferSelect;
+export type AdminAuditLog = typeof adminAuditLog.$inferSelect;
