@@ -56,6 +56,8 @@ function ensureDb() {
 function revalidatePublic() {
   revalidatePath("/", "layout");
   revalidatePath("/sitemap.xml");
+  revalidatePath("/rss.xml");
+  revalidatePath("/llms.txt");
 }
 
 // ── Public: Inquiry ──────────────────────────────────────

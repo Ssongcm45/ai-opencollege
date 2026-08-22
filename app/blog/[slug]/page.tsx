@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getPostBySlug, getSiteSettings } from "@/lib/content";
 import { toHtmlBody } from "@/lib/html";
+import { siteUrl } from "@/lib/site";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -29,11 +30,29 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post || !post.published) notFound();
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified: post.updatedAt?.toISOString?.() ?? undefined,
+    image: post.thumbnailUrl ?? undefined,
+    mainEntityOfPage: `${siteUrl}/blog/${post.slug}`,
+    author: { "@type": "Organization", name: "AI OpenCollege" },
+    publisher: {
+      "@type": "Organization",
+      name: "AI OpenCollege",
+      logo: { "@type": "ImageObject", url: `${siteUrl}/logo.png` }
+    },
+    inLanguage: "ko"
+  };
 
   return (
     <>
       <Header />
       <main>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
         <section className="page-hero">
           <div className="wrap">
             <div className="ey">{post.category}</div>

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getPublishedCases, getPublishedPosts } from "@/lib/content";
+import { getPublishedCases, getPublishedPortfolio, getPublishedPosts } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -24,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    const [posts, cases] = await Promise.all([getPublishedPosts(), getPublishedCases()]);
+    const [posts, cases, portfolio] = await Promise.all([getPublishedPosts(), getPublishedCases(), getPublishedPortfolio()]);
 
     return [
       ...staticEntries,
@@ -35,7 +35,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...cases.map((item) => ({
         url: `${baseUrl}/cases/${item.slug}`,
         lastModified: item.updatedAt
-      }))
+      })),
+      ...portfolio
+        .filter((item) => /^[0-9a-f]{8}-/.test(item.id))
+        .map((item) => ({
+          url: `${baseUrl}/portfolio/${item.id}`,
+          lastModified: item.updatedAt
+        }))
     ];
   } catch {
     return staticEntries;

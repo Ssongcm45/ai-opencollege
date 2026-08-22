@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getCaseBySlug, getSiteSettings } from "@/lib/content";
 import { toHtmlBody } from "@/lib/html";
+import { siteUrl } from "@/lib/site";
 import { getVideoEmbed } from "@/lib/video";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -30,11 +31,29 @@ export default async function CaseDetailPage({ params }: { params: Promise<{ slu
   const item = await getCaseBySlug(slug);
   if (!item || !item.published) notFound();
   const embed = getVideoEmbed(item.videoUrl);
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: item.title,
+    description: item.summary,
+    datePublished: item.createdAt?.toISOString(),
+    dateModified: item.updatedAt?.toISOString?.() ?? undefined,
+    image: item.thumbnailUrl ?? undefined,
+    mainEntityOfPage: `${siteUrl}/cases/${item.slug}`,
+    author: { "@type": "Organization", name: "AI OpenCollege" },
+    publisher: {
+      "@type": "Organization",
+      name: "AI OpenCollege",
+      logo: { "@type": "ImageObject", url: `${siteUrl}/logo.png` }
+    },
+    inLanguage: "ko"
+  };
 
   return (
     <>
       <Header />
       <main>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
         <section className="page-hero">
           <div className="wrap">
             <div className="ey">{item.clientType} · {item.hours}</div>
