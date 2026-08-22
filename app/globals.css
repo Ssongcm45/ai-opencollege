@@ -310,7 +310,7 @@ footer { background: var(--navy); color: #fff; padding: 60px 0 30px; }
 .cms-sidebar-foot { border-top: 1px solid rgba(255,255,255,.08); padding: 16px; }
 .cms-logout { background: rgba(255,255,255,.08); border: none; border-radius: 8px; color: rgba(255,255,255,.6); cursor: pointer; font-size: 13px; font-weight: 600; padding: 9px 16px; transition: all .15s; width: 100%; }
 .cms-logout:hover { background: rgba(255,255,255,.14); color: #fff; }
-.cms-body { background: #f0f2f5; margin-left: 240px; min-height: 100vh; padding: 32px 36px; }
+.cms-body { background: #f0f2f5; flex: 1; margin-left: 240px; min-height: 100vh; min-width: 0; padding: 32px 36px; }
 
 /* ── CMS Components ────────────────────────────────────── */
 .cms-header { align-items: center; display: flex; justify-content: space-between; margin-bottom: 28px; }
