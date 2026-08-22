@@ -430,6 +430,15 @@ export async function setInquiryStatus(id: string, status: string) {
   redirect("/admin/inquiries");
 }
 
+export async function setInquiryStatusInline(id: string, status: string): Promise<{ ok: boolean }> {
+  await requireAdminSession();
+  ensureDb();
+  if (!["new", "read", "replied", "archived"].includes(status)) return { ok: false };
+  await getDb().update(inquiries).set({ status }).where(eq(inquiries.id, id));
+  await audit("inquiry.status", `${id} → ${status}`);
+  return { ok: true };
+}
+
 export async function deleteInquiry(id: string) {
   await requireAdminSession();
   ensureDb();

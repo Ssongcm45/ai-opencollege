@@ -73,10 +73,12 @@ export default async function DashboardPage() {
       <div className="cms-card">
         <div className="cms-card-head"><span className="cms-card-title">최근 문의</span><Link href="/admin/inquiries" className="cms-link">전체 보기 →</Link></div>
         {inquiries.slice(0, 5).map((inq) => (
-          <div key={inq.id} className="inq-row">
-            <div className="inq-top"><span className="inq-name">{inq.name}</span>{getStatusBadge(inq.status)}</div>
-            <div className="inq-meta">{[inq.organization, inq.phone, inq.email].filter(Boolean).join(" · ")}</div>
-            <div className="inq-msg">{inq.message}</div>
+          <div key={inq.id} className="cms-list-row">
+            <div>
+              <Link href="/admin/inquiries" className="cms-list-title">{inq.name}{inq.organization ? ` · ${inq.organization}` : ""}</Link>
+              <span style={{ color: "#9ca3af", fontSize: 12, marginLeft: 8 }}>{new Date(inq.createdAt).toLocaleString("ko-KR")}</span>
+            </div>
+            {getStatusBadge(inq.status)}
           </div>
         ))}
         {!inquiries.length && <p className="cms-empty">아직 문의가 없습니다.</p>}

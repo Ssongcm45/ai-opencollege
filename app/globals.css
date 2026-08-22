@@ -694,3 +694,8 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 }
 
 .report-modal-model { margin-bottom: 8px; }
+
+.inq-status-select { padding: 6px 10px; font-size: 13px; width: auto; min-width: 96px; }
+.inq-detail-row td { background: #f8fafc; }
+.inq-detail-actions { display: flex; gap: 8px; margin-top: 12px; align-items: center; }
+.cms-table tr.clickable { cursor: pointer; }
