@@ -699,3 +699,10 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 .inq-detail-row td { background: #f8fafc; }
 .inq-detail-actions { display: flex; gap: 8px; margin-top: 12px; align-items: center; }
 .cms-table tr.clickable { cursor: pointer; }
+.inq-note { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 8px; padding: 10px 12px; }
+.inq-note-date { color: #9ca3af; font-size: 11px; margin-bottom: 4px; display: flex; justify-content: space-between; }
+.inq-note-body { color: #111827; font-size: 13px; white-space: pre-wrap; }
+.inq-note-del { background: none; border: 0; color: #9ca3af; cursor: pointer; }
+.inq-note-form { display: flex; gap: 8px; margin-top: 10px; align-items: flex-start; }
+.inq-note-count { color: #9ca3af; font-size: 12px; margin-right: 4px; }
+.inq-notes-title { color: #374151; font-size: 13px; font-weight: 800; margin: 14px 0 8px; }

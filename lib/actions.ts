@@ -11,7 +11,7 @@ import { z } from "zod";
 import { audit } from "@/lib/audit";
 import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } from "@/lib/auth";
 import { getDb, hasDatabase } from "@/lib/db";
-import { adminConfig, categories, blogPosts, fieldCases, inquiries, portfolioItems, siteSettings } from "@/lib/db/schema";
+import { adminConfig, categories, blogPosts, fieldCases, inquiries, inquiryNotes, portfolioItems, siteSettings } from "@/lib/db/schema";
 
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com").trim();
 
@@ -439,9 +439,28 @@ export async function setInquiryStatusInline(id: string, status: string): Promis
   return { ok: true };
 }
 
+export async function addInquiryNote(inquiryId: string, body: string): Promise<{ ok: boolean; note?: { id: string; body: string; createdAt: string } }> {
+  await requireAdminSession();
+  ensureDb();
+  const trimmedBody = body.trim();
+  if (!trimmedBody || trimmedBody.length > 2000) return { ok: false };
+  const [note] = await getDb().insert(inquiryNotes).values({ inquiryId, body: trimmedBody }).returning();
+  await audit("inquiry.note-add", inquiryId);
+  return { ok: true, note: { id: note.id, body: note.body, createdAt: note.createdAt.toISOString() } };
+}
+
+export async function deleteInquiryNote(id: string): Promise<{ ok: boolean }> {
+  await requireAdminSession();
+  ensureDb();
+  await getDb().delete(inquiryNotes).where(eq(inquiryNotes.id, id));
+  await audit("inquiry.note-delete", id);
+  return { ok: true };
+}
+
 export async function deleteInquiry(id: string) {
   await requireAdminSession();
   ensureDb();
+  await getDb().delete(inquiryNotes).where(eq(inquiryNotes.inquiryId, id));
   await getDb().delete(inquiries).where(eq(inquiries.id, id));
   await audit("inquiry.delete", id);
   redirect("/admin/inquiries");

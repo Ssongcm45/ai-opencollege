@@ -1,6 +1,6 @@
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { getDb, hasDatabase } from "@/lib/db";
-import { categories, blogPosts, fieldCases, inquiries, portfolioItems, siteSettings, type NewBlogPost, type NewFieldCase } from "@/lib/db/schema";
+import { categories, blogPosts, fieldCases, inquiries, inquiryNotes, portfolioItems, siteSettings, type NewBlogPost, type NewFieldCase } from "@/lib/db/schema";
 
 export const fallbackPosts = [
   {
@@ -215,6 +215,12 @@ export async function getPortfolioById(id: string) {
 export async function getAllInquiries() {
   if (!hasDatabase) return [];
   return getDb().select().from(inquiries).orderBy(desc(inquiries.createdAt));
+}
+
+export async function getAllInquiryNotes(): Promise<{ id: string; inquiryId: string; body: string; createdAt: string }[]> {
+  if (!hasDatabase) return [];
+  const notes = await getDb().select().from(inquiryNotes).orderBy(asc(inquiryNotes.createdAt));
+  return notes.map((note) => ({ ...note, createdAt: note.createdAt.toISOString() }));
 }
 
 export type CategoryScope = "blog" | "case" | "portfolio";

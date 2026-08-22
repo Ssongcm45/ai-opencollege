@@ -84,6 +84,13 @@ export const inquiries = pgTable("inquiries", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
 });
 
+export const inquiryNotes = pgTable("inquiry_notes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  inquiryId: uuid("inquiry_id").notNull(),
+  body: text("body").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+});
+
 export const categories = pgTable("categories", {
   id: uuid("id").primaryKey().defaultRandom(),
   scope: varchar("scope", { length: 20 }).notNull(),

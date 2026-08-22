@@ -1,11 +1,16 @@
 import { InquiryTable, type InquiryRow } from "@/components/admin/InquiryTable";
-import { getAllInquiries } from "@/lib/content";
+import { getAllInquiries, getAllInquiryNotes } from "@/lib/content";
 
 export default async function InquiriesPage() {
-  const inquiries = await getAllInquiries();
+  const [inquiries, inquiryNotes] = await Promise.all([getAllInquiries(), getAllInquiryNotes()]);
+  const notesByInquiryId = inquiryNotes.reduce<Record<string, { id: string; body: string; createdAt: string }[]>>((notes, note) => {
+    (notes[note.inquiryId] ??= []).push({ id: note.id, body: note.body, createdAt: note.createdAt });
+    return notes;
+  }, {});
   const rows: InquiryRow[] = inquiries.map((inquiry) => ({
     ...inquiry,
-    createdAt: inquiry.createdAt.toISOString()
+    createdAt: inquiry.createdAt.toISOString(),
+    notes: notesByInquiryId[inquiry.id] ?? []
   }));
   const newCount = rows.filter((row) => row.status === "new").length;
 
