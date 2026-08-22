@@ -72,6 +72,21 @@ export async function getCheckGroupById(id: string): Promise<CheckGroup | null> 
   return group ?? null;
 }
 
+export async function getGroupResponses(groupId: string): Promise<CheckResponse[]> {
+  if (!hasDatabase) return [];
+  return getDb()
+    .select()
+    .from(checkResponses)
+    .where(eq(checkResponses.groupId, groupId))
+    .orderBy(desc(checkResponses.createdAt));
+}
+
+export async function getResponseById(id: string): Promise<CheckResponse | null> {
+  if (!hasDatabase || !UUID_RE.test(id)) return null;
+  const [response] = await getDb().select().from(checkResponses).where(eq(checkResponses.id, id)).limit(1);
+  return response ?? null;
+}
+
 export interface GroupStats {
   n: number;
   avgValidAverage: number;

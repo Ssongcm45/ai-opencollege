@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCheckGroupById, getGroupStats } from "@/lib/check-data";
+import { getCheckGroupById, getGroupResponses, getGroupStats } from "@/lib/check-data";
 import { AREAS, MATURITY_LEVELS, type AreaKey } from "@/lib/diagnostic";
 
 const AREA_KEYS: AreaKey[] = ["A", "B", "C", "D", "E"];
 
 function pct(value: number): string {
   return `${Math.round(value * 100)}%`;
+}
+
+function formatDateTime(date: Date): string {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
 export default async function CheckStatsPage({
@@ -18,7 +23,7 @@ export default async function CheckStatsPage({
   const group = await getCheckGroupById(id);
   if (!group) notFound();
 
-  const stats = await getGroupStats(group.id);
+  const [stats, responses] = await Promise.all([getGroupStats(group.id), getGroupResponses(group.id)]);
 
   return (
     <>
@@ -180,6 +185,44 @@ export default async function CheckStatsPage({
           </div>
         </>
       )}
+
+      <div className="cms-card">
+        <div className="cms-card-head">
+          <span className="cms-card-title">개별 응답</span>
+        </div>
+        {responses.length === 0 ? (
+          <p className="cms-empty">아직 응답이 없습니다.</p>
+        ) : (
+          <table className="cms-table">
+            <thead>
+              <tr>
+                <th>이름</th>
+                <th>부서</th>
+                <th>직급</th>
+                <th>Level</th>
+                <th>평균</th>
+                <th>게이트</th>
+                <th>제출일시</th>
+                <th>상세보기</th>
+              </tr>
+            </thead>
+            <tbody>
+              {responses.map((response) => (
+                <tr key={response.id}>
+                  <td>{response.name ?? "익명(테스트)"}</td>
+                  <td>{response.department ?? "-"}</td>
+                  <td>{response.position ?? "-"}</td>
+                  <td>{response.finalLevel}</td>
+                  <td>{response.validAverage.toFixed(2)}</td>
+                  <td>{response.gateCount}</td>
+                  <td>{formatDateTime(response.createdAt)}</td>
+                  <td><Link href={`/admin/checks/${group.id}/${response.id}`}>보기</Link></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </>
   );
 }

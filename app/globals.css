@@ -498,6 +498,9 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 .check-area-head { align-items: center; display: flex; gap: 12px; }
 .check-area-key { align-items: center; background: var(--navy); border-radius: 10px; color: #fff; display: grid; font-size: 16px; font-weight: 900; height: 36px; place-items: center; width: 36px; }
 .check-bg { margin-top: 22px; }
+.check-identity-grid { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; margin-top: 20px; }
+.check-identity-full { grid-column: 1 / -1; }
+.check-identity-grid .textarea { min-height: 120px; }
 .check-bg-label { color: var(--navy); font-size: 14px; font-weight: 800; margin-bottom: 10px; }
 .check-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .check-q { padding-top: 22px; }
@@ -593,6 +596,8 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 
 @media (max-width: 700px) {
   .check-card { padding: 22px 18px; }
+  .check-identity-grid { grid-template-columns: 1fr; }
+  .check-identity-full { grid-column: auto; }
   .check-scale { flex-wrap: wrap; }
   .check-scale-btn { flex: 1 1 calc(33.333% - 6px); min-height: 68px; }
   .result-grid { grid-template-columns: 1fr; }

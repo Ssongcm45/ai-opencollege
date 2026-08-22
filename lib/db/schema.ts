@@ -106,6 +106,12 @@ export const checkGroups = pgTable("check_groups", {
 export const checkResponses = pgTable("check_responses", {
   id: uuid("id").primaryKey().defaultRandom(),
   groupId: uuid("group_id").notNull(),
+  name: varchar("name", { length: 80 }),
+  department: varchar("department", { length: 80 }),
+  position: varchar("position", { length: 60 }),
+  phone: varchar("phone", { length: 60 }),
+  email: varchar("email", { length: 160 }),
+  note: text("note"),
   role: varchar("role", { length: 60 }),
   frequency: varchar("frequency", { length: 60 }),
   environment: varchar("environment", { length: 120 }),

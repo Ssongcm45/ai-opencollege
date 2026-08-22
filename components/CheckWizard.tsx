@@ -27,10 +27,28 @@ interface CheckWizardProps {
   orgName?: string;
 }
 
+interface OrgIdentity {
+  name: string;
+  department: string;
+  position: string;
+  phone: string;
+  email: string;
+  note: string;
+}
+
 export function CheckWizard({ orgCode, orgName }: CheckWizardProps) {
   // step 0 = 인트로, 1..5 = 영역 A~E, 6 = 결과.
   const [step, setStep] = useState(0);
   const [background, setBackground] = useState<Record<string, string>>({});
+  const [identity, setIdentity] = useState<OrgIdentity>({
+    name: "",
+    department: "",
+    position: "",
+    phone: "",
+    email: "",
+    note: ""
+  });
+  const [privacyOk, setPrivacyOk] = useState(false);
   const [answers, setAnswers] = useState<Answers>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const initialMount = useRef(true);
@@ -38,6 +56,8 @@ export function CheckWizard({ orgCode, orgName }: CheckWizardProps) {
   const isOrgMode = Boolean(orgCode);
 
   const backgroundComplete = BACKGROUND_QUESTIONS.every((q) => background[q.key]);
+  const identityComplete = Object.values(identity).every((value) => value.trim().length > 0);
+  const canStart = backgroundComplete && (!isOrgMode || (identityComplete && privacyOk));
 
   const answeredCount = useMemo(
     () => AREAS.reduce((n, area) => n + area.questions.filter((q) => answers[q.code] !== undefined).length, 0),
@@ -79,6 +99,8 @@ export function CheckWizard({ orgCode, orgName }: CheckWizardProps) {
 
   const reset = () => {
     setBackground({});
+    setIdentity({ name: "", department: "", position: "", phone: "", email: "", note: "" });
+    setPrivacyOk(false);
     setAnswers({});
     setStep(0);
   };
@@ -97,6 +119,29 @@ export function CheckWizard({ orgCode, orgName }: CheckWizardProps) {
         <div className="check-card check-intro">
           <p className="check-intro-text">{INTRO_TEXT}</p>
         </div>
+        {isOrgMode ? (
+          <div className="check-card">
+            <h2 className="check-step-title">참여자 정보 <em>(필수)</em></h2>
+            <div className="check-identity-grid">
+              <input className="input" onChange={(event) => setIdentity((prev) => ({ ...prev, name: event.target.value }))} placeholder="이름" value={identity.name} />
+              <input className="input" onChange={(event) => setIdentity((prev) => ({ ...prev, department: event.target.value }))} placeholder="부서" value={identity.department} />
+              <input className="input" onChange={(event) => setIdentity((prev) => ({ ...prev, position: event.target.value }))} placeholder="직급" value={identity.position} />
+              <input className="input" onChange={(event) => setIdentity((prev) => ({ ...prev, phone: event.target.value }))} placeholder="전화번호" type="tel" value={identity.phone} />
+              <input className="input check-identity-full" onChange={(event) => setIdentity((prev) => ({ ...prev, email: event.target.value }))} placeholder="이메일" type="email" value={identity.email} />
+              <textarea className="textarea check-identity-full" onChange={(event) => setIdentity((prev) => ({ ...prev, note: event.target.value }))} placeholder="교육에 기대하는 점, 현재 어려움 등 자유롭게 적어 주세요" value={identity.note} />
+              <div className="privacy-box check-identity-full">
+                <label className="privacy-check">
+                  <input checked={privacyOk} onChange={(event) => setPrivacyOk(event.target.checked)} type="checkbox" />
+                  <span>개인정보 수집 및 이용에 동의합니다. (필수)</span>
+                </label>
+                <details className="privacy-detail">
+                  <summary>자세히 보기</summary>
+                  <p>수집 항목: 이름, 부서, 직급, 전화번호, 이메일, 응답 내용 · 목적: 조직 역량 진단 결과 확인 및 교육 설계 · 보유 기간: 진단 목적 달성 후 1년 이내 파기</p>
+                </details>
+              </div>
+            </div>
+          </div>
+        ) : null}
         <div className="check-card">
           <h2 className="check-step-title">시작 전, 몇 가지 배경을 알려주세요</h2>
           <p className="check-step-sub">채점에는 반영되지 않으며, 결과 해석에만 참고합니다.</p>
@@ -123,7 +168,7 @@ export function CheckWizard({ orgCode, orgName }: CheckWizardProps) {
           <span />
           <button
             className="btn bp btn-pill"
-            disabled={!backgroundComplete}
+            disabled={!canStart}
             onClick={() => goTo(1)}
             type="button"
           >
@@ -220,6 +265,7 @@ export function CheckWizard({ orgCode, orgName }: CheckWizardProps) {
       answers={answers}
       background={background}
       containerRef={containerRef}
+      identity={identity}
       isOrgMode={isOrgMode}
       onReset={reset}
       orgCode={orgCode}
@@ -232,13 +278,14 @@ interface ResultViewProps {
   answers: Answers;
   background: Record<string, string>;
   containerRef: React.RefObject<HTMLDivElement | null>;
+  identity: OrgIdentity;
   isOrgMode: boolean;
   onReset: () => void;
   orgCode?: string;
   orgName?: string;
 }
 
-function ResultView({ answers, background, containerRef, isOrgMode, onReset, orgCode, orgName }: ResultViewProps) {
+function ResultView({ answers, background, containerRef, identity, isOrgMode, onReset, orgCode, orgName }: ResultViewProps) {
   const result = useMemo(() => computeResult(answers), [answers]);
   const maturity = MATURITY_LEVELS[result.finalLevel];
 
@@ -252,15 +299,16 @@ function ResultView({ answers, background, containerRef, isOrgMode, onReset, org
     submittedRef.current = true;
     submitOrgCheckResponse(
       orgCode,
+      identity,
       {
-        role: background.role,
-        frequency: background.frequency,
-        environment: background.environment,
-        purpose: background.purpose,
+        role: background.role ?? "",
+        frequency: background.frequency ?? "",
+        environment: background.environment ?? "",
+        purpose: background.purpose ?? "",
       },
       answers,
     ).then(setOrgStatus);
-  }, [isOrgMode, orgCode, background, answers]);
+  }, [isOrgMode, orgCode, identity, background, answers]);
 
   useEffect(() => {
     if (isOrgMode || completionRecordedRef.current) return;
@@ -405,7 +453,7 @@ function ResultView({ answers, background, containerRef, isOrgMode, onReset, org
       {/* 8. 미세 문구 */}
       <p className="check-note">
         {isOrgMode
-          ? "응답(역할·응답값)은 조직 통계 목적으로만 저장되며 이름 등 개인 식별 정보는 수집하지 않습니다."
+          ? "입력하신 참여자 정보와 응답은 조직 진단 결과 확인 및 교육 설계 목적으로 저장됩니다."
           : "응답 내용은 저장되지 않으며, 완료 횟수만 익명으로 집계됩니다."}
       </p>
     </div>

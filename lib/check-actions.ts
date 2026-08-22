@@ -75,7 +75,14 @@ function clamp(value: string | undefined, max: number): string | undefined {
 }
 
 // 결과 → checkResponses insert 값.
-function toResponseRow(groupId: string, background: {
+function toResponseRow(groupId: string, identity: {
+  name: string;
+  department: string;
+  position: string;
+  phone: string;
+  email: string;
+  note: string;
+}, background: {
   role?: string;
   frequency?: string;
   environment?: string;
@@ -83,6 +90,12 @@ function toResponseRow(groupId: string, background: {
 }, answers: Answers, result: DiagnosticResult) {
   return {
     groupId,
+    name: clamp(identity.name, 80) ?? null,
+    department: clamp(identity.department, 80) ?? null,
+    position: clamp(identity.position, 60) ?? null,
+    phone: clamp(identity.phone, 60) ?? null,
+    email: clamp(identity.email, 160) ?? null,
+    note: clamp(identity.note, Number.MAX_SAFE_INTEGER) ?? null,
     role: clamp(background.role, 60) ?? null,
     frequency: clamp(background.frequency, 60) ?? null,
     environment: clamp(background.environment, 120) ?? null,
@@ -124,9 +137,17 @@ function areaTableRows(result: DiagnosticResult): string {
 // ── (a) 조직 진단 응답 저장 ──────────────────────────────
 export async function submitOrgCheckResponse(
   code: string,
-  background: { role?: string; frequency?: string; environment?: string; purpose?: string },
+  identity: { name: string; department: string; position: string; phone: string; email: string; note: string },
+  background: { role: string; frequency: string; environment: string; purpose: string },
   answers: Record<string, number>
 ): Promise<{ ok: boolean; message: string }> {
+  const identityComplete = [identity.name, identity.department, identity.position, identity.phone, identity.note]
+    .every((value) => value.trim().length > 0);
+  const emailValid = z.string().email().safeParse(identity.email.trim()).success;
+  if (!identityComplete || !emailValid) {
+    return { ok: false, message: "이름, 부서, 직급, 전화번호, 이메일, 하고 싶은 말을 모두 입력해 주세요." };
+  }
+
   if (!hasDatabase) {
     return { ok: false, message: "저장소가 설정되지 않아 응답을 기록하지 못했습니다." };
   }
@@ -148,7 +169,7 @@ export async function submitOrgCheckResponse(
   const result = computeResult(validated);
 
   try {
-    await getDb().insert(checkResponses).values(toResponseRow(group.id, background, validated, result));
+    await getDb().insert(checkResponses).values(toResponseRow(group.id, identity, background, validated, result));
   } catch (e) {
     console.error("[check] 응답 저장 실패:", e);
     return { ok: false, message: "응답 저장 중 오류가 발생했습니다." };
