@@ -124,6 +124,12 @@ export const checkResponses = pgTable("check_responses", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
 });
 
+export const checkCompletions = pgTable("check_completions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  source: varchar("source", { length: 40 }).notNull().default("individual"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+});
+
 export type CheckGroup = typeof checkGroups.$inferSelect;
 export type CheckResponse = typeof checkResponses.$inferSelect;
 

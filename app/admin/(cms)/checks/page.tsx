@@ -1,16 +1,40 @@
 import Link from "next/link";
 import { createCheckGroup, deleteCheckGroup, toggleCheckGroup } from "@/lib/check-actions";
-import { getCheckGroupsWithCounts } from "@/lib/check-data";
+import { getCheckGroupsWithCounts, getCheckTotals } from "@/lib/check-data";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { CheckLinkField } from "@/components/admin/CheckLinkField";
 
 export default async function ChecksAdminPage() {
-  const groups = await getCheckGroupsWithCounts();
+  const [groups, totals] = await Promise.all([getCheckGroupsWithCounts(), getCheckTotals()]);
 
   return (
     <>
       <div className="cms-header">
         <h1 className="cms-page-title">AI학습체크 조직 진단</h1>
+      </div>
+
+      <div className="cms-card">
+        <div className="cms-card-head">
+          <span className="cms-card-title">진행 현황</span>
+        </div>
+        <div className="stat-figs">
+          <div className="stat-fig">
+            <div className="stat-fig-label">총 진행 수</div>
+            <div className="stat-fig-num">{totals.total}</div>
+          </div>
+          <div className="stat-fig">
+            <div className="stat-fig-label">개인 진단</div>
+            <div className="stat-fig-num">{totals.individualCount}</div>
+          </div>
+          <div className="stat-fig">
+            <div className="stat-fig-label">조직 응답</div>
+            <div className="stat-fig-num">{totals.orgResponseCount}</div>
+          </div>
+          <div className="stat-fig">
+            <div className="stat-fig-label">최근 30일</div>
+            <div className="stat-fig-num">{totals.last30Days}</div>
+          </div>
+        </div>
       </div>
 
       <div className="cms-card">

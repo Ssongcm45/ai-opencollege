@@ -1,6 +1,6 @@
-import { desc, eq } from "drizzle-orm";
+import { count, desc, eq, gte } from "drizzle-orm";
 import { getDb, hasDatabase } from "@/lib/db";
-import { checkGroups, checkResponses, type CheckGroup, type CheckResponse } from "@/lib/db/schema";
+import { checkCompletions, checkGroups, checkResponses, type CheckGroup, type CheckResponse } from "@/lib/db/schema";
 import type { AreaKey } from "@/lib/diagnostic";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -19,6 +19,35 @@ export async function getCheckGroupByCode(code: string): Promise<CheckGroup | nu
 
 export interface CheckGroupWithCount extends CheckGroup {
   responseCount: number;
+}
+
+export async function getCheckTotals(): Promise<{
+  individualCount: number;
+  orgResponseCount: number;
+  total: number;
+  last30Days: number;
+}> {
+  if (!hasDatabase) {
+    return { individualCount: 0, orgResponseCount: 0, total: 0, last30Days: 0 };
+  }
+
+  const db = getDb();
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const [individualTotal, orgTotal, recentIndividualTotal, recentOrgTotal] = await Promise.all([
+    db.select({ value: count() }).from(checkCompletions),
+    db.select({ value: count() }).from(checkResponses),
+    db.select({ value: count() }).from(checkCompletions).where(gte(checkCompletions.createdAt, thirtyDaysAgo)),
+    db.select({ value: count() }).from(checkResponses).where(gte(checkResponses.createdAt, thirtyDaysAgo))
+  ]);
+  const individualCount = individualTotal[0]?.value ?? 0;
+  const orgResponseCount = orgTotal[0]?.value ?? 0;
+
+  return {
+    individualCount,
+    orgResponseCount,
+    total: individualCount + orgResponseCount,
+    last30Days: (recentIndividualTotal[0]?.value ?? 0) + (recentOrgTotal[0]?.value ?? 0)
+  };
 }
 
 // 관리자 목록: 그룹 + 응답 수.

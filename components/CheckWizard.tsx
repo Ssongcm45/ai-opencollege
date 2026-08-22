@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { emailMyResult, submitCheckInquiry, submitOrgCheckResponse } from "@/lib/check-actions";
+import { emailMyResult, recordCheckCompletion, submitCheckInquiry, submitOrgCheckResponse } from "@/lib/check-actions";
 import {
   AREAS,
   BACKGROUND_QUESTIONS,
@@ -245,6 +245,7 @@ function ResultView({ answers, background, containerRef, isOrgMode, onReset, org
   // 조직 모드: 결과 화면 진입 시 한 번만 저장.
   const [orgStatus, setOrgStatus] = useState<{ ok: boolean; message: string } | null>(null);
   const submittedRef = useRef(false);
+  const completionRecordedRef = useRef(false);
 
   useEffect(() => {
     if (!isOrgMode || !orgCode || submittedRef.current) return;
@@ -260,6 +261,12 @@ function ResultView({ answers, background, containerRef, isOrgMode, onReset, org
       answers,
     ).then(setOrgStatus);
   }, [isOrgMode, orgCode, background, answers]);
+
+  useEffect(() => {
+    if (isOrgMode || completionRecordedRef.current) return;
+    completionRecordedRef.current = true;
+    void recordCheckCompletion();
+  }, [isOrgMode]);
 
   return (
     <div className="check-wizard" ref={containerRef}>
@@ -393,16 +400,13 @@ function ResultView({ answers, background, containerRef, isOrgMode, onReset, org
         <button className="btn bo btn-pill" onClick={onReset} type="button">
           다시 진단하기
         </button>
-        <a className="btn bp btn-lg btn-pill" href="/#contact">
-          우리 조직 맞춤 교육 문의 →
-        </a>
       </div>
 
       {/* 8. 미세 문구 */}
       <p className="check-note">
         {isOrgMode
           ? "응답(역할·응답값)은 조직 통계 목적으로만 저장되며 이름 등 개인 식별 정보는 수집하지 않습니다."
-          : "결과는 저장되지 않으며 이 화면에서만 확인할 수 있습니다."}
+          : "응답 내용은 저장되지 않으며, 완료 횟수만 익명으로 집계됩니다."}
       </p>
     </div>
   );
@@ -470,8 +474,8 @@ function CheckInquiryCard({ answers }: { answers: Answers }) {
       ) : (
         <>
           {!open ? (
-            <button className="btn bp btn-pill" onClick={() => setOpen(true)} type="button">
-              교육 문의 작성 →
+            <button className="btn bp btn-lg btn-pill" onClick={() => setOpen(true)} type="button">
+              진단결과로 교육 문의하기 →
             </button>
           ) : (
             <form action={action} className="check-inquiry-form">

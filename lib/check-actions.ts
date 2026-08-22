@@ -8,7 +8,7 @@ import { Resend } from "resend";
 import { z } from "zod";
 import { requireAdminSession } from "@/lib/auth";
 import { getDb, hasDatabase } from "@/lib/db";
-import { checkGroups, checkResponses, inquiries } from "@/lib/db/schema";
+import { checkCompletions, checkGroups, checkResponses, inquiries } from "@/lib/db/schema";
 import {
   AREAS,
   MATURITY_LEVELS,
@@ -158,6 +158,16 @@ export async function submitOrgCheckResponse(
 }
 
 // ── (b) 내 결과 이메일 발송 ──────────────────────────────
+export async function recordCheckCompletion(): Promise<{ ok: boolean }> {
+  if (!hasDatabase) return { ok: false };
+  try {
+    await getDb().insert(checkCompletions).values({ source: "individual" });
+    return { ok: true };
+  } catch {
+    return { ok: false };
+  }
+}
+
 const emailSchema = z.string().email();
 
 export async function emailMyResult(
