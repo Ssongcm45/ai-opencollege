@@ -28,6 +28,7 @@ export default async function CheckStatsPage({
   return (
     <>
       <div className="cms-header">
+        <a className="cms-btn cms-btn-primary" href={`/admin/report/${group.id}`} target="_blank" rel="noreferrer">PDF 리포트</a>
         <h1 className="cms-page-title">{group.name} · 조직 역량 통계</h1>
         <Link href="/admin/checks" className="cms-link">← 목록으로</Link>
       </div>

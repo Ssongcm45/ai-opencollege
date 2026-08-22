@@ -166,6 +166,14 @@ export const MATURITY_LEVELS: Record<1 | 2 | 3 | 4 | 5, MaturityLevel> = {
 };
 
 // §7.3 영역별 해석 문장 (결과지용) — per area, per Level 1~5.
+export const ORG_UPSKILLING_GUIDE: Record<1 | 2 | 3 | 4 | 5, { goal: string; programs: string; caution: string }> = {
+  1: { goal: "안전한 첫 사용 만들기", programs: "기본 도구 온보딩, 민감정보 판별, 결과 검토 실습", caution: "고권한 도구·외부 데이터 연결을 서두르지 않는다." },
+  2: { goal: "개인 활용을 반복 가능한 습관으로 전환", programs: "직무별 프롬프트·템플릿, 출처 검증, 업무 1건 적용", caution: "교육 후 템플릿이 실제로 재사용되는지 확인한다." },
+  3: { goal: "검증된 업무 사례를 팀 워크플로로 확장", programs: "스킬·지침 파일, 데이터 검증, 소규모 PoC", caution: "성공 사례만 보지 말고 오류·중단 사례도 기록한다." },
+  4: { goal: "안전한 통합·자동화 구현", programs: "MCP 최소 권한, 에이전트 역할 분리, GitHub·CLI·테스트, 휴먼 승인 설계", caution: "읽기 도구와 쓰기 도구를 구분하고 모든 외부 변경을 승인 흐름에 둔다." },
+  5: { goal: "조직 지식과 운영 체계로 최적화", programs: "스킬 라이브러리, `AGENTS.md`/`CLAUDE.md` 표준, 온톨로지·DB, 내부 커뮤니티", caution: "개인의 노하우를 표준화하되 승인·감사·개정 책임자를 명확히 둔다." },
+};
+
 export const AREA_LEVEL_SENTENCES: Record<AreaKey, Record<1 | 2 | 3 | 4 | 5, string>> = {
   A: {
     1: "한 가지 승인된 AI 도구로 자주 하는 업무 1건을 안전하게 처리해 보는 것부터 시작하십시오.",
