@@ -421,6 +421,23 @@ export async function markInquiryRead(id: string) {
   redirect("/admin/inquiries");
 }
 
+export async function setInquiryStatus(id: string, status: string) {
+  await requireAdminSession();
+  ensureDb();
+  if (!["new", "read", "replied", "archived"].includes(status)) redirect("/admin/inquiries");
+  await getDb().update(inquiries).set({ status }).where(eq(inquiries.id, id));
+  await audit("inquiry.status", `${id} → ${status}`);
+  redirect("/admin/inquiries");
+}
+
+export async function deleteInquiry(id: string) {
+  await requireAdminSession();
+  ensureDb();
+  await getDb().delete(inquiries).where(eq(inquiries.id, id));
+  await audit("inquiry.delete", id);
+  redirect("/admin/inquiries");
+}
+
 // ── Admin: Categories ────────────────────────────────────
 export async function createCategory(formData: FormData) {
   await requireAdminSession();
