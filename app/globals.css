@@ -557,6 +557,40 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 .gate-list li::before { color: var(--verm); content: "→"; font-weight: 900; left: 0; position: absolute; }
 .result-cta { gap: 12px; }
 
+/* AI학습체크 결과 — 이메일/문의 서브 카드 */
+.check-org-status { border-radius: 10px; font-size: 13px; font-weight: 700; padding: 10px 14px; }
+.check-org-status.ok { background: #dcfce7; color: #15803d; }
+.check-org-status.err { background: var(--verm-5); color: var(--verm-h); }
+.check-sub-card { display: flex; flex-direction: column; gap: 12px; }
+.check-sub-title { color: var(--navy); font-size: 16px; font-weight: 900; letter-spacing: -.02em; }
+.check-sub-desc { color: var(--t3); font-size: 13.5px; line-height: 1.6; margin-top: -6px; }
+.check-sub-note { color: var(--t3); font-size: 12px; line-height: 1.5; }
+.check-email-row { display: flex; gap: 10px; }
+.check-email-row .input { flex: 1; }
+.check-email-row .btn { flex: 0 0 auto; }
+.check-inquiry-form { display: flex; flex-direction: column; gap: 12px; }
+.check-inline-msg { border-radius: 8px; font-size: 13px; font-weight: 700; padding: 8px 12px; }
+.check-inline-msg.ok { background: #dcfce7; color: #15803d; }
+.check-inline-msg.err { background: var(--verm-5); color: var(--verm-h); }
+
+/* 관리자 조직 통계 */
+.stat-warn { background: #fffbeb; border: 1px solid #fcd34d; border-left: 4px solid #f59e0b; border-radius: 10px; color: #92400e; font-size: 13.5px; line-height: 1.6; margin-bottom: 20px; padding: 14px 16px; }
+.stat-figs { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); }
+.stat-fig { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px 18px; }
+.stat-fig-label { color: #6b7280; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+.stat-fig-num { color: #0f1623; font-size: 26px; font-weight: 900; letter-spacing: -.03em; }
+.stat-fig-unit { color: #9ca3af; font-size: 14px; font-weight: 700; }
+.stat-rows { display: flex; flex-direction: column; gap: 14px; }
+.stat-row { align-items: center; display: grid; gap: 14px; grid-template-columns: 200px 1fr 120px; }
+.stat-row-label { color: #111827; font-size: 13px; font-weight: 700; }
+.stat-row-label b { color: var(--verm); margin-right: 4px; }
+.stat-bar-track { background: #eef2f7; border-radius: 999px; height: 12px; overflow: hidden; }
+.stat-bar-track-na { align-items: center; background: repeating-linear-gradient(-45deg, #f1f5f9, #f1f5f9 6px, #e5e7eb 6px, #e5e7eb 12px); display: flex; padding: 0 10px; }
+.stat-na-note { color: #9ca3af; font-size: 11px; font-weight: 700; }
+.stat-bar { background: var(--navy); border-radius: 999px; height: 100%; transition: width .4s ease; }
+.stat-bar-low { background: var(--verm); }
+.stat-row-val { color: #374151; font-size: 13px; font-weight: 800; text-align: right; }
+
 @media (max-width: 700px) {
   .check-card { padding: 22px 18px; }
   .check-scale { flex-wrap: wrap; }
@@ -564,4 +598,8 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
   .result-grid { grid-template-columns: 1fr; }
   .result-cta { flex-direction: column-reverse; }
   .result-cta .btn { width: 100%; }
+  .check-email-row { flex-direction: column; }
+  .stat-figs { grid-template-columns: 1fr; }
+  .stat-row { grid-template-columns: 1fr; gap: 6px; }
+  .stat-row-val { text-align: left; }
 }

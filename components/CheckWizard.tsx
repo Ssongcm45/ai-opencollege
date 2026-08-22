@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useActionState, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { emailMyResult, submitCheckInquiry, submitOrgCheckResponse } from "@/lib/check-actions";
 import {
   AREAS,
   BACKGROUND_QUESTIONS,
@@ -21,11 +22,20 @@ function areaTitle(key: AreaKey): string {
   return AREAS.find((a) => a.key === key)?.title ?? key;
 }
 
-export function CheckWizard() {
+interface CheckWizardProps {
+  orgCode?: string;
+  orgName?: string;
+}
+
+export function CheckWizard({ orgCode, orgName }: CheckWizardProps) {
   // step 0 = 인트로, 1..5 = 영역 A~E, 6 = 결과.
   const [step, setStep] = useState(0);
   const [background, setBackground] = useState<Record<string, string>>({});
   const [answers, setAnswers] = useState<Answers>({});
+  const containerRef = useRef<HTMLDivElement>(null);
+  const initialMount = useRef(true);
+
+  const isOrgMode = Boolean(orgCode);
 
   const backgroundComplete = BACKGROUND_QUESTIONS.every((q) => background[q.key]);
 
@@ -41,6 +51,15 @@ export function CheckWizard() {
 
   const progressPercent =
     step === 0 ? 0 : step > AREA_STEPS ? 100 : Math.round((answeredCount / TOTAL_QUESTIONS) * 100);
+
+  // 단계 전환 시 위저드 상단으로 부드럽게 스크롤 (초기 마운트는 제외).
+  useEffect(() => {
+    if (initialMount.current) {
+      initialMount.current = false;
+      return;
+    }
+    containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [step]);
 
   const setScale = (code: string, value: number) => {
     setAnswers((prev) => ({ ...prev, [code]: value }));
@@ -59,21 +78,19 @@ export function CheckWizard() {
   };
 
   const reset = () => {
-    setStep(0);
     setBackground({});
     setAnswers({});
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setStep(0);
   };
 
   const goTo = (target: number) => {
     setStep(target);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // ---- Step 0: 인트로 + 배경 문항 ----
   if (step === 0) {
     return (
-      <div className="check-wizard">
+      <div className="check-wizard" ref={containerRef}>
         <div className="check-progress" aria-hidden="true">
           <div className="check-progress-bar" style={{ width: "0%" }} />
         </div>
@@ -121,7 +138,7 @@ export function CheckWizard() {
   if (currentArea) {
     const isDArea = currentArea.key === "D";
     return (
-      <div className="check-wizard">
+      <div className="check-wizard" ref={containerRef}>
         <div className="check-progress" aria-hidden="true">
           <div className="check-progress-bar" style={{ width: `${progressPercent}%` }} />
         </div>
@@ -198,14 +215,63 @@ export function CheckWizard() {
   }
 
   // ---- Step 6: 결과 ----
-  const result = computeResult(answers);
+  return (
+    <ResultView
+      answers={answers}
+      background={background}
+      containerRef={containerRef}
+      isOrgMode={isOrgMode}
+      onReset={reset}
+      orgCode={orgCode}
+      orgName={orgName}
+    />
+  );
+}
+
+interface ResultViewProps {
+  answers: Answers;
+  background: Record<string, string>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  isOrgMode: boolean;
+  onReset: () => void;
+  orgCode?: string;
+  orgName?: string;
+}
+
+function ResultView({ answers, background, containerRef, isOrgMode, onReset, orgCode, orgName }: ResultViewProps) {
+  const result = useMemo(() => computeResult(answers), [answers]);
   const maturity = MATURITY_LEVELS[result.finalLevel];
 
+  // 조직 모드: 결과 화면 진입 시 한 번만 저장.
+  const [orgStatus, setOrgStatus] = useState<{ ok: boolean; message: string } | null>(null);
+  const submittedRef = useRef(false);
+
+  useEffect(() => {
+    if (!isOrgMode || !orgCode || submittedRef.current) return;
+    submittedRef.current = true;
+    submitOrgCheckResponse(
+      orgCode,
+      {
+        role: background.role,
+        frequency: background.frequency,
+        environment: background.environment,
+        purpose: background.purpose,
+      },
+      answers,
+    ).then(setOrgStatus);
+  }, [isOrgMode, orgCode, background, answers]);
+
   return (
-    <div className="check-wizard">
+    <div className="check-wizard" ref={containerRef}>
       <div className="check-progress" aria-hidden="true">
         <div className="check-progress-bar" style={{ width: "100%" }} />
       </div>
+
+      {isOrgMode && orgStatus ? (
+        <p className={`check-org-status${orgStatus.ok ? " ok" : " err"}`}>
+          {orgStatus.ok ? `✓ ${orgName ?? "조직"} 조직 진단에 응답이 저장되었습니다` : orgStatus.message}
+        </p>
+      ) : null}
 
       {/* 1. 종합 */}
       <div className="check-card result-hero">
@@ -316,9 +382,15 @@ export function CheckWizard() {
         </div>
       ) : null}
 
-      {/* 5. CTA */}
+      {/* 5. 이메일로 결과 받기 */}
+      <EmailResultCard answers={answers} />
+
+      {/* 6. 이 결과로 교육 문의하기 */}
+      <CheckInquiryCard answers={answers} />
+
+      {/* 7. CTA */}
       <div className="check-nav result-cta">
-        <button className="btn bo btn-pill" onClick={reset} type="button">
+        <button className="btn bo btn-pill" onClick={onReset} type="button">
           다시 진단하기
         </button>
         <a className="btn bp btn-lg btn-pill" href="/#contact">
@@ -326,8 +398,106 @@ export function CheckWizard() {
         </a>
       </div>
 
-      {/* 6. 미세 문구 */}
-      <p className="check-note">결과는 저장되지 않으며 이 화면에서만 확인할 수 있습니다.</p>
+      {/* 8. 미세 문구 */}
+      <p className="check-note">
+        {isOrgMode
+          ? "응답(역할·응답값)은 조직 통계 목적으로만 저장되며 이름 등 개인 식별 정보는 수집하지 않습니다."
+          : "결과는 저장되지 않으며 이 화면에서만 확인할 수 있습니다."}
+      </p>
+    </div>
+  );
+}
+
+function EmailResultCard({ answers }: { answers: Answers }) {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<{ ok: boolean; message: string } | null>(null);
+  const [pending, startTransition] = useTransition();
+
+  const send = () => {
+    setStatus(null);
+    startTransition(async () => {
+      const res = await emailMyResult(email, answers);
+      setStatus(res);
+      if (res.ok) setEmail("");
+    });
+  };
+
+  return (
+    <div className="check-card check-sub-card">
+      <h3 className="check-sub-title">이메일로 결과 받기</h3>
+      <p className="check-sub-desc">진단 결과 요약을 입력하신 이메일로 보내드립니다.</p>
+      <div className="check-email-row">
+        <input
+          className="input"
+          disabled={pending}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="이메일 주소"
+          type="email"
+          value={email}
+        />
+        <button
+          className="btn bn btn-pill"
+          disabled={pending || !email.trim()}
+          onClick={send}
+          type="button"
+        >
+          {pending ? "발송 중..." : "결과 받기 →"}
+        </button>
+      </div>
+      {status ? (
+        <p className={`check-inline-msg${status.ok ? " ok" : " err"}`}>{status.message}</p>
+      ) : null}
+    </div>
+  );
+}
+
+function CheckInquiryCard({ answers }: { answers: Answers }) {
+  const [open, setOpen] = useState(false);
+  const [state, action, pending] = useActionState(submitCheckInquiry, null);
+  const answersJson = useMemo(() => JSON.stringify(answers), [answers]);
+
+  useEffect(() => {
+    if (state?.ok) setOpen(false);
+  }, [state]);
+
+  return (
+    <div className="check-card check-sub-card">
+      <h3 className="check-sub-title">이 결과로 교육 문의하기</h3>
+      <p className="check-sub-desc">진단 결과를 바탕으로 우리 조직에 맞는 교육을 문의할 수 있습니다.</p>
+
+      {state?.ok ? (
+        <p className="check-inline-msg ok">{state.message}</p>
+      ) : (
+        <>
+          {!open ? (
+            <button className="btn bp btn-pill" onClick={() => setOpen(true)} type="button">
+              교육 문의 작성 →
+            </button>
+          ) : (
+            <form action={action} className="check-inquiry-form">
+              <input name="answersJson" type="hidden" value={answersJson} />
+              <input className="input" name="name" placeholder="이름 *" required />
+              <input className="input" name="organization" placeholder="기관/회사명" />
+              <input className="input" name="email" placeholder="이메일 *" required type="email" />
+              <input className="input" name="phone" placeholder="연락처 *" required />
+              <textarea className="textarea" name="message" placeholder="교육 목적, 희망 일정, 필요한 과정 등" />
+              <div className="privacy-box">
+                <label className="privacy-check">
+                  <input name="privacy" required type="checkbox" />
+                  <span>
+                    개인정보 수집 및 이용에 동의합니다. <em>(필수)</em>
+                  </span>
+                </label>
+              </div>
+              <p className="check-sub-note">진단 결과 요약이 문의와 함께 관리자에게 전달됩니다.</p>
+              <button className="btn bn btn-pill" disabled={pending} type="submit">
+                {pending ? "접수 중..." : "교육 문의 접수 →"}
+              </button>
+              {state && !state.ok ? <p className="check-inline-msg err">{state.message}</p> : null}
+            </form>
+          )}
+        </>
+      )}
     </div>
   );
 }

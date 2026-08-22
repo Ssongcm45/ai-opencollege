@@ -1,7 +1,9 @@
 import {
   boolean,
   integer,
+  jsonb,
   pgTable,
+  real,
   text,
   timestamp,
   unique,
@@ -92,6 +94,38 @@ export const siteSettings = pgTable("site_settings", {
   googleVerification: varchar("google_verification", { length: 300 }),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
 });
+
+export const checkGroups = pgTable("check_groups", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 120 }).notNull(),
+  code: varchar("code", { length: 40 }).notNull().unique(),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+});
+
+export const checkResponses = pgTable("check_responses", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  groupId: uuid("group_id").notNull(),
+  role: varchar("role", { length: 60 }),
+  frequency: varchar("frequency", { length: 60 }),
+  environment: varchar("environment", { length: 120 }),
+  purpose: varchar("purpose", { length: 60 }),
+  answers: jsonb("answers").notNull(),
+  scoreA: integer("score_a").notNull(),
+  scoreB: integer("score_b").notNull(),
+  scoreC: integer("score_c").notNull(),
+  scoreD: integer("score_d"),
+  scoreE: integer("score_e").notNull(),
+  validAverage: real("valid_average").notNull(),
+  baseLevel: integer("base_level").notNull(),
+  finalLevel: integer("final_level").notNull(),
+  dApplicable: boolean("d_applicable").notNull(),
+  gateCount: integer("gate_count").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
+});
+
+export type CheckGroup = typeof checkGroups.$inferSelect;
+export type CheckResponse = typeof checkResponses.$inferSelect;
 
 export type BlogPost = typeof blogPosts.$inferSelect;
 export type NewBlogPost = typeof blogPosts.$inferInsert;

@@ -1,0 +1,50 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { CheckWizard } from "@/components/CheckWizard";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { getCheckGroupByCode } from "@/lib/check-data";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ code: string }>;
+}): Promise<Metadata> {
+  const { code } = await params;
+  const group = await getCheckGroupByCode(code);
+  return {
+    title: group ? `${group.name} AI학습체크 · AI OpenCollege` : "AI학습체크 · AI OpenCollege",
+    robots: { index: false },
+  };
+}
+
+export default async function OrgCheckPage({
+  params,
+}: {
+  params: Promise<{ code: string }>;
+}) {
+  const { code } = await params;
+  const group = await getCheckGroupByCode(code);
+  if (!group) notFound();
+
+  return (
+    <>
+      <Header />
+      <main>
+        <section className="page-hero">
+          <div className="wrap">
+            <div className="ey">AI CHECK · {group.name}</div>
+            <h1 className="sh2 sh2-lg">AI 업무 실행 역량 진단</h1>
+            <p className="sdesc">최근 3개월 실제 업무 경험 기준 · 5개 영역 30문항 · 약 10분</p>
+          </div>
+        </section>
+        <section className="sec">
+          <div className="wrap" style={{ maxWidth: 900 }}>
+            <CheckWizard orgCode={group.code} orgName={group.name} />
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}
