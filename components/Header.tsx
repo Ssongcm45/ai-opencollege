@@ -20,7 +20,7 @@ export function Header() {
               <a href="/#faq">FAQ</a>
             </nav>
             <div className="hcta">
-              <a href="/#courses" className="btn bo btn-pill">교육과정 보기</a>
+              <a href="/check" className="btn bo btn-pill">AI학습체크</a>
               <a href="/#contact" className="btn bp btn-pill">교육 문의</a>
             </div>
           </div>
