@@ -8,7 +8,7 @@ import { Resend } from "resend";
 import { z } from "zod";
 import { audit } from "@/lib/audit";
 import { requireAdminSession } from "@/lib/auth";
-import { getGroupStats } from "@/lib/check-data";
+import { getGroupStats, isGroupOpen } from "@/lib/check-data";
 import { isAllowedAiModel } from "@/lib/ai-models";
 import { getDb, hasDatabase } from "@/lib/db";
 import { checkCompletions, checkGroups, checkResponses, inquiries } from "@/lib/db/schema";
@@ -42,6 +42,13 @@ function ensureDb() {
 
 function areaTitle(key: AreaKey): string {
   return AREAS.find((a) => a.key === key)?.title ?? key;
+}
+
+function parseExpiresAt(value: FormDataEntryValue | null): { value: string; expiresAt: Date | null; valid: boolean } {
+  const raw = String(value ?? "").trim();
+  if (!raw) return { value: raw, expiresAt: null, valid: true };
+  const expiresAt = new Date(`${raw}T23:59:59+09:00`);
+  return { value: raw, expiresAt, valid: !Number.isNaN(expiresAt.getTime()) };
 }
 
 // 모든 문항 코드 집합 (A1..E6). D 코드만 0(미적용) 허용.
@@ -161,8 +168,8 @@ export async function submitOrgCheckResponse(
     .from(checkGroups)
     .where(eq(checkGroups.code, code))
     .limit(1);
-  if (!group || !group.active) {
-    return { ok: false, message: "유효하지 않거나 종료된 진단 링크입니다." };
+  if (!group || !isGroupOpen(group)) {
+    return { ok: false, message: "응답 기간이 종료되었거나 유효하지 않은 진단 링크입니다." };
   }
 
   const validated = validateAnswers(answers);
@@ -395,17 +402,34 @@ export async function createCheckGroup(formData: FormData) {
   ensureDb();
   const name = String(formData.get("name") ?? "").trim();
   if (!name) redirect("/admin/checks");
+  const expiry = parseExpiresAt(formData.get("expiresAt"));
+  if (!expiry.valid) redirect("/admin/checks");
 
   const db = getDb();
   let code = randomCode();
   try {
-    await db.insert(checkGroups).values({ name: name.slice(0, 120), code });
+    await db.insert(checkGroups).values({ name: name.slice(0, 120), code, expiresAt: expiry.expiresAt });
   } catch {
     // 유니크 충돌 시 한 번 재시도.
     code = randomCode();
-    await db.insert(checkGroups).values({ name: name.slice(0, 120), code });
+    await db.insert(checkGroups).values({ name: name.slice(0, 120), code, expiresAt: expiry.expiresAt });
   }
   await audit("check.group-create", name.slice(0, 120));
+  revalidatePath("/admin/checks");
+  redirect("/admin/checks");
+}
+
+export async function updateCheckGroupExpiry(id: string, formData: FormData) {
+  await requireAdminSession();
+  ensureDb();
+  const expiry = parseExpiresAt(formData.get("expiresAt"));
+  if (!expiry.valid) redirect("/admin/checks");
+
+  await getDb()
+    .update(checkGroups)
+    .set({ expiresAt: expiry.expiresAt })
+    .where(eq(checkGroups.id, id));
+  await audit("check.group-expiry", `${id} → ${expiry.value || "무기한"}`);
   revalidatePath("/admin/checks");
   redirect("/admin/checks");
 }

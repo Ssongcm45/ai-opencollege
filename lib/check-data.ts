@@ -6,6 +6,10 @@ import type { AreaKey } from "@/lib/diagnostic";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 // 참여 링크(공개)로 접근하는 활성 조직 진단 그룹.
+export function isGroupOpen(group: { active: boolean; expiresAt: Date | null }): boolean {
+  return group.active && (!group.expiresAt || group.expiresAt.getTime() > Date.now());
+}
+
 export async function getCheckGroupByCode(code: string): Promise<CheckGroup | null> {
   if (!hasDatabase) return null;
   const [group] = await getDb()
@@ -13,8 +17,7 @@ export async function getCheckGroupByCode(code: string): Promise<CheckGroup | nu
     .from(checkGroups)
     .where(eq(checkGroups.code, code))
     .limit(1);
-  if (!group || !group.active) return null;
-  return group;
+  return group ?? null;
 }
 
 export interface CheckGroupWithCount extends CheckGroup {

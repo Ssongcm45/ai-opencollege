@@ -27,6 +27,7 @@ export interface ReportViewProps {
   recipient?: { name: string; org: string };
   comment?: string;
   curriculum?: string;
+  anonymizeParticipants?: boolean;
 }
 
 export function ReportView({
@@ -37,7 +38,8 @@ export function ReportView({
   senderId,
   recipient,
   comment,
-  curriculum
+  curriculum,
+  anonymizeParticipants = false
 }: ReportViewProps) {
   const dominantLevel = ([1, 2, 3, 4, 5] as const).reduce(
     (dominant, level) =>
@@ -195,7 +197,16 @@ export function ReportView({
             </tr>
           </thead>
           <tbody>
-            {participants.map((participant, index) => (
+            {participants.map((originalParticipant, index) => {
+              const participant = anonymizeParticipants
+                ? {
+                  ...originalParticipant,
+                  name: `참여자 ${index + 1}`,
+                  department: "비공개",
+                  position: "비공개"
+                }
+                : originalParticipant;
+              return (
               <tr key={index}>
                 <td>{participant.name ?? "익명"}</td>
                 <td>{participant.department ?? "-"}</td>
@@ -203,9 +214,11 @@ export function ReportView({
                 <td>{participant.finalLevel}</td>
                 <td>{participant.validAverage.toFixed(2)}</td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
+        {anonymizeParticipants ? <p>참여자 식별 정보는 요청에 따라 비공개 처리되었습니다.</p> : null}
       </section>
 
       {commentText.length > 0 ? (

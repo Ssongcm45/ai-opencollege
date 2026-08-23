@@ -28,6 +28,7 @@ export function ReportModal({
   const [recipientName, setRecipientName] = useState("");
   const [comment, setComment] = useState("");
   const [curriculum, setCurriculum] = useState("");
+  const [anonymizeParticipants, setAnonymizeParticipants] = useState(false);
   const [aiSummary, setAiSummary] = useState<string | null>(initialAiSummary);
   const [error, setError] = useState<string | null>(null);
   const [aiModel, setAiModel] = useState<string>(AI_MODEL_OPTIONS[0].id);
@@ -99,6 +100,19 @@ export function ReportModal({
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div className="report-modal-row">
+                <div className="report-modal-field">
+                  <label className="report-modal-label">
+                    <input
+                      type="checkbox"
+                      checked={anonymizeParticipants}
+                      onChange={(event) => setAnonymizeParticipants(event.target.checked)}
+                    />{" "}
+                    참여자 정보 가리기 (이름·부서·직급 비공개)
+                  </label>
+                </div>
               </div>
 
               <div className="report-modal-row">
@@ -201,6 +215,7 @@ export function ReportModal({
                 recipient={{ name: recipientName, org: recipientOrg }}
                 comment={comment}
                 curriculum={curriculum}
+                anonymizeParticipants={anonymizeParticipants}
               />
             </div>
           </div>
