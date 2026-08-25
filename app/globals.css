@@ -711,7 +711,7 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 .nav-link-btn { background: none; border: 0; border-radius: 4px; color: var(--t2); cursor: pointer; font: inherit; font-size: 16px; font-weight: 600; padding: 8px 14px; }
 .nav-link-btn:hover { background: var(--cream); color: var(--navy); }
 .guide-modal-overlay { align-items: center; background: rgba(14,27,60,.6); display: flex; inset: 0; justify-content: center; padding: 20px; position: fixed; z-index: 1000; }
-.guide-modal-panel { background: #fff; border-radius: 16px; box-shadow: 0 24px 64px rgba(0,0,0,.3); display: flex; flex-direction: column; height: 92vh; max-width: 1240px; overflow: hidden; width: 100%; }
+.guide-modal-panel { background: #fff; border-radius: 16px; box-shadow: 0 24px 64px rgba(0,0,0,.3); display: flex; flex-direction: column; height: 92vh; max-width: 1480px; overflow: hidden; width: 100%; }
 .guide-modal-bar { align-items: center; background: #0f1623; color: #fff; display: flex; justify-content: space-between; padding: 10px 16px; }
 .guide-modal-title { font-size: 14px; font-weight: 800; letter-spacing: -.01em; }
 .guide-modal-bar-actions { align-items: center; display: flex; gap: 12px; }
