@@ -2824,7 +2824,7 @@ document.querySelectorAll('.tc').forEach((c,i)=>{c.style.transitionDelay=`${(i%6
 
 <script>
 // NAV
-function navTo(el,id){document.querySelectorAll('.nf').forEach(n=>n.classList.remove('on'));el.classList.add('on');const t=document.getElementById(id);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});}
+function navTo(el,id){document.querySelectorAll('.nf').forEach(n=>n.classList.remove('on'));el.classList.add('on');const t=document.getElementById(id);if(t){var _p=t.closest('.guide-pane')||document.scrollingElement;var _top=t.getBoundingClientRect().top-_p.getBoundingClientRect().top+_p.scrollTop-12;_p.scrollTo({top:_top,behavior:'smooth'});}}
 
 // KEYWORD SHOW/HIDE
 let activeKw={};
@@ -3433,7 +3433,7 @@ function navTo(el,id){
   document.querySelectorAll('.nl').forEach(n=>n.classList.remove('on'));
   el.classList.add('on');
   const t=document.getElementById(id);
-  if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+  if(t){var _p=t.closest('.guide-pane')||document.scrollingElement;var _top=t.getBoundingClientRect().top-_p.getBoundingClientRect().top+_p.scrollTop-12;_p.scrollTo({top:_top,behavior:'smooth'});}
 }
 function showStep(idx){
   document.querySelectorAll('.step-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
@@ -3502,7 +3502,7 @@ function goSec(tab, secId, btnId) {
           window.scrollTo({top: top, behavior:'smooth'});
         }, 50);
       } else {
-        target.scrollIntoView({behavior:'smooth', block:'start'});
+        pane.scrollTo({top: target.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop - 12, behavior:'smooth'});
       }
     }
   } else {
