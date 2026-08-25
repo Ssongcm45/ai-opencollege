@@ -706,3 +706,17 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 .inq-note-form { display: flex; gap: 8px; margin-top: 10px; align-items: flex-start; }
 .inq-note-count { color: #9ca3af; font-size: 12px; margin-right: 4px; }
 .inq-notes-title { color: #374151; font-size: 13px; font-weight: 800; margin: 14px 0 8px; }
+
+/* Guidebook modal */
+.nav-link-btn { background: none; border: 0; border-radius: 4px; color: var(--t2); cursor: pointer; font: inherit; font-size: 16px; font-weight: 600; padding: 8px 14px; }
+.nav-link-btn:hover { background: var(--cream); color: var(--navy); }
+.guide-modal-overlay { align-items: center; background: rgba(14,27,60,.6); display: flex; inset: 0; justify-content: center; padding: 20px; position: fixed; z-index: 1000; }
+.guide-modal-panel { background: #fff; border-radius: 16px; box-shadow: 0 24px 64px rgba(0,0,0,.3); display: flex; flex-direction: column; height: 92vh; max-width: 1240px; overflow: hidden; width: 100%; }
+.guide-modal-bar { align-items: center; background: #0f1623; color: #fff; display: flex; justify-content: space-between; padding: 10px 16px; }
+.guide-modal-title { font-size: 14px; font-weight: 800; letter-spacing: -.01em; }
+.guide-modal-bar-actions { align-items: center; display: flex; gap: 12px; }
+.guide-modal-open { color: rgba(255,255,255,.75); font-size: 12.5px; font-weight: 700; text-decoration: none; }
+.guide-modal-open:hover { color: #fff; }
+.guide-modal-close { background: rgba(255,255,255,.12); border: 0; border-radius: 8px; color: #fff; cursor: pointer; font-size: 18px; height: 30px; line-height: 1; width: 30px; }
+.guide-modal-close:hover { background: var(--verm); }
+.guide-modal-frame { border: 0; flex: 1; width: 100%; }
