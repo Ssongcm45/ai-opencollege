@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI OpenCollege 강의 교안 — 크리에이티브 과정 · AI 디자인·마케팅</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0F0A1E;--ink2:#1E1535;--ink3:#332550;--ink4:#6B5590;--ink5:#9B80C0;
+  --paper:#FDF8FF;--p2:#F5EEFF;--p3:#EAD9FF;--p4:#D4AAFF;--p5:#BE80FF;
+  /* 크리에이티브: 보라·마젠타 + 오렌지 팝 */
+  --c1:#7C3AED;--c2:#8B5CF6;--c3:#A78BFA;--c4:rgba(124,58,237,.12);--c5:rgba(124,58,237,.06);
+  --c-border:rgba(124,58,237,.22);
+  --mg:#D946EF;--mgs:rgba(217,70,239,.12);
+  --or:#F97316;--ors:rgba(249,115,22,.12);
+  --gr:#10B981;--grs:rgba(16,185,129,.1);
+  --bl:#3B82F6;--bls:rgba(59,130,246,.1);
+  --yw:#EAB308;--yws:rgba(234,179,8,.12);
+  --rd:#EF4444;--rds:rgba(239,68,68,.08);
+  --fu:'Pretendard','Apple SD Gothic Neo',-apple-system,sans-serif;
+  --fs:'Noto Serif KR','Georgia',serif;
+  --fm:'JetBrains Mono','Courier New',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--fu);line-height:1.7;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--p2)}::-webkit-scrollbar-thumb{background:var(--p4);border-radius:3px}
+.cover{min-height:100vh;background:#08041A;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 36px;position:relative;overflow:hidden}
+.cov-g1{position:absolute;left:-100px;top:-80px;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(139,92,246,.28),rgba(217,70,239,.15) 40%,transparent 65%);pointer-events:none}
+.cov-g2{position:absolute;right:-80px;bottom:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.2),transparent 65%);pointer-events:none}
+.cov-noise{position:absolute;inset:0;background-image:radial-gradient(rgba(139,92,246,.08) 1px,transparent 1px),radial-gradient(rgba(217,70,239,.05) 1px,transparent 1px);background-size:24px 24px,48px 48px;background-position:0 0,12px 12px;pointer-events:none}
+.cov-inner{position:relative;z-index:2;max-width:740px}
+.cov-series{font-size:11px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:.22em;font-family:var(--fm);margin-bottom:22px;text-transform:uppercase}
+.cov-badge{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(217,70,239,.2));border:1px solid rgba(167,139,250,.4);border-radius:10px;padding:9px 22px;font-size:13px;font-weight:700;color:#E9D5FF;margin-bottom:30px}
+.cov-bdot{width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#A78BFA,#E879F9);box-shadow:0 0 12px rgba(167,139,250,.9)}
+.cov-title{font-family:var(--fs);font-size:clamp(32px,5.2vw,52px);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-.5px;margin-bottom:18px}
+.cov-title em{background:linear-gradient(135deg,#A78BFA,#F0ABFC,#FCA5A5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-style:normal}
+.cov-sub{font-size:17px;color:rgba(255,255,255,.5);font-weight:400;line-height:1.65;margin-bottom:36px;font-family:var(--fs)}
+.cov-rule{width:64px;height:2px;background:linear-gradient(90deg,transparent,rgba(167,139,250,.7),rgba(240,171,252,.7),transparent);margin:0 auto 36px}
+.cov-stats{display:flex;justify-content:center;gap:40px;margin-bottom:42px}
+.cs{text-align:center}.cs-n{font-size:36px;font-weight:900;font-family:var(--fm);color:#C4B5FD;line-height:1}
+.cs-l{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);margin-top:5px;letter-spacing:.08em}
+.cov-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.cc{padding:7px 15px;border-radius:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:600;color:rgba(255,255,255,.55)}
+.cov-footer{position:absolute;bottom:24px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.2);font-family:var(--fm)}
+.nav{position:sticky;top:0;z-index:80;background:rgba(253,248,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--p3)}
+.nav-wrap{max-width:880px;margin:0 auto;padding:0 28px;display:flex;align-items:center;overflow-x:auto}
+.nt{padding:13px 15px;font-size:11.5px;font-weight:700;color:var(--ink4);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .12s}
+.nt:hover{color:var(--ink2)}.nt.on{color:var(--c1);border-bottom-color:var(--c1)}
+.wrap{max-width:880px;margin:0 auto;padding:0 28px 100px}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ti{display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:12px;border:1px solid var(--p3);cursor:pointer;transition:all .12s;background:var(--paper)}
+.ti:hover{border-color:var(--c-border);background:var(--c5);transform:translateY(-1px)}
+.ti-num{width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;font-family:var(--fm);color:#fff}
+.ti-bd{flex:1;min-width:0}.ti-wk{font-size:9.5px;font-weight:800;color:var(--ink5);font-family:var(--fm);margin-bottom:3px}
+.ti-nm{font-size:13px;font-weight:700;color:var(--ink2);line-height:1.3}.ti-cnt{font-size:11px;color:var(--ink5);flex-shrink:0}
+.mod{padding:60px 0;border-top:2px solid var(--p3)}
+.mod-ey{font-size:11px;font-weight:800;color:var(--c1);letter-spacing:.14em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.mod-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border-radius:6px;font-size:11px;font-weight:800;font-family:var(--fm);margin-bottom:16px}
+.mod-h{font-family:var(--fs);font-size:clamp(24px,3.8vw,34px);font-weight:900;color:var(--ink);line-height:1.18;letter-spacing:-.3px;margin-bottom:14px}
+.mod-sub{font-size:15px;color:var(--ink3);font-weight:400;line-height:1.7;margin-bottom:22px;font-family:var(--fs)}
+.mod-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px}
+.mchip{display:flex;align-items:center;gap:6px;background:white;border:1px solid var(--p3);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--ink3)}
+.obj{background:var(--c5);border:1px solid var(--c-border);border-radius:14px;padding:20px 24px;margin-bottom:28px}
+.obj-l{font-size:10px;font-weight:800;color:var(--c1);letter-spacing:.1em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.obj ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.obj li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--ink2);line-height:1.6}
+.obj li::before{content:'✓';font-size:12px;font-weight:900;color:var(--c1);flex-shrink:0;margin-top:2px}
+.sec{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;color:var(--ink5);letter-spacing:.1em;font-family:var(--fm);margin-bottom:14px;text-transform:uppercase}
+.sec::before{content:'';width:20px;height:2px;background:linear-gradient(90deg,var(--c1),var(--mg));border-radius:1px;flex-shrink:0}
+.lesson{background:white;border:1px solid var(--p3);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.les-head{padding:14px 20px;border-bottom:1px solid var(--p3);display:flex;align-items:center;gap:10px;background:var(--p2)}
+.les-num{width:28px;height:28px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:900;font-family:var(--fm);color:#fff}
+.les-type{font-size:10px;font-weight:800;padding:3px 9px;border-radius:5px;font-family:var(--fm);flex-shrink:0;text-transform:uppercase;letter-spacing:.05em}
+.les-type.th{background:rgba(124,58,237,.12);color:var(--c1)}
+.les-type.lab{background:rgba(249,115,22,.12);color:#C2410C}
+.les-type.ws{background:rgba(16,185,129,.1);color:#065F46}
+.les-type.tool{background:rgba(217,70,239,.12);color:#A21CAF}
+.les-title{font-size:14px;font-weight:800;color:var(--ink);flex:1}
+.les-dur{font-size:11px;font-weight:700;color:var(--ink5);font-family:var(--fm);flex-shrink:0}
+.les-body{padding:20px 24px}
+.les-body p{font-size:14px;color:var(--ink2);line-height:1.8;margin-bottom:12px}
+.les-body p:last-child{margin-bottom:0}
+.les-body strong{font-weight:800;color:var(--ink)}
+.les-body ul{padding-left:18px;margin-bottom:12px}
+.les-body li{font-size:14px;color:var(--ink2);line-height:1.75;margin-bottom:4px}
+.kp{background:var(--c5);border-left:3px solid var(--c1);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0}
+.kp-l{font-size:10px;font-weight:800;color:var(--c1);font-family:var(--fm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.kp-t{font-size:13.5px;color:var(--ink2);line-height:1.65;font-weight:500}
+/* 툴 카드 (이 트랙 특화) */
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.tool-card{background:white;border:1px solid var(--p3);border-radius:14px;padding:16px 18px;position:relative;overflow:hidden}
+.tool-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.tool-card.img::before{background:linear-gradient(90deg,#7C3AED,#D946EF)}
+.tool-card.vid::before{background:linear-gradient(90deg,#3B82F6,#06B6D4)}
+.tool-card.aud::before{background:linear-gradient(90deg,#F97316,#EAB308)}
+.tool-card.edit::before{background:linear-gradient(90deg,#10B981,#3B82F6)}
+.tc-ic{font-size:26px;margin-bottom:8px}
+.tc-name{font-size:14px;font-weight:900;color:var(--ink);margin-bottom:4px}
+.tc-category{font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;font-family:var(--fm)}
+.tc-desc{font-size:12.5px;color:var(--ink4);line-height:1.6;margin-bottom:10px}
+.tc-use{font-size:11.5px;color:var(--ink3);line-height:1.6}
+.tc-use strong{font-weight:800;color:var(--c1)}
+/* 워크플로우 박스 */
+.workflow{background:white;border:1px solid var(--p3);border-radius:14px;padding:18px 22px;margin:14px 0}
+.wf-l{font-size:10px;font-weight:800;color:var(--mg);font-family:var(--fm);margin-bottom:14px;text-transform:uppercase;letter-spacing:.1em}
+.wf-steps{display:flex;align-items:stretch;gap:0;overflow-x:auto}
+.wf-step{flex:1;min-width:0;text-align:center;padding:12px 10px;position:relative}
+.wf-step:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--ink5);z-index:1}
+.wf-ic{font-size:22px;margin-bottom:6px}
+.wf-tool{font-size:10px;font-weight:800;color:var(--c1);font-family:var(--fm);margin-bottom:3px;text-transform:uppercase}
+.wf-desc{font-size:11.5px;color:var(--ink3);line-height:1.45}
+/* 프롬프트 박스 */
+.pb{background:#08041A;border-radius:14px;overflow:hidden;margin:14px 0;border:1px solid rgba(139,92,246,.18)}
+.pb-top{padding:10px 18px;background:#100830;border-bottom:1px solid rgba(139,92,246,.15);display:flex;align-items:center;gap:8px}
+.pb-dots{display:flex;gap:5px}.pd{width:11px;height:11px;border-radius:50%}
+.pd.r{background:#FF5F57}.pd.y{background:#FEBC2E}.pd.g{background:#28C840}
+.pb-label{font-size:11px;font-weight:700;color:rgba(196,181,253,.5);font-family:var(--fm);margin-left:8px;flex:1}
+.pb-tag{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:4px;font-family:var(--fm)}
+.pb-tag.tpl{background:rgba(124,58,237,.25);color:#C4B5FD}
+.pb-tag.img{background:rgba(217,70,239,.2);color:#F0ABFC}
+.pb-tag.vid{background:rgba(59,130,246,.2);color:#93C5FD}
+.pb-tag.aud{background:rgba(249,115,22,.2);color:#FED7AA}
+.pb-body{padding:20px 22px;font-family:var(--fm);font-size:12.5px;color:#C4B5FD;line-height:1.9;white-space:pre-wrap}
+.slot{color:#FDE68A;font-weight:700}.comment{color:#2D1A4A;font-style:italic}.ai-r{color:#86EFAC}
+.prac{background:rgba(124,58,237,.05);border:1px solid var(--c-border);border-radius:14px;padding:18px 22px;margin:14px 0}
+.prac-l{font-size:10px;font-weight:800;color:var(--c1);font-family:var(--fm);margin-bottom:12px;text-transform:uppercase;letter-spacing:.1em}
+.prac-steps{display:flex;flex-direction:column;gap:9px}
+.ps{display:flex;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--ink2);line-height:1.65}
+.ps-n{width:24px;height:24px;border-radius:7px;background:var(--c1);color:#fff;font-size:11px;font-weight:900;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm)}
+.mission{background:var(--c5);border:1px solid var(--c-border);border-radius:14px;padding:18px 22px;margin:14px 0}
+.mis-l{font-size:10px;font-weight:800;color:var(--c1);font-family:var(--fm);margin-bottom:10px;text-transform:uppercase;letter-spacing:.1em}
+.mis-t{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px;font-family:var(--fs)}
+.mis-d{font-size:13.5px;color:var(--ink3);line-height:1.7;margin-bottom:12px}
+.mis-rewards{display:flex;gap:8px;flex-wrap:wrap}
+.mr{padding:4px 11px;border-radius:6px;font-size:11.5px;font-weight:800;font-family:var(--fm)}
+.mr.xp{background:rgba(249,115,22,.15);color:#C2410C}.mr.pt{background:rgba(16,185,129,.12);color:#065F46}
+.inote{background:#08041A;border-radius:14px;padding:18px 22px;margin:14px 0;border:1px solid rgba(124,58,237,.25)}
+.inote-l{font-size:10px;font-weight:800;color:#C4B5FD;font-family:var(--fm);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.1em}
+.inote-l::after{content:'· 수강생 비공개';font-size:9px;color:rgba(239,68,68,.7)}
+.inote-body{font-size:13px;color:rgba(196,181,253,.65);line-height:1.8}
+.inote-body strong{color:rgba(196,181,253,.9);font-weight:700}
+.inote-body ul{padding-left:16px;margin-top:6px}.inote-body li{margin-bottom:5px}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--p3),transparent);margin:32px 0}
+.tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+.tbl th{padding:10px 14px;text-align:left;font-size:10.5px;font-weight:800;color:var(--ink3);letter-spacing:.06em;border-bottom:2px solid var(--p3);background:var(--p2)}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--p3);color:var(--ink2);line-height:1.6;vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}.tbl tr:hover td{background:var(--p2)}
+.chap{background:linear-gradient(135deg,#08041A 0%,#120830 55%,#0A0520 100%);border-radius:18px;padding:48px 44px;margin:60px 0;position:relative;overflow:hidden}
+.chap-g{position:absolute;right:-50px;top:-50px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.25),transparent 65%);pointer-events:none}
+.chap-g2{position:absolute;left:-30px;bottom:-30px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(217,70,239,.2),transparent 65%);pointer-events:none}
+.chap-part{font-size:10.5px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:.15em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.chap-n{font-size:60px;font-weight:900;font-family:var(--fm);line-height:1;margin-bottom:8px}
+.chap-h{font-family:var(--fs);font-size:24px;font-weight:900;color:#fff;line-height:1.3;margin-bottom:8px}
+.chap-s{font-size:14px;color:rgba(255,255,255,.45);line-height:1.65}
+.chap-meta{font-size:11px;color:rgba(255,255,255,.25);font-family:var(--fm);margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+.warn{background:rgba(239,68,68,.05);border-left:3px solid var(--rd);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0}
+.warn-l{font-size:10px;font-weight:800;color:var(--rd);font-family:var(--fm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.warn-t{font-size:13.5px;color:var(--ink2);line-height:1.65}
+@media(max-width:700px){.wrap{padding:0 16px 80px}.toc-grid{grid-template-columns:1fr}.tool-grid{grid-template-columns:1fr}.wf-steps{flex-direction:column}.chap{padding:32px 22px}.chap-n{font-size:44px}}
+</style>
+</head>
+<body>
+<div class="cover" id="top">
+  <div class="cov-g1"></div><div class="cov-g2"></div><div class="cov-noise"></div>
+  <div class="cov-inner">
+    <div class="cov-series">AI OPENCOLLEGE LEARNING SYSTEM · CREATIVE COURSE · VOLUME I</div>
+    <div class="cov-badge"><div class="cov-bdot"></div>AI 디자인·마케팅 크리에이티브 과정</div>
+    <h1 class="cov-title">AI로 <em>창작의 한계를<br>넘는다</em></h1>
+    <p class="cov-sub">이미지·영상·음악·음성·편집까지<br>나노바나나·Veo3·CapCut·ElevenLabs·Suno를 완전 정복하는 교안</p>
+    <div class="cov-rule"></div>
+    <div class="cov-stats">
+      <div class="cs"><div class="cs-n">10</div><div class="cs-l">모듈</div></div>
+      <div class="cs"><div class="cs-n">40</div><div class="cs-l">일</div></div>
+      <div class="cs"><div class="cs-n">5개</div><div class="cs-l">AI 툴</div></div>
+      <div class="cs"><div class="cs-n">Creative</div><div class="cs-l">과정</div></div>
+    </div>
+    <div class="cov-chips">
+      <div class="cc">🖼 나노바나나 이미지생성</div>
+      <div class="cc">🎬 Veo3 영상제작</div>
+      <div class="cc">✂️ CapCut AI 편집</div>
+      <div class="cc">🎙 ElevenLabs 음성</div>
+      <div class="cc">🎵 Suno 음악생성</div>
+    </div>
+  </div>
+  <div class="cov-footer">AI OpenCollege · 크리에이티브 과정 · AI 디자인·마케팅 · 교안 v1.0 · 2026</div>
+</div>
+<nav class="nav">
+  <div class="nav-wrap">
+    <div class="nt on" onclick="navTo(this,'toc')">목차</div>
+    <div class="nt" onclick="navTo(this,'m01')">M01</div>
+    <div class="nt" onclick="navTo(this,'m02')">M02</div>
+    <div class="nt" onclick="navTo(this,'m03')">M03</div>
+    <div class="nt" onclick="navTo(this,'m04')">M04</div>
+    <div class="nt" onclick="navTo(this,'m05')">M05</div>
+    <div class="nt" onclick="navTo(this,'m06')">M06</div>
+    <div class="nt" onclick="navTo(this,'m07')">M07</div>
+    <div class="nt" onclick="navTo(this,'m08')">M08</div>
+    <div class="nt" onclick="navTo(this,'m09')">M09</div>
+    <div class="nt" onclick="navTo(this,'m10')">M10</div>
+  </div>
+</nav>
+<div class="wrap">
+
+<!-- TOC -->
+<section id="toc" class="mod" style="border-top:none;padding-top:52px">
+  <div class="mod-ey">CONTENTS</div>
+  <h2 class="mod-h" style="font-size:30px">목차</h2>
+  <p style="font-size:14px;color:var(--ink4);margin-bottom:28px;line-height:1.7">10개 모듈 · 40일 과정. 디자이너가 아니어도, 개발자가 아니어도 됩니다. AI 툴로 프로 수준의 이미지·영상·음악·마케팅 콘텐츠를 만드는 실전 과정입니다.</p>
+  <!-- 툴 개요 -->
+  <div class="tool-grid" style="margin-bottom:24px">
+    <div class="tool-card img"><div class="tc-ic">🖼</div><div class="tc-name">나노바나나 (NanoBanana)</div><div class="tc-category" style="background:rgba(124,58,237,.12);color:var(--c1)">IMAGE AI</div><div class="tc-desc">한국어 프롬프트 친화적 AI 이미지 생성 서비스. 상업적 이용 가능, 고해상도 출력.</div><div class="tc-use"><strong>활용:</strong> SNS 썸네일, 마케팅 비주얼, 상품 이미지, 브랜딩</div></div>
+    <div class="tool-card vid"><div class="tc-ic">🎬</div><div class="tc-name">Veo3 (Google DeepMind)</div><div class="tc-category" style="background:rgba(59,130,246,.1);color:var(--bl)">VIDEO AI</div><div class="tc-desc">텍스트·이미지→고품질 영상 생성. 물리적 자연스러움, 복잡한 동작 구현.</div><div class="tc-use"><strong>활용:</strong> 광고 영상, 제품 시연, 숏폼 콘텐츠, 브랜드 영상</div></div>
+    <div class="tool-card aud"><div class="tc-ic">✂️</div><div class="tc-name">CapCut AI</div><div class="tc-category" style="background:rgba(249,115,22,.12);color:#C2410C">EDITING AI</div><div class="tc-desc">AI 자동 편집·자막·효과·배경제거. 숏폼 영상 제작의 표준 도구.</div><div class="tc-use"><strong>활용:</strong> 릴스/쇼츠 편집, 자막 자동화, 배경음악, 트렌딩 효과</div></div>
+    <div class="tool-card aud"><div class="tc-ic">🎙</div><div class="tc-name">ElevenLabs</div><div class="tc-category" style="background:rgba(234,179,8,.12);color:#92400E">VOICE AI</div><div class="tc-desc">가장 자연스러운 AI 음성 생성. 다국어, 커스텀 보이스 클로닝.</div><div class="tc-use"><strong>활용:</strong> 영상 내레이션, 팟캐스트, 광고 보이스오버, 오디오북</div></div>
+    <div class="tool-card edit"><div class="tc-ic">🎵</div><div class="tc-name">Suno</div><div class="tc-category" style="background:rgba(16,185,129,.1);color:#065F46">MUSIC AI</div><div class="tc-desc">텍스트 프롬프트→완성된 음악 트랙. 다양한 장르, 보컬 포함.</div><div class="tc-use"><strong>활용:</strong> 영상 BGM, 광고 징글, SNS 콘텐츠 배경음악</div></div>
+    <div class="tool-card img" style="border-top-color:transparent;border-top:1px solid var(--p3);"><div class="tc-ic">🧠</div><div class="tc-name">Claude (전략·카피)</div><div class="tc-category" style="background:rgba(124,58,237,.12);color:var(--c1)">STRATEGY AI</div><div class="tc-desc">콘텐츠 전략, 카피라이팅, 프롬프트 설계, 마케팅 기획을 총괄.</div><div class="tc-use"><strong>활용:</strong> 캠페인 기획, 카피 작성, 프롬프트 최적화, 분석</div></div>
+  </div>
+  <div class="toc-grid">
+    <a class="ti" onclick="jumpTo('m01')"><div class="ti-num" style="background:#7C3AED">01</div><div class="ti-bd"><div class="ti-wk">DAY 1–4</div><div class="ti-nm">크리에이티브 AI 생태계 — 툴 선택과 워크플로우 설계</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m02')"><div class="ti-num" style="background:#6D28D9">02</div><div class="ti-bd"><div class="ti-wk">DAY 5–8</div><div class="ti-nm">나노바나나 완전 정복 — AI 이미지 프롬프트 마스터</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m03')"><div class="ti-num" style="background:#5B21B6">03</div><div class="ti-bd"><div class="ti-wk">DAY 9–12</div><div class="ti-nm">브랜드 비주얼 시스템 — 일관된 이미지 제작</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m04')"><div class="ti-num" style="background:#3B82F6">04</div><div class="ti-bd"><div class="ti-wk">DAY 13–17</div><div class="ti-nm">Veo3 영상 제작 — 텍스트·이미지→고품질 비디오</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m05')"><div class="ti-num" style="background:#1D4ED8">05</div><div class="ti-bd"><div class="ti-wk">DAY 18–21</div><div class="ti-nm">CapCut AI 편집 — 숏폼 영상 자동 제작 마스터</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m06')"><div class="ti-num" style="background:#F97316">06</div><div class="ti-bd"><div class="ti-wk">DAY 22–25</div><div class="ti-nm">ElevenLabs 음성 — 내레이션·광고 보이스 제작</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m07')"><div class="ti-num" style="background:#10B981">07</div><div class="ti-bd"><div class="ti-wk">DAY 26–28</div><div class="ti-nm">Suno 음악 생성 — BGM·징글·분위기 음악 만들기</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m08')"><div class="ti-num" style="background:#D946EF">08</div><div class="ti-bd"><div class="ti-wk">DAY 29–32</div><div class="ti-nm">멀티미디어 통합 워크플로우 — 완성된 콘텐츠 생산</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m09')"><div class="ti-num" style="background:#DB2777">09</div><div class="ti-bd"><div class="ti-wk">DAY 33–36</div><div class="ti-nm">AI 마케팅 캠페인 — 전략·카피·비주얼 통합</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m10')"><div class="ti-num" style="background:#1E1B4B">10</div><div class="ti-bd"><div class="ti-wk">DAY 37–40</div><div class="ti-nm">캡스톤 — AI 크리에이티브 포트폴리오 완성</div></div><div class="ti-cnt">→</div></a>
+  </div>
+</section>
+
+<!-- PART 1 -->
+<div class="chap" id="part1">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART ONE</div>
+  <div class="chap-n" style="color:#C4B5FD">01–03</div>
+  <div class="chap-h">이미지를 마스터한다<br>— 나노바나나로 세상을 그린다</div>
+  <div class="chap-s">크리에이티브 AI 생태계를 이해하고, 나노바나나로 원하는 이미지를,<br>브랜드 비주얼 시스템까지 체계적으로 구축합니다.</div>
+  <div class="chap-meta">M01 AI 생태계 · M02 나노바나나 · M03 브랜드 비주얼 · Day 1–12</div>
+</div>
+
+<!-- M01 -->
+<section class="mod" id="m01">
+  <div class="mod-ey">MODULE 01 · DAY 1–4</div>
+  <div class="mod-badge" style="background:rgba(124,58,237,.12);color:var(--c1)">M01 · AI 생태계</div>
+  <h2 class="mod-h">크리에이티브 AI 생태계<br>— 툴 선택과 워크플로우 설계</h2>
+  <p class="mod-sub">이미지·영상·음악·음성을 만드는 AI 툴이 쏟아지고 있습니다. 무엇을 언제 쓰고, 어떻게 조합해야 하는지 전략적으로 이해하는 것이 시작입니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 1–4</div>
+    <div class="mchip">🗺 툴 생태계 이해</div>
+    <div class="mchip">⚡ 워크플로우 설계</div>
+    <div class="mchip">⏱ 약 80분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>5가지 AI 툴(나노바나나·Veo3·CapCut·ElevenLabs·Suno)의 역할을 이해하고 조합할 수 있다</li>
+      <li>콘텐츠 목적에 따라 어떤 툴 조합이 최적인지 판단할 수 있다</li>
+      <li>모든 계정을 세팅하고 기본 인터페이스를 이해할 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">AI 크리에이티브 워크플로우 개요</div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:var(--c1)">1</div><div class="les-type th">개요</div><div class="les-title">콘텐츠 유형별 AI 툴 조합 — 언제 무엇을 쓰나</div><div class="les-dur">20분</div></div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>콘텐츠 목적</th><th>주요 툴 조합</th><th>결과물</th><th>난이도</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SNS 인스타그램 포스팅</strong></td><td>나노바나나 + Claude (카피)</td><td>이미지 + 캡션</td><td>⭐⭐</td></tr>
+          <tr><td><strong>YouTube 숏츠/릴스</strong></td><td>Veo3 or CapCut + ElevenLabs + Suno</td><td>30~60초 영상</td><td>⭐⭐⭐</td></tr>
+          <tr><td><strong>광고 영상 (30초)</strong></td><td>나노바나나 + Veo3 + ElevenLabs + Suno + CapCut</td><td>완성된 광고</td><td>⭐⭐⭐⭐</td></tr>
+          <tr><td><strong>제품 썸네일</strong></td><td>나노바나나</td><td>상품 이미지</td><td>⭐⭐</td></tr>
+          <tr><td><strong>팟캐스트 에피소드</strong></td><td>Claude (대본) + ElevenLabs (음성) + Suno (인트로)</td><td>오디오 파일</td><td>⭐⭐⭐</td></tr>
+          <tr><td><strong>브랜드 영상 (1분)</strong></td><td>Claude + 나노바나나 + Veo3 + ElevenLabs + Suno + CapCut</td><td>완성된 브랜드 필름</td><td>⭐⭐⭐⭐⭐</td></tr>
+        </tbody>
+      </table>
+      <div class="kp">
+        <div class="kp-l">이 과정의 최종 목표</div>
+        <div class="kp-t">10개 모듈을 마치면 <strong>혼자서 광고 영상 1편을 처음부터 끝까지</strong> 만들 수 있습니다. 기획(Claude) → 이미지(나노바나나) → 영상(Veo3) → 편집(CapCut) → 음성(ElevenLabs) → 음악(Suno)의 전 과정을 체득합니다.</div>
+      </div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">계정 세팅 체크리스트</div>
+  <div class="prac">
+    <div class="prac-l">✅ 첫 수업 전 세팅 완료 목록</div>
+    <div class="prac-steps">
+      <div class="ps"><div class="ps-n">1</div><strong>나노바나나 (nanobanana.ai 또는 공식 URL):</strong> 회원가입 + 무료 크레딧 확인</div>
+      <div class="ps"><div class="ps-n">2</div><strong>Google AI Studio (Veo3):</strong> Google 계정으로 접속 + Veo 3 접근 확인</div>
+      <div class="ps"><div class="ps-n">3</div><strong>CapCut:</strong> 앱 설치 (모바일/데스크탑 모두) + 계정 생성</div>
+      <div class="ps"><div class="ps-n">4</div><strong>ElevenLabs (elevenlabs.io):</strong> 회원가입 + 무료 플랜 (월 10,000자)</div>
+      <div class="ps"><div class="ps-n">5</div><strong>Suno (suno.com):</strong> Discord 또는 웹으로 가입 + 무료 크레딧</div>
+      <div class="ps"><div class="ps-n">6</div><strong>Claude.ai:</strong> 계정 확인 (이미 있으면 OK)</div>
+    </div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 1–4 미션</div><div class="mis-t">6개 툴 전체 세팅 완료 + 각 툴 기본 테스트</div><div class="mis-d">6개 툴 모두 계정을 만들고, 각각 가장 기본적인 기능 1개씩 테스트해보세요. "가장 신기했던 툴"을 하나 골라 화면 캡처와 함께 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+50 XP</div><div class="mr pt">+20 P</div></div></div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>나노바나나 상태 확인:</strong> 수업 시점에 서비스 상태를 반드시 확인하세요. 한국 AI 서비스는 업데이트가 잦습니다. 접속 불가 시 대안으로 Ideogram.ai(한국어 친화)를 준비해두세요.<br><br>
+      <strong>Veo3 접근:</strong> 2026년 기준 Google AI Studio를 통해 접근 가능하지만 접근 방식이 변경될 수 있습니다. 수업 전날 반드시 접근 경로를 확인하세요.
+    </div>
+  </div>
+</section>
+
+<!-- M02 -->
+<section class="mod" id="m02">
+  <div class="mod-ey">MODULE 02 · DAY 5–8</div>
+  <div class="mod-badge" style="background:rgba(217,70,239,.12);color:#A21CAF">M02 · 이미지 생성</div>
+  <h2 class="mod-h">나노바나나 완전 정복<br>— AI 이미지 프롬프트 마스터</h2>
+  <p class="mod-sub">생각한 것을 그대로 이미지로 만들어내는 것은 기술이 아닙니다. 좋은 프롬프트를 쓰는 것입니다. 나노바나나로 원하는 이미지를 정확하게 생성하는 프롬프트 공식을 마스터합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 5–8</div>
+    <div class="mchip">🖼 이미지 프롬프트</div>
+    <div class="mchip">🎨 스타일 컨트롤</div>
+    <div class="mchip">⏱ 약 100분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>SCSE 이미지 프롬프트 공식(Subject·Context·Style·Extra)을 적용할 수 있다</li>
+      <li>원하는 스타일(사진/일러스트/3D/포스터)로 정확하게 이미지를 생성할 수 있다</li>
+      <li>생성된 이미지를 네거티브 프롬프트와 파라미터로 세밀하게 조정할 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">이미지 프롬프트 공식</div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#A21CAF">1</div><div class="les-type th">이론</div><div class="les-title">SCSE 이미지 프롬프트 공식 — 원하는 이미지를 정확하게</div><div class="les-dur">20분</div></div>
+    <div class="les-body">
+      <p>이미지 생성 AI에서 결과물의 90%는 프롬프트에 달려있습니다. "예쁜 카페 사진"처럼 막연하게 쓰면 막연한 결과가 나옵니다. SCSE 공식으로 구조화하면 원하는 것이 나옵니다.</p>
+      <table class="tbl">
+        <thead><tr><th>요소</th><th>설명</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr><td><strong>S — Subject</strong></td><td>주제·주인공 (무엇을 그릴 건지)</td><td>젊은 여성 바리스타, 라떼 아트를 만들고 있는</td></tr>
+          <tr><td><strong>C — Context</strong></td><td>배경·환경·상황 (어디서, 어떤 분위기)</td><td>따뜻한 아침 햇살이 드는 원목 인테리어 카페에서</td></tr>
+          <tr><td><strong>S — Style</strong></td><td>스타일·렌더링·분위기</td><td>필름 사진 스타일, 따뜻한 색감, 보케 효과</td></tr>
+          <tr><td><strong>E — Extra</strong></td><td>추가 파라미터·품질·비율</td><td>4K, 상업 사진, 16:9 와이드</td></tr>
+        </tbody>
+      </table>
+      <div class="kp">
+        <div class="kp-l">Claude로 이미지 프롬프트 생성하기</div>
+        <div class="kp-t">이미지 프롬프트 자체를 Claude에게 만들게 하면 훨씬 좋은 결과가 나옵니다. "이런 이미지를 만들고 싶어 → Claude가 상세 프롬프트 작성 → 나노바나나에 입력"이 가장 효율적인 워크플로우입니다.</div>
+      </div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">이미지 프롬프트 생성 + 스타일 변형</div><div class="pb-tag img">이미지 AI</div></div>
+    <div class="pb-body"><span class="comment"># Claude로 나노바나나 프롬프트 생성</span>
+나노바나나(AI 이미지 생성)에 쓸 프롬프트를 써줘.
+
+내가 만들고 싶은 이미지:
+<span class="slot">[원하는 이미지 설명 — 한국어로 자유롭게]</span>
+
+사용 목적:
+<span class="slot">[SNS 포스팅 / 광고 / 제품 이미지 / 브랜딩 등]</span>
+
+요구사항:
+- 스타일: <span class="slot">[사진 실사 / 일러스트 / 3D / 미니멀 / 레트로 등]</span>
+- 색감: <span class="slot">[따뜻한 / 차가운 / 파스텔 / 모노크롬 등]</span>
+- 비율: <span class="slot">[정방형(1:1) / 세로(4:5) / 가로(16:9)]</span>
+
+SCSE 공식으로 구조화된 프롬프트를 3가지 버전으로 만들어줘.
+각각 조금씩 다른 해석으로.
+
+<span class="comment"># 스타일 변형 프롬프트 세트</span>
+같은 주제를 5가지 스타일로 표현하는 프롬프트 세트를 만들어줘.
+
+주제: <span class="slot">[예: "서울의 카페 풍경"]</span>
+
+스타일별 프롬프트:
+1. 현대 상업 사진 스타일
+2. 수채화 일러스트 스타일
+3. 레트로 필름 사진 스타일
+4. 미니멀리즘 그래픽 스타일
+5. 팝아트 스타일
+
+<span class="comment"># 네거티브 프롬프트 (원하지 않는 것 제거)</span>
+다음 이미지 생성에서 피해야 할 요소를 네거티브 프롬프트로 정리해줘.
+
+피하고 싶은 것:
+<span class="slot">[흐릿한 이미지, 인공적인 느낌, 과도한 필터, 왜곡된 얼굴 등]</span></div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">나노바나나 실습 — 스타일별 이미지 생성</div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#A21CAF">2</div><div class="les-type lab">실습</div><div class="les-title">주제별 이미지 20장 생성 실습</div><div class="les-dur">40분</div></div>
+    <div class="les-body">
+      <p>나노바나나에서 같은 주제를 다양한 스타일로 생성해보는 실습입니다. 좋은 결과가 나올 때의 프롬프트 패턴을 기록해두는 것이 핵심입니다.</p>
+      <div class="prac">
+        <div class="prac-l">🎨 실습 단계</div>
+        <div class="prac-steps">
+          <div class="ps"><div class="ps-n">1</div>Claude로 브랜드/제품 이미지 프롬프트 5세트 생성 (각 3가지 버전)</div>
+          <div class="ps"><div class="ps-n">2</div>나노바나나에서 각 프롬프트로 이미지 생성 (총 15장 이상)</div>
+          <div class="ps"><div class="ps-n">3</div>가장 좋은 결과 5장 선택 + "왜 이 프롬프트가 잘 됐는지" 분석</div>
+          <div class="ps"><div class="ps-n">4</div>선택된 이미지를 CapCut으로 간단한 SNS 포스팅 형식으로 편집</div>
+          <div class="ps"><div class="ps-n">5</div>최종 5장 + 사용 프롬프트 제출</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 5–8 미션</div><div class="mis-t">SNS 포스팅용 이미지 5장 완성</div><div class="mis-d">실제 브랜드(내 브랜드 또는 가상 브랜드)의 SNS 포스팅에 쓸 이미지 5장을 나노바나나로 생성하세요. 각 이미지의 프롬프트와 생성 과정도 함께 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+70 XP</div><div class="mr pt">+40 P</div></div></div>
+</section>
+
+<!-- M03 -->
+<section class="mod" id="m03">
+  <div class="mod-ey">MODULE 03 · DAY 9–12</div>
+  <div class="mod-badge" style="background:rgba(91,33,182,.12);color:#5B21B6">M03 · 브랜드 비주얼</div>
+  <h2 class="mod-h">브랜드 비주얼 시스템<br>— 일관된 이미지 제작</h2>
+  <p class="mod-sub">좋은 브랜드는 이미지 하나하나가 아닌 전체적인 일관성에서 나옵니다. AI 이미지를 브랜드 시스템으로 연결하는 방법을 배웁니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 9–12</div><div class="mchip">🎨 브랜드 일관성</div><div class="mchip">📐 스타일 가이드</div><div class="mchip">⏱ 약 90분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>브랜드 이미지 스타일 가이드를 Claude로 정의할 수 있다</li>
+    <li>동일한 스타일을 반복 생성하는 "시드 프롬프트" 시스템을 만들 수 있다</li>
+    <li>로고·제품·라이프스타일 이미지를 통일된 톤으로 제작할 수 있다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">브랜드 이미지 스타일 가이드 + 시드 프롬프트</div><div class="pb-tag img">브랜드 시스템</div></div>
+    <div class="pb-body"><span class="comment"># 브랜드 이미지 스타일 가이드</span>
+다음 브랜드의 AI 이미지 스타일 가이드를 만들어줘.
+
+[브랜드 정보]
+브랜드명: <span class="slot">[이름]</span>
+업종/제품: <span class="slot">[설명]</span>
+타겟 고객: <span class="slot">[누구]</span>
+브랜드 컨셉: <span class="slot">[따뜻함 / 모던 / 프리미엄 / 친근함 등]</span>
+
+스타일 가이드 포함 내용:
+1. 색감 팔레트 (3~5가지 주요 색상 + 느낌)
+2. 이미지 스타일 (어떤 렌더링 방식)
+3. 조명 방향과 분위기
+4. 구도 원칙 (클로즈업/와이드/여백 활용)
+5. 피해야 할 요소 목록 (네거티브 지침)
+
+<span class="comment"># 재사용 가능한 시드 프롬프트</span>
+위 스타일 가이드를 기반으로
+모든 이미지에 고정으로 붙일 "시드 프롬프트"를 만들어줘.
+
+형식: "[주제 설명], [고정 스타일 요소들]"
+이 시드 프롬프트에 앞에 주제만 바꾸면
+항상 같은 브랜드 톤이 나오도록.
+
+예시 주제별 테스트:
+- 제품 이미지 버전
+- 라이프스타일 이미지 버전
+- 팀/사람 이미지 버전
+- 배경 텍스처 버전</div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 9–12 미션</div><div class="mis-t">브랜드 이미지 패키지 (8장) 완성</div><div class="mis-d">시드 프롬프트로 동일 브랜드 톤의 이미지 8장(제품·라이프스타일·배경 포함)을 생성하세요. 완성된 이미지 패키지와 시드 프롬프트를 함께 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+45 P</div></div></div>
+</section>
+
+<!-- PART 2 -->
+<div class="chap" id="part2">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART TWO</div>
+  <div class="chap-n" style="color:#93C5FD">04–07</div>
+  <div class="chap-h">영상·음성·음악을 만든다<br>— 멀티미디어 완전 정복</div>
+  <div class="chap-s">Veo3로 영상을 만들고, CapCut으로 편집하고,<br>ElevenLabs로 목소리를, Suno로 배경음악을 완성합니다.</div>
+  <div class="chap-meta">M04 Veo3 · M05 CapCut · M06 ElevenLabs · M07 Suno · Day 13–28</div>
+</div>
+
+<!-- M04 -->
+<section class="mod" id="m04">
+  <div class="mod-ey">MODULE 04 · DAY 13–17</div>
+  <div class="mod-badge" style="background:rgba(59,130,246,.1);color:#1D4ED8">M04 · Veo3 영상</div>
+  <h2 class="mod-h">Veo3 영상 제작<br>— 텍스트·이미지→고품질 비디오</h2>
+  <p class="mod-sub">텍스트 한 줄, 또는 이미지 한 장이 움직이는 영상이 됩니다. Veo3는 현재 가장 자연스러운 동작과 물리적 표현이 가능한 AI 영상 생성 모델입니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 13–17</div>
+    <div class="mchip">🎬 Veo3 마스터</div>
+    <div class="mchip">🎥 영상 프롬프트</div>
+    <div class="mchip">⏱ 약 120분</div>
+  </div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>텍스트→영상, 이미지→영상 두 가지 방식으로 Veo3를 활용할 수 있다</li>
+    <li>카메라 무브먼트·피사체 동작·배경을 프롬프트로 제어할 수 있다</li>
+    <li>생성된 클립들을 CapCut으로 연결해 완성된 영상을 만들 수 있다</li>
+  </ul></div>
+  <div class="sec">Veo3 프롬프트 공식</div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#1D4ED8">1</div><div class="les-type th">이론</div><div class="les-title">영상 프롬프트 5요소 — 움직이는 이미지를 설계하는 법</div><div class="les-dur">22분</div></div>
+    <div class="les-body">
+      <p>영상 프롬프트는 이미지 프롬프트에 <strong>시간과 움직임</strong>이 더해집니다. 무엇이 어떻게 움직이고, 카메라는 어떻게 움직이는지를 명확하게 써야 합니다.</p>
+      <table class="tbl">
+        <thead><tr><th>요소</th><th>설명</th><th>예시 키워드</th></tr></thead>
+        <tbody>
+          <tr><td><strong>피사체</strong></td><td>무엇이 나오는가</td><td>젊은 여성, 커피잔, 도심 거리</td></tr>
+          <tr><td><strong>행동/동작</strong></td><td>어떻게 움직이는가</td><td>천천히 걷는, 바람에 흔들리는, 회전하는</td></tr>
+          <tr><td><strong>카메라 무브</strong></td><td>카메라가 어떻게 움직이는가</td><td>줌인, 슬로우 팬, 드론 샷, 클로즈업</td></tr>
+          <tr><td><strong>분위기/조명</strong></td><td>빛과 분위기</td><td>골든아워, 네온 불빛, 안개 낀 아침</td></tr>
+          <tr><td><strong>영상 스타일</strong></td><td>촬영 방식</td><td>시네마틱, 광고 스타일, 다큐멘터리, 4K</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">Veo3 영상 프롬프트 생성 마스터</div><div class="pb-tag vid">VIDEO AI</div></div>
+    <div class="pb-body"><span class="comment"># Veo3 텍스트→영상 프롬프트</span>
+Veo3에 입력할 영상 프롬프트를 써줘.
+
+원하는 영상:
+<span class="slot">[어떤 장면을 영상으로 만들고 싶은지 설명]</span>
+
+영상 목적:
+<span class="slot">[SNS 숏폼 / 광고 / 브랜드 영상 / 제품 소개]</span>
+
+구체화해줄 것:
+- 피사체 설명 (누가/무엇이)
+- 행동/동작 (어떻게 움직이는지)
+- 카메라 무브 (줌인/패닝/스태틱 등)
+- 분위기 (밝은/어두운/따뜻한/차가운)
+- 영상 스타일 (시네마틱/광고/다큐)
+
+영어 프롬프트로도 번역해줘.
+(Veo3는 영어 프롬프트가 더 정교하게 작동할 수 있음)
+
+<span class="comment"># 이미지→영상 (Veo3 이미지 애니메이션)</span>
+다음 이미지를 자연스럽게 움직이게 할 프롬프트를 써줘.
+
+이미지 설명:
+<span class="slot">[나노바나나로 만든 이미지 설명]</span>
+
+원하는 동작:
+<span class="slot">[바람에 머리카락이 날리는 / 화면 안으로 걸어들어오는 등]</span>
+
+<span class="comment"># 30초 광고 영상 스토리보드</span>
+다음 제품의 30초 광고 영상 스토리보드를 만들어줘.
+
+제품: <span class="slot">[제품명·설명]</span>
+타겟: <span class="slot">[타겟 고객]</span>
+핵심 메시지: <span class="slot">[광고에서 전달할 것]</span>
+
+스토리보드:
+- 씬 1 (0~8초): 훅 — 시선을 잡는 첫 장면
+- 씬 2 (8~18초): 문제/제품 소개
+- 씬 3 (18~25초): 해결/이점 강조
+- 씬 4 (25~30초): CTA + 브랜드
+
+각 씬에 Veo3 프롬프트 포함.</div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 13–17 미션</div><div class="mis-t">Veo3로 10~15초 클립 3개 생성</div><div class="mis-d">브랜드 또는 제품 관련 10~15초 영상 클립을 Veo3로 3개 생성하세요. 사용한 프롬프트와 함께 제출하고, 3개 클립을 CapCut으로 이어붙인 완성본도 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+85 XP</div><div class="mr pt">+55 P</div></div></div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>Veo3 접근 방식:</strong> 수업 시점에 Google AI Studio 또는 Vertex AI를 통한 접근 방식을 최신화하세요. 유료 API 비용이 발생할 수 있으므로 수업용 크레딧 사용 계획을 미리 안내하세요.<br><br>
+      <strong>대안 툴:</strong> Veo3 접근이 어려운 경우 Runway Gen-3, Kling AI, Pika 등 대안 툴을 준비해두세요. 프롬프트 공식은 동일하게 적용됩니다.
+    </div>
+  </div>
+</section>
+
+<!-- M05 -->
+<section class="mod" id="m05">
+  <div class="mod-ey">MODULE 05 · DAY 18–21</div>
+  <div class="mod-badge" style="background:rgba(249,115,22,.12);color:#C2410C">M05 · CapCut AI</div>
+  <h2 class="mod-h">CapCut AI 편집<br>— 숏폼 영상 자동 제작 마스터</h2>
+  <p class="mod-sub">CapCut은 단순 편집 툴을 넘어서 AI 자동 자막·배경 제거·스마트 편집·트렌드 효과를 갖춘 크리에이터의 필수 도구입니다. AI 기능 중심으로 빠르게 마스터합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 18–21</div>
+    <div class="mchip">✂️ AI 자동 편집</div>
+    <div class="mchip">📝 자막 자동화</div>
+    <div class="mchip">⏱ 약 110분</div>
+  </div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>CapCut AI 자동 자막으로 영상에 자막을 즉시 추가할 수 있다</li>
+    <li>배경 제거·배경 교체·색보정을 AI로 처리할 수 있다</li>
+    <li>나노바나나 이미지 + Veo3 클립 + ElevenLabs 음성을 CapCut에서 조립할 수 있다</li>
+    <li>숏폼(30~60초) 영상을 30분 안에 완성하는 워크플로우를 갖출 수 있다</li>
+  </ul></div>
+  <div class="sec">CapCut AI 핵심 기능 7가지</div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#C2410C">1</div><div class="les-type lab">실습</div><div class="les-title">CapCut AI 기능 완전 정복 — 7가지 핵심 실습</div><div class="les-dur">50분</div></div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>#</th><th>기능</th><th>설명</th><th>활용 상황</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>AI 자동 자막</strong></td><td>음성 → 자막 자동 생성 + 스타일링</td><td>모든 영상에 기본 적용</td></tr>
+          <tr><td>2</td><td><strong>배경 제거</strong></td><td>AI가 인물·제품을 배경에서 분리</td><td>제품 영상, 가상 배경 합성</td></tr>
+          <tr><td>3</td><td><strong>텍스트→영상</strong></td><td>스크립트 입력 → 영상 자동 생성</td><td>빠른 콘텐츠 대량 생산</td></tr>
+          <tr><td>4</td><td><strong>AI 음악 맞춤</strong></td><td>영상 분위기에 맞는 BGM 자동 추천</td><td>배경음악 없을 때</td></tr>
+          <tr><td>5</td><td><strong>스마트 컷</strong></td><td>불필요한 멈춤·침묵 자동 제거</td><td>인터뷰, 강의 영상 편집</td></tr>
+          <tr><td>6</td><td><strong>색보정 AI</strong></td><td>영상 분위기에 맞는 필터 자동 적용</td><td>일관된 색감 유지</td></tr>
+          <tr><td>7</td><td><strong>리믹스/템플릿</strong></td><td>트렌딩 형식에 내 영상 적용</td><td>릴스/숏츠 트렌드 활용</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="workflow">
+    <div class="wf-l">⚡ 30분 숏폼 제작 워크플로우</div>
+    <div class="wf-steps">
+      <div class="wf-step"><div class="wf-ic">🧠</div><div class="wf-tool">Claude</div><div class="wf-desc">스크립트<br>30초 분량</div></div>
+      <div class="wf-step"><div class="wf-ic">🖼</div><div class="wf-tool">나노바나나</div><div class="wf-desc">키 이미지<br>3~5장</div></div>
+      <div class="wf-step"><div class="wf-ic">🎬</div><div class="wf-tool">Veo3</div><div class="wf-desc">클립<br>2~3개</div></div>
+      <div class="wf-step"><div class="wf-ic">🎙</div><div class="wf-tool">ElevenLabs</div><div class="wf-desc">내레이션<br>음성 파일</div></div>
+      <div class="wf-step"><div class="wf-ic">✂️</div><div class="wf-tool">CapCut</div><div class="wf-desc">조립·자막<br>·음악 완성</div></div>
+    </div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 18–21 미션</div><div class="mis-t">30~60초 완성 숏폼 영상 1편 제작</div><div class="mis-d">지금까지 만든 이미지·클립을 CapCut으로 조립해 30~60초 완성 영상을 만드세요. AI 자막·배경음악이 반드시 포함되어야 합니다. 실제 SNS에 업로드하면 보너스 XP!</div><div class="mis-rewards"><div class="mr xp">+90 XP</div><div class="mr pt">+60 P</div></div></div>
+</section>
+
+<!-- M06 -->
+<section class="mod" id="m06">
+  <div class="mod-ey">MODULE 06 · DAY 22–25</div>
+  <div class="mod-badge" style="background:rgba(234,179,8,.12);color:#92400E">M06 · ElevenLabs</div>
+  <h2 class="mod-h">ElevenLabs 음성<br>— 내레이션·광고 보이스 제작</h2>
+  <p class="mod-sub">AI 음성 기술은 이제 사람 목소리와 구분하기 어려운 수준입니다. ElevenLabs로 광고·내레이션·팟캐스트에 쓸 수 있는 자연스러운 한국어·영어 음성을 만듭니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 22–25</div>
+    <div class="mchip">🎙 AI 음성 생성</div>
+    <div class="mchip">🌍 다국어 지원</div>
+    <div class="mchip">⏱ 약 90분</div>
+  </div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>ElevenLabs에서 목적에 맞는 AI 보이스를 선택하고 사용할 수 있다</li>
+    <li>영상 내레이션용 스크립트를 Claude로 작성하고 ElevenLabs로 변환할 수 있다</li>
+    <li>커스텀 보이스(나만의 목소리 클로닝)를 이해하고 기초 설정할 수 있다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">ElevenLabs 내레이션 스크립트 + 음성 설정 가이드</div><div class="pb-tag aud">VOICE AI</div></div>
+    <div class="pb-body"><span class="comment"># 광고 내레이션 스크립트</span>
+다음 영상에 쓸 내레이션 스크립트를 써줘.
+ElevenLabs AI 음성으로 읽을 것을 고려해서.
+
+영상 유형: <span class="slot">[광고 / 제품 소개 / 브랜드 영상 / 설명 영상]</span>
+제품/서비스: <span class="slot">[설명]</span>
+영상 길이: <span class="slot">[N초]</span>
+톤: <span class="slot">[따뜻한 / 전문적 / 에너지틱 / 차분한]</span>
+
+스크립트 조건:
+- 자연스럽게 읽히는 문장 (구어체)
+- 감정 강조 표시 포함 (예: [강조], [멈춤])
+- ElevenLabs SSML 태그 활용 (속도·강세 제어)
+- 분량: <span class="slot">[N초 = 약 N자]</span>
+
+<span class="comment"># ElevenLabs 보이스 선택 가이드</span>
+다음 목적에 맞는 ElevenLabs 한국어 보이스 타입을 추천해줘.
+
+목적: <span class="slot">[광고 / 내레이션 / 친근한 안내 / 전문적 설명]</span>
+
+추천 기준:
+- 남성/여성 구분
+- 나이대 느낌 (젊은/성숙한)
+- 속도와 억양 특성
+- 어떤 콘텐츠에 가장 잘 맞는지
+
+<span class="comment"># 멀티랭귀지 활용</span>
+다음 한국어 내레이션을 영어로도 자연스럽게 번역해줘.
+ElevenLabs로 한국어·영어 두 버전 음성을 만들 예정.
+
+한국어 원본:
+<span class="slot">[내레이션 텍스트]</span>
+
+영어 번역 조건:
+- 직역이 아닌 자연스러운 영어로
+- 같은 느낌과 톤 유지
+- 영어권 시청자에게 어색하지 않게</div>
+  </div>
+  <div class="warn">
+    <div class="warn-l">⚠️ 음성 클로닝 윤리</div>
+    <div class="warn-t">ElevenLabs의 보이스 클로닝(다른 사람 목소리 복제)은 <strong>반드시 해당 인물의 동의가 있어야</strong> 합니다. 동의 없는 타인 목소리 클로닝은 법적 문제가 될 수 있습니다. 본 과정에서는 자신의 목소리 클로닝 또는 ElevenLabs 기본 제공 보이스만 사용합니다.</div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 22–25 미션</div><div class="mis-t">30초 광고 내레이션 음성 파일 완성</div><div class="mis-d">Claude로 광고 스크립트를 작성하고 ElevenLabs로 30초 내레이션 음성 파일을 만드세요. 한국어 + 영어 두 버전을 모두 제출하면 보너스 XP!</div><div class="mis-rewards"><div class="mr xp">+80 XP</div><div class="mr pt">+50 P</div></div></div>
+</section>
+
+<!-- M07 -->
+<section class="mod" id="m07">
+  <div class="mod-ey">MODULE 07 · DAY 26–28</div>
+  <div class="mod-badge" style="background:rgba(16,185,129,.1);color:#065F46">M07 · Suno 음악</div>
+  <h2 class="mod-h">Suno 음악 생성<br>— BGM·징글·분위기 음악 만들기</h2>
+  <p class="mod-sub">영상에 맞는 배경음악, 브랜드 징글, 팟캐스트 인트로 — 음악 지식 없이 텍스트만으로 완성된 음악을 만듭니다. 저작권 걱정 없는 나만의 음악입니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 26–28</div>
+    <div class="mchip">🎵 AI 음악 생성</div>
+    <div class="mchip">🎸 장르·분위기 제어</div>
+    <div class="mchip">⏱ 약 85분</div>
+  </div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>Suno로 원하는 장르·분위기·길이의 음악을 생성할 수 있다</li>
+    <li>브랜드 징글(5~10초)과 영상 BGM(30~120초)을 목적에 맞게 만들 수 있다</li>
+    <li>생성된 음악을 CapCut 편집에서 영상에 맞게 사용할 수 있다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">Suno 음악 프롬프트 설계</div><div class="pb-tag aud">MUSIC AI</div></div>
+    <div class="pb-body"><span class="comment"># Suno 프롬프트 작성</span>
+Suno에서 생성할 음악 프롬프트를 써줘.
+
+목적: <span class="slot">[영상 BGM / 광고 징글 / 오프닝 / 긴장감 조성]</span>
+분위기: <span class="slot">[밝고 경쾌한 / 따뜻하고 감성적인 / 전문적이고 모던한 / 신나는]</span>
+장르: <span class="slot">[팝 / 재즈 / 힙합 / 어쿠스틱 / 오케스트라 / 로파이]</span>
+길이: <span class="slot">[N초]</span>
+특이사항: <span class="slot">[보컬 있음/없음, BPM 빠름/느림]</span>
+
+Suno 스타일 태그 포함 프롬프트:
+- 장르 태그 (예: pop, acoustic, lo-fi)
+- 악기 태그 (예: piano, guitar, strings)
+- 분위기 태그 (예: uplifting, melancholic)
+- 페이스 태그 (예: 120 BPM, slow tempo)
+
+3가지 버전으로 제안해줘.
+
+<span class="comment"># 브랜드 징글 기획</span>
+다음 브랜드의 징글을 기획해줘.
+
+브랜드: <span class="slot">[브랜드명·이미지]</span>
+길이: 5~8초
+
+징글 기획:
+- 브랜드 느낌을 표현하는 음악 방향
+- Suno 프롬프트 (장르·악기·분위기 태그 포함)
+- 가사가 있다면 브랜드명·슬로건 활용 방식
+
+<span class="comment"># 씬별 BGM 매핑</span>
+다음 30초 광고 영상의 씬별 BGM 방향을 제안해줘.
+
+씬 1 (0~8초): <span class="slot">[도입 장면]</span> → 어떤 음악?
+씬 2 (8~20초): <span class="slot">[핵심 장면]</span> → 어떤 음악?
+씬 3 (20~30초): <span class="slot">[클로징]</span> → 어떤 음악?
+
+각 씬의 Suno 프롬프트도 포함.</div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 26–28 미션</div><div class="mis-t">브랜드 징글 + 영상 BGM 2트랙 완성</div><div class="mis-d">Suno로 브랜드 징글(5~8초) 1개 + 영상 BGM(30~60초) 1개를 만드세요. 생성한 음악을 CapCut 영상에 삽입해 완성도를 확인합니다.</div><div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+45 P</div></div></div>
+</section>
+
+<!-- PART 3 -->
+<div class="chap" id="part3">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART THREE</div>
+  <div class="chap-n" style="color:#FDBA74">08–10</div>
+  <div class="chap-h">통합하고, 마케팅하고,<br>포트폴리오로 증명한다</div>
+  <div class="chap-s">5가지 툴을 하나의 워크플로우로 통합하고,<br>AI 마케팅 캠페인을 실전 제작하며, 크리에이티브 포트폴리오로 마무리합니다.</div>
+  <div class="chap-meta">M08 통합 워크플로우 · M09 AI 마케팅 캠페인 · M10 캡스톤 · Day 29–40</div>
+</div>
+
+<!-- M08 -->
+<section class="mod" id="m08">
+  <div class="mod-ey">MODULE 08 · DAY 29–32</div>
+  <div class="mod-badge" style="background:rgba(217,70,239,.12);color:#A21CAF">M08 · 통합 워크플로우</div>
+  <h2 class="mod-h">멀티미디어 통합 워크플로우<br>— 완성된 콘텐츠 생산 시스템</h2>
+  <p class="mod-sub">5가지 툴을 개별로 쓰는 것과 하나의 통합 파이프라인으로 엮는 것은 다릅니다. 아이디어 하나에서 완성된 콘텐츠까지 흐르는 나만의 크리에이티브 시스템을 완성합니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 29–32</div><div class="mchip">🔄 통합 파이프라인</div><div class="mchip">⚡ 콘텐츠 생산 가속</div><div class="mchip">⏱ 약 120분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>아이디어 → 완성 콘텐츠까지 전 과정을 2~4시간 안에 완성할 수 있다</li>
+    <li>콘텐츠 유형별(SNS/광고/팟캐스트) 최적화된 워크플로우를 설계할 수 있다</li>
+    <li>Claude로 콘텐츠 전략을 세우고 5가지 툴로 실행하는 사이클을 완성할 수 있다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">완성형 콘텐츠 제작 — Claude 마스터 프롬프트</div><div class="pb-tag tpl">통합 워크플로우</div></div>
+    <div class="pb-body"><span class="comment"># 콘텐츠 전체 기획 (Claude가 총괄)</span>
+다음 콘텐츠 제작 전체를 기획해줘.
+각 단계별로 어떤 프롬프트를 어떤 툴에 쓸지 포함.
+
+콘텐츠: <span class="slot">[인스타그램 릴스 / 유튜브 숏츠 / 광고 영상 등]</span>
+브랜드: <span class="slot">[브랜드 정보]</span>
+핵심 메시지: <span class="slot">[전달할 내용]</span>
+길이: <span class="slot">[N초]</span>
+
+단계별 기획:
+1. 스크립트/내러티브 (Claude → 바로 사용 가능하게)
+2. 이미지 생성 프롬프트 (나노바나나용)
+3. 영상 클립 프롬프트 (Veo3용)
+4. 내레이션 스크립트 (ElevenLabs용)
+5. 배경음악 방향 (Suno 프롬프트)
+6. CapCut 편집 순서 (어떤 순서로 조립할지)
+
+<span class="comment"># SNS 콘텐츠 캘린더 월간 기획</span>
+다음 브랜드의 이번 달 SNS 콘텐츠 캘린더를 기획해줘.
+
+브랜드: <span class="slot">[브랜드]</span>
+채널: <span class="slot">[인스타그램 / 유튜브 / TikTok]</span>
+게시 빈도: 주 <span class="slot">[N]</span>회
+
+월간 캘린더:
+- 주제 클러스터 4개 (각 주별)
+- 각 콘텐츠의 유형 (이미지/릴스/스토리)
+- AI 툴 조합 계획
+- 예상 제작 시간</div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 29–32 미션</div><div class="mis-t">완성 콘텐츠 3개 생산 (이미지·숏폼·음성 포함)</div><div class="mis-d">이미지 포스팅 1개 + 30초 숏폼 1개 + 음성 내레이션 포함 영상 1개를 통합 워크플로우로 제작하세요. 각 콘텐츠의 제작 시간을 기록해 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+90 XP</div><div class="mr pt">+60 P</div></div></div>
+</section>
+
+<!-- M09 -->
+<section class="mod" id="m09">
+  <div class="mod-ey">MODULE 09 · DAY 33–36</div>
+  <div class="mod-badge" style="background:rgba(219,39,119,.1);color:#9D174D">M09 · AI 마케팅</div>
+  <h2 class="mod-h">AI 마케팅 캠페인<br>— 전략·카피·비주얼 통합</h2>
+  <p class="mod-sub">AI로 만든 콘텐츠가 마케팅 캠페인으로 완성됩니다. Claude로 전략을 세우고, AI 툴로 실행 자산을 만들고, 데이터로 검증하는 전 과정을 경험합니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 33–36</div><div class="mchip">📣 캠페인 기획</div><div class="mchip">📊 성과 측정</div><div class="mchip">⏱ 약 110분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>마케팅 캠페인의 전략(Why) + 메시지(What) + 크리에이티브(How)를 통합 설계할 수 있다</li>
+    <li>A/B 테스트용 크리에이티브 2세트를 AI로 빠르게 제작할 수 있다</li>
+    <li>캠페인 성과를 분석하고 Claude로 인사이트를 도출할 수 있다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">AI 마케팅 캠페인 전체 기획</div><div class="pb-tag tpl">캠페인 도구</div></div>
+    <div class="pb-body"><span class="comment"># 캠페인 전략 기획</span>
+다음 제품/서비스의 SNS 마케팅 캠페인을 기획해줘.
+
+[캠페인 정보]
+제품/서비스: <span class="slot">[설명]</span>
+목표: <span class="slot">[인지도 / 전환 / 팔로워 증가]</span>
+타겟: <span class="slot">[페르소나 설명]</span>
+기간: <span class="slot">[N주]</span>
+예산 규모: <span class="slot">[없음/소규모/중간]</span>
+
+기획 내용:
+1. 캠페인 핵심 메시지 (Big Idea)
+2. 채널 믹스 + 각 채널 역할
+3. 콘텐츠 유형별 계획 (이미지/영상/스토리)
+4. A/B 테스트 계획 (어떤 변수를 테스트할 것인가)
+5. 성과 측정 KPI (구체적 수치)
+
+<span class="comment"># A/B 테스트 크리에이티브 2세트</span>
+다음 캠페인의 A/B 테스트용 크리에이티브를 기획해줘.
+
+테스트 변수: <span class="slot">[훅 문구 / 이미지 스타일 / CTA 방식]</span>
+
+버전 A (현재 가설):
+- 나노바나나 이미지 프롬프트
+- 카피라이팅 텍스트
+- CTA 문구
+
+버전 B (대안 가설):
+- 나노바나나 이미지 프롬프트 (다른 스타일)
+- 카피라이팅 텍스트 (다른 각도)
+- CTA 문구 (다른 방식)
+
+<span class="comment"># 캠페인 성과 분석 (데이터 받은 후)</span>
+다음 캠페인 데이터를 분석해줘.
+
+[성과 데이터]
+<span class="slot">[조회수, 좋아요, 클릭률, 전환수 등 데이터 붙여넣기]</span>
+
+분석해줄 것:
+1. A/B 테스트 승자와 근거
+2. 예상보다 잘 된 것 / 안 된 것
+3. 다음 캠페인에서 개선할 점 3가지
+4. 이 데이터가 시사하는 타겟 인사이트</div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 33–36 미션</div><div class="mis-t">실전 미니 캠페인 실행 + 성과 분석</div><div class="mis-d">실제 SNS에 A/B 테스트 포스팅 2개를 게시하고, 48시간 후 성과를 Claude로 분석하세요. (개인 계정 or 가상 브랜드 계정 사용 가능) 분석 결과를 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+90 XP</div><div class="mr pt">+60 P</div></div></div>
+</section>
+
+<!-- M10 -->
+<section class="mod" id="m10">
+  <div class="mod-ey">MODULE 10 · DAY 37–40</div>
+  <div class="mod-badge" style="background:rgba(30,27,75,.1);color:#4338CA">M10 · 캡스톤</div>
+  <h2 class="mod-h">캡스톤<br>— AI 크리에이티브 포트폴리오 완성</h2>
+  <p class="mod-sub">40일간 만든 모든 크리에이티브 자산을 포트폴리오로 통합합니다. 이 포트폴리오는 취업·프리랜서·창업에서 "AI를 쓸 줄 아는 크리에이터"임을 증명하는 실물 자산입니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 37–40</div><div class="mchip">📁 포트폴리오</div><div class="mchip">🎤 발표</div><div class="mchip">🏆 크리에이티브 수료</div><div class="mchip">⏱ 총 200분</div></div>
+  <div class="sec">최종 결과물 — 크리에이티브 포트폴리오</div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#4338CA">1</div><div class="les-type lab">포트폴리오</div><div class="les-title">AI 크리에이티브 포트폴리오 구성</div><div class="les-dur">필수 제출</div></div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>섹션</th><th>결과물</th><th>사용 툴</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1. 브랜드 이미지 패키지</strong></td><td>일관된 브랜드 이미지 8장 이상</td><td>나노바나나 + Claude</td></tr>
+          <tr><td><strong>2. 숏폼 영상 (30~60초)</strong></td><td>완성된 SNS 영상 2편 이상</td><td>Veo3 + CapCut</td></tr>
+          <tr><td><strong>3. 음성 내레이션</strong></td><td>광고/내레이션 음성 2트랙</td><td>ElevenLabs</td></tr>
+          <tr><td><strong>4. 오리지널 음악</strong></td><td>BGM 1트랙 + 징글 1개</td><td>Suno</td></tr>
+          <tr><td><strong>5. 완성형 광고 (30초)</strong></td><td>5개 툴 통합 완성 광고 영상 1편</td><td>전체 통합</td></tr>
+          <tr><td><strong>6. 마케팅 캠페인 보고서</strong></td><td>기획 + 실행 + 성과 분석</td><td>Claude</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#4338CA">2</div><div class="les-type th">평가</div><div class="les-title">크리에이티브 과정 수료 평가</div><div class="les-dur">평가 기준</div></div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>평가 항목</th><th>배점</th><th>기준</th></tr></thead>
+        <tbody>
+          <tr><td>포트폴리오 완성도</td><td>40점</td><td>6개 섹션 완성 + 퀄리티</td></tr>
+          <tr><td>툴 활용 다양성</td><td>30점</td><td>5가지 툴 모두 실제 사용</td></tr>
+          <tr><td>통합 완성 광고 품질</td><td>20점</td><td>30초 광고 영상 완성도</td></tr>
+          <tr><td>발표·설명 능력</td><td>10점</td><td>제작 과정 설명, 선택 이유</td></tr>
+        </tbody>
+      </table>
+      <div class="kp"><div class="kp-l">수료 기준</div><div class="kp-t"><strong>크리에이티브 과정 Certificate:</strong> 총점 75점 이상<br><strong>우수 수료 (Creative Excellence):</strong> 총점 90점 이상 → AI OpenCollege 크리에이티브 파트너 등록 자격<br><strong>AI OpenCollege 강사 연계:</strong> Track E(교육자)와 결합 시 AI 크리에이티브 교육 강사 가능</div></div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">다음 단계</div>
+  <table class="tbl">
+    <thead><tr><th>관심 방향</th><th>추천 경로</th><th>내용</th></tr></thead>
+    <tbody>
+      <tr><td>마케터로 취업</td><td>Track F (취업준비생)</td><td>AI 크리에이티브 역량 + 취업 전략 결합</td></tr>
+      <tr><td>프리랜서 크리에이터</td><td>Track C (창업자)</td><td>AI 크리에이티브 서비스 사업화</td></tr>
+      <tr><td>AI 콘텐츠 강사</td><td>Track E (교육자)</td><td>AI 크리에이티브 교육 과정 개발</td></tr>
+    </tbody>
+  </table>
+  <div class="mission"><div class="mis-l">🏆 최종 미션</div><div class="mis-t">30초 완성 광고 영상 + 포트폴리오 사이트 완성</div><div class="mis-d">5개 AI 툴을 모두 사용한 30초 완성 광고 영상을 제작하고, Notion이나 포트폴리오 사이트로 크리에이티브 포트폴리오를 완성하세요. 실제 SNS에 게시하거나 클라이언트에게 보여줄 수 있는 수준이어야 합니다.</div><div class="mis-rewards"><div class="mr xp">+200 XP</div><div class="mr pt">+150 P</div></div></div>
+</section>
+
+<!-- 부록 -->
+<section class="mod" id="appendix" style="border-top:2px solid var(--p3)">
+  <div class="mod-ey">APPENDIX</div>
+  <h2 class="mod-h" style="font-size:26px">부록 — 5가지 AI 툴 프롬프트 빠른 참조</h2>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">크리에이티브 과정 마스터 프롬프트 요약</div><div class="pb-tag tpl">빠른 참조</div></div>
+    <div class="pb-body"><span class="comment">━━ 나노바나나 (이미지) ━━</span>
+SCSE 공식: Subject + Context + Style + Extra
+시드 프롬프트: 브랜드 스타일 고정 → 주제만 교체
+네거티브 프롬프트: 원하지 않는 요소 제거
+
+<span class="comment">━━ Veo3 (영상) ━━</span>
+5요소: 피사체 + 동작 + 카메라무브 + 조명 + 스타일
+텍스트→영상 / 이미지→영상 두 가지 모드
+씬별 스토리보드 먼저 → 씬별 프롬프트 작성
+
+<span class="comment">━━ CapCut (편집) ━━</span>
+AI 자동 자막 → 배경 제거 → 스마트 컷 → 음악 추가
+소재 조립 순서: 클립 → 음성 → 자막 → 음악 → 효과
+30분 숏폼 워크플로우 루틴화
+
+<span class="comment">━━ ElevenLabs (음성) ━━</span>
+목적에 맞는 보이스 선택 (한국어/영어)
+SSML 태그로 속도·강세 제어
+스크립트는 구어체, 자연스러운 문장
+
+<span class="comment">━━ Suno (음악) ━━</span>
+장르 + 악기 + 분위기 + BPM 태그 조합
+브랜드 징글 (5~8초) / BGM (30~120초) 구분
+씬별 BGM 매핑으로 영상 분위기 최적화
+
+<span class="comment">━━ 통합 워크플로우 ━━</span>
+Claude(전략·스크립트) → 나노바나나(이미지)
+→ Veo3(클립) → ElevenLabs(음성) → Suno(음악)
+→ CapCut(조립·완성)</div>
+  </div>
+  <div class="sec" style="margin-top:24px">저작권 빠른 참조</div>
+  <table class="tbl">
+    <thead><tr><th>툴</th><th>상업적 사용</th><th>주의사항</th></tr></thead>
+    <tbody>
+      <tr><td>나노바나나</td><td>플랜에 따라 다름</td><td>유료 플랜 상업 이용 가능 여부 확인 필수</td></tr>
+      <tr><td>Veo3</td><td>API 이용약관 확인</td><td>Google 서비스 약관 준수</td></tr>
+      <tr><td>CapCut</td><td>편집 결과물은 사용자 소유</td><td>내장 음악·효과는 라이선스 확인</td></tr>
+      <tr><td>ElevenLabs</td><td>유료 플랜 상업 이용 가능</td><td>타인 목소리 클로닝 동의 필수</td></tr>
+      <tr><td>Suno</td><td>Pro/Premier 플랜 상업 이용</td><td>무료 플랜은 비상업 이용만</td></tr>
+    </tbody>
+  </table>
+</section>
+</div>
+
+<script>
+function navTo(el,id){document.querySelectorAll('.nt').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
+function jumpTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
+const secs=['toc','m01','m02','m03','m04','m05','m06','m07','m08','m09','m10'];
+const obs=new IntersectionObserver((e)=>{e.forEach(x=>{if(x.isIntersecting){const id=x.target.id;document.querySelectorAll('.nt').forEach(t=>{t.classList.toggle('on',t.textContent.trim().toLowerCase()===id||t.textContent.trim().toUpperCase()===id.toUpperCase());});}});},{rootMargin:'-20% 0px -75% 0px'});
+secs.forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
+</script>
+</body>
+</html>

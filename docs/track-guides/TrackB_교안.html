@@ -1,0 +1,2460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI OpenCollege 강의 교안 — Track B · 기술 담당자 API 심화 과정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#111827;--ink2:#1F2937;--ink3:#374151;--ink4:#6B7280;--ink5:#9CA3AF;
+  --paper:#FFFFFF;--p2:#F9FAFB;--p3:#F3F4F6;--p4:#E5E7EB;--p5:#D1D5DB;
+  /* Track B 메인 색상: 에메랄드·틸 계열 */
+  --b1:#059669;--b2:#10B981;--b3:#34D399;--b4:#D1FAE5;--b5:rgba(5,150,105,.08);
+  --b-border:rgba(5,150,105,.2);
+  --a1:#3B46F1;--a2:#4F58F5;--a3:#818CF8;--a5:rgba(59,70,241,.07);
+  --xp:#B45309;--xps:rgba(180,83,9,.1);
+  --pt:#065F46;--pts:rgba(6,95,70,.1);
+  --rd:#991B1B;--rds:rgba(153,27,27,.08);
+  --wn:#92400E;--wns:rgba(146,64,14,.1);
+  --pu:#5B21B6;--pus:rgba(91,33,182,.1);
+  --cy:#0E7490;--cys:rgba(14,116,144,.1);
+  --or:#C2410C;--ors:rgba(194,65,12,.1);
+  --fu:'Pretendard','Apple SD Gothic Neo',-apple-system,sans-serif;
+  --fs:'Noto Serif KR','Georgia',serif;
+  --fm:'JetBrains Mono','SF Mono','Courier New',monospace;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--paper);color:var(--ink);font-family:var(--fu);line-height:1.7;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--p3)}::-webkit-scrollbar-thumb{background:var(--p5);border-radius:3px}
+
+/* ─── COVER ─── */
+.cover{min-height:100vh;background:#050F0A;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 36px;position:relative;overflow:hidden}
+.cov-g1{position:absolute;left:-120px;top:-120px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(5,150,105,.25),transparent 65%);pointer-events:none}
+.cov-g2{position:absolute;right:-80px;bottom:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(59,70,241,.12),transparent 65%);pointer-events:none}
+.cov-grid{position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(5,150,105,.04) 0,rgba(5,150,105,.04) 1px,transparent 1px,transparent 60px),repeating-linear-gradient(90deg,rgba(5,150,105,.04) 0,rgba(5,150,105,.04) 1px,transparent 1px,transparent 60px);pointer-events:none}
+.cov-inner{position:relative;z-index:2;max-width:740px}
+.cov-series{font-size:11px;font-weight:800;color:rgba(255,255,255,.35);letter-spacing:.2em;font-family:var(--fm);margin-bottom:24px;text-transform:uppercase}
+.cov-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(5,150,105,.2);border:1px solid rgba(5,150,105,.5);border-radius:40px;padding:9px 22px;font-size:13px;font-weight:700;color:#34D399;margin-bottom:32px}
+.cov-bdot{width:7px;height:7px;border-radius:50%;background:#10B981;box-shadow:0 0 10px rgba(16,185,129,.8)}
+.cov-title{font-family:var(--fs);font-size:clamp(34px,5.5vw,56px);font-weight:900;color:#fff;line-height:1.12;letter-spacing:-.5px;margin-bottom:18px}
+.cov-title em{color:#34D399;font-style:normal}
+.cov-sub{font-size:17px;color:rgba(255,255,255,.5);font-weight:400;line-height:1.65;margin-bottom:40px;font-family:var(--fs)}
+.cov-rule{width:64px;height:2px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.7),transparent);margin:0 auto 40px}
+.cov-stats{display:flex;justify-content:center;gap:40px;margin-bottom:48px}
+.cs{text-align:center}
+.cs-n{font-size:36px;font-weight:900;font-family:var(--fm);color:#34D399;line-height:1}
+.cs-l{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);margin-top:5px;letter-spacing:.08em}
+.cov-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.cc{padding:7px 15px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-size:12px;font-weight:600;color:rgba(255,255,255,.5);font-family:var(--fm)}
+.cov-footer{position:absolute;bottom:24px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.2);font-family:var(--fm)}
+
+/* ─── STICKY NAV ─── */
+.nav{position:sticky;top:0;z-index:80;background:rgba(255,255,255,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--p4)}
+.nav-wrap{max-width:880px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:0;overflow-x:auto}
+.nt{padding:13px 15px;font-size:11.5px;font-weight:700;color:var(--ink4);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .12s;font-family:var(--fm)}
+.nt:hover{color:var(--ink2)}.nt.on{color:var(--b1);border-bottom-color:var(--b1)}
+
+/* ─── WRAPPER ─── */
+.wrap{max-width:880px;margin:0 auto;padding:0 28px 100px}
+
+/* ─── TOC ─── */
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ti{display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:12px;border:1px solid var(--p4);cursor:pointer;transition:all .12s;text-decoration:none;background:var(--paper)}
+.ti:hover{border-color:rgba(5,150,105,.4);background:rgba(5,150,105,.04);transform:translateY(-1px)}
+.ti-num{width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;font-family:var(--fm);color:#fff}
+.ti-bd{flex:1;min-width:0}
+.ti-wk{font-size:9.5px;font-weight:800;color:var(--ink5);font-family:var(--fm);margin-bottom:3px}
+.ti-nm{font-size:13px;font-weight:700;color:var(--ink2);line-height:1.3}
+.ti-cnt{font-size:11px;color:var(--ink5);flex-shrink:0}
+
+/* ─── MODULE ─── */
+.mod{padding:60px 0;border-top:2px solid var(--p3)}
+.mod-ey{font-size:11px;font-weight:800;color:var(--b1);letter-spacing:.14em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.mod-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border-radius:6px;font-size:11px;font-weight:800;font-family:var(--fm);margin-bottom:16px}
+.mod-h{font-family:var(--fs);font-size:clamp(26px,4vw,36px);font-weight:900;color:var(--ink);line-height:1.18;letter-spacing:-.3px;margin-bottom:14px}
+.mod-sub{font-size:15px;color:var(--ink3);font-weight:400;line-height:1.7;margin-bottom:22px;font-family:var(--fs)}
+.mod-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px}
+.mchip{display:flex;align-items:center;gap:6px;background:var(--p2);border:1px solid var(--p4);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--ink3)}
+
+/* 목표 */
+.obj{background:rgba(5,150,105,.06);border:1px solid rgba(5,150,105,.2);border-radius:14px;padding:20px 24px;margin-bottom:28px}
+.obj-l{font-size:10px;font-weight:800;color:var(--b1);letter-spacing:.1em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.obj ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.obj li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--ink2);line-height:1.6;font-weight:400}
+.obj li::before{content:'✓';font-size:12px;font-weight:900;color:var(--b1);flex-shrink:0;margin-top:2px}
+
+/* 전제 조건 */
+.prereq{background:rgba(146,64,14,.06);border:1px solid rgba(146,64,14,.18);border-radius:12px;padding:14px 18px;margin-bottom:20px}
+.prereq-l{font-size:10px;font-weight:800;color:var(--wn);font-family:var(--fm);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em}
+.prereq ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.prereq li{font-size:13px;color:var(--ink3);line-height:1.55;display:flex;align-items:flex-start;gap:8px}
+.prereq li::before{content:'⚙';font-size:11px;flex-shrink:0;margin-top:2px}
+
+/* 섹션 */
+.sec{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;color:var(--ink5);letter-spacing:.1em;font-family:var(--fm);margin-bottom:14px;text-transform:uppercase}
+.sec::before{content:'';width:20px;height:2px;background:var(--b1);border-radius:1px;flex-shrink:0}
+
+/* 강의 카드 */
+.lesson{background:var(--paper);border:1px solid var(--p4);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.les-head{padding:14px 20px;border-bottom:1px solid var(--p4);display:flex;align-items:center;gap:10px;background:var(--p2)}
+.les-num{width:28px;height:28px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:900;font-family:var(--fm);color:#fff}
+.les-type{font-size:10px;font-weight:800;padding:3px 9px;border-radius:5px;font-family:var(--fm);flex-shrink:0;text-transform:uppercase;letter-spacing:.05em}
+.les-type.th{background:rgba(5,150,105,.1);color:var(--b1)}
+.les-type.pr{background:rgba(59,70,241,.1);color:var(--a1)}
+.les-type.lab{background:rgba(180,83,9,.1);color:var(--xp)}
+.les-type.arch{background:rgba(91,33,182,.1);color:var(--pu)}
+.les-title{font-size:14px;font-weight:800;color:var(--ink);flex:1}
+.les-dur{font-size:11px;font-weight:700;color:var(--ink5);font-family:var(--fm);flex-shrink:0}
+.les-body{padding:20px 24px}
+.les-body p{font-size:14px;color:var(--ink2);line-height:1.8;margin-bottom:12px;font-weight:400}
+.les-body p:last-child{margin-bottom:0}
+.les-body strong{font-weight:800;color:var(--ink)}
+.les-body ul{padding-left:18px;margin-bottom:12px}
+.les-body li{font-size:14px;color:var(--ink2);line-height:1.75;margin-bottom:4px}
+
+/* 핵심 포인트 */
+.kp{background:rgba(5,150,105,.06);border-left:3px solid var(--b1);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0}
+.kp-l{font-size:10px;font-weight:800;color:var(--b1);font-family:var(--fm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.kp-t{font-size:13.5px;color:var(--ink2);line-height:1.65;font-weight:500}
+
+/* 경고 박스 */
+.warn{background:rgba(153,27,27,.05);border-left:3px solid #DC2626;border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0}
+.warn-l{font-size:10px;font-weight:800;color:#DC2626;font-family:var(--fm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.warn-t{font-size:13.5px;color:var(--ink2);line-height:1.65;font-weight:500}
+
+/* 아키텍처 다이어그램 */
+.arch-box{background:#0A0F1A;border-radius:14px;padding:22px 24px;margin:14px 0;border:1px solid rgba(16,185,129,.15);font-family:var(--fm);font-size:12.5px;color:#CDD9E5;line-height:2}
+.arch-title{font-size:10px;font-weight:800;color:rgba(52,211,153,.7);letter-spacing:.1em;margin-bottom:12px;text-transform:uppercase}
+.arch-node{color:#34D399;font-weight:700}
+.arch-arrow{color:#374151}
+.arch-label{color:#6B7280;font-style:italic}
+.arch-highlight{color:#FFB800;font-weight:700}
+.arch-comment{color:#374151;font-style:italic}
+
+/* 비교 박스 */
+.vs-box{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.vs-col{border-radius:10px;padding:14px 16px;border:1px solid}
+.vs-col.bad{background:rgba(153,27,27,.05);border-color:rgba(153,27,27,.15)}
+.vs-col.good{background:rgba(5,150,105,.05);border-color:rgba(5,150,105,.15)}
+.vs-col-l{font-size:10px;font-weight:800;font-family:var(--fm);margin-bottom:8px;letter-spacing:.08em}
+.vs-col.bad .vs-col-l{color:var(--rd)}
+.vs-col.good .vs-col-l{color:var(--b1)}
+.vs-col p{font-size:13px;color:var(--ink2);line-height:1.65}
+.vs-col code{font-family:var(--fm);font-size:12px;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px}
+
+/* 코드 박스 */
+.cb{background:#0D1117;border-radius:14px;overflow:hidden;margin:14px 0;border:1px solid rgba(255,255,255,.07)}
+.cb-top{padding:10px 18px;background:#161B22;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px}
+.cb-dots{display:flex;gap:5px}
+.cd{width:11px;height:11px;border-radius:50%}
+.cd.r{background:#FF5F57}.cd.y{background:#FEBC2E}.cd.g{background:#28C840}
+.cb-lang{font-size:11px;font-weight:800;color:rgba(255,255,255,.3);font-family:var(--fm);margin-left:8px;flex:1}
+.cb-tag{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:4px;font-family:var(--fm)}
+.cb-tag.py{background:rgba(59,130,246,.25);color:#60A5FA}
+.cb-tag.js{background:rgba(234,179,8,.2);color:#FCD34D}
+.cb-tag.sh{background:rgba(52,211,153,.2);color:#34D399}
+.cb-tag.json{background:rgba(251,191,36,.2);color:#FCD34D}
+.cb-tag.ts{background:rgba(96,165,250,.2);color:#93C5FD}
+.cb-body{padding:20px 22px;font-family:var(--fm);font-size:13px;color:#CDD9E5;line-height:1.85;white-space:pre;overflow-x:auto}
+
+/* 코드 구문 강조 */
+.kw{color:#FF7B72}      /* 키워드: import, def, class, return */
+.fn{color:#D2A8FF}      /* 함수명 */
+.st{color:#A5D6FF}      /* 문자열 */
+.cm{color:#4B6073;font-style:italic} /* 주석 */
+.num{color:#79C0FF}     /* 숫자 */
+.param{color:#FFA657}   /* 파라미터 */
+.cls{color:#F0883E}     /* 클래스명 */
+.ret{color:#7EE787}     /* 반환값/성공 */
+.hl{color:#FFB800;font-weight:700} /* 강조 */
+.env{color:#E06C75}     /* 환경변수 */
+
+/* 프롬프트 박스 */
+.pb{background:#0D1117;border-radius:14px;overflow:hidden;margin:14px 0;border:1px solid rgba(255,255,255,.07)}
+.pb-top{padding:10px 18px;background:#161B22;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px}
+.pb-dots{display:flex;gap:5px}
+.pd{width:11px;height:11px;border-radius:50%}
+.pd.r{background:#FF5F57}.pd.y{background:#FEBC2E}.pd.g{background:#28C840}
+.pb-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.3);font-family:var(--fm);margin-left:8px;flex:1}
+.pb-tag{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:4px;font-family:var(--fm)}
+.pb-tag.sys{background:rgba(52,211,153,.2);color:#34D399}
+.pb-tag.adv{background:rgba(255,183,0,.2);color:#FFB800}
+.pb-tag.tpl{background:rgba(59,70,241,.2);color:#818CF8}
+.pb-body{padding:20px 22px;font-family:var(--fm);font-size:13px;color:#CDD9E5;line-height:1.9;white-space:pre-wrap}
+.slot{color:#FFB800;font-weight:700}
+.comment{color:#4B6073;font-style:italic}
+
+/* 실습 */
+.prac{background:rgba(59,70,241,.06);border:1px solid rgba(59,70,241,.18);border-radius:14px;padding:18px 22px;margin:14px 0}
+.prac-l{font-size:10px;font-weight:800;color:var(--a1);font-family:var(--fm);margin-bottom:12px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.1em}
+.prac-steps{display:flex;flex-direction:column;gap:9px}
+.ps{display:flex;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--ink2);font-weight:400;line-height:1.65}
+.ps-n{width:24px;height:24px;border-radius:7px;background:var(--a1);color:#fff;font-size:11px;font-weight:900;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm)}
+.ps code{font-family:var(--fm);font-size:12.5px;background:rgba(59,70,241,.1);color:var(--a1);padding:2px 6px;border-radius:4px}
+
+/* 퀴즈 */
+.quiz{background:var(--p2);border-radius:14px;padding:18px 22px;margin:14px 0;border:1px solid var(--p4)}
+.quiz-l{font-size:10px;font-weight:800;color:var(--wn);font-family:var(--fm);margin-bottom:12px;text-transform:uppercase;letter-spacing:.1em}
+.quiz-q{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;line-height:1.55}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.qo{padding:10px 14px;border-radius:9px;font-size:13.5px;background:var(--paper);border:1px solid var(--p4);color:var(--ink3);display:flex;align-items:center;gap:9px}
+.qo.ok{background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.25);color:var(--pt);font-weight:700}
+.qo-n{font-family:var(--fm);font-size:10px;font-weight:900;width:18px;flex-shrink:0}
+.qo code{font-family:var(--fm);font-size:12.5px;background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px}
+.quiz-exp{font-size:12.5px;color:var(--ink4);padding:10px 14px;background:var(--paper);border-radius:8px;border-left:3px solid var(--wn);line-height:1.65}
+
+/* 미션 */
+.mission{background:rgba(5,150,105,.06);border:1px solid rgba(5,150,105,.2);border-radius:14px;padding:18px 22px;margin:14px 0}
+.mis-l{font-size:10px;font-weight:800;color:var(--b1);font-family:var(--fm);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.1em}
+.mis-t{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.mis-d{font-size:13.5px;color:var(--ink3);line-height:1.7;margin-bottom:12px}
+.mis-rewards{display:flex;gap:8px;flex-wrap:wrap}
+.mr{padding:4px 11px;border-radius:6px;font-size:11.5px;font-weight:800;font-family:var(--fm)}
+.mr.xp{background:rgba(180,83,9,.12);color:var(--xp)}
+.mr.pt{background:rgba(5,150,105,.12);color:var(--b1)}
+
+/* 강사 노트 */
+.inote{background:#0D1117;border-radius:14px;padding:18px 22px;margin:14px 0;border:1px solid rgba(199,145,0,.18)}
+.inote-l{font-size:10px;font-weight:800;color:#C79100;font-family:var(--fm);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.1em}
+.inote-l::after{content:'· 수강생 비공개';font-size:9px;color:rgba(239,68,68,.7)}
+.inote-body{font-size:13px;color:rgba(200,216,236,.65);line-height:1.8}
+.inote-body strong{color:rgba(200,216,236,.9);font-weight:700}
+.inote-body ul{padding-left:16px;margin-top:6px}
+.inote-body li{margin-bottom:5px}
+.inote-body code{font-family:var(--fm);font-size:12px;background:rgba(255,255,255,.07);padding:1px 5px;border-radius:3px;color:#7EE787}
+
+/* 구분선 */
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--p4),transparent);margin:32px 0}
+
+/* 표 */
+.tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+.tbl th{padding:10px 14px;text-align:left;font-size:10.5px;font-weight:800;color:var(--ink3);letter-spacing:.06em;border-bottom:2px solid var(--p4);background:var(--p2)}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--p4);color:var(--ink2);line-height:1.6;vertical-align:top}
+.tbl td code{font-family:var(--fm);font-size:12.5px;background:rgba(5,150,105,.08);color:var(--b1);padding:2px 6px;border-radius:4px}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--p2)}
+
+/* 챕터 */
+.chap{background:linear-gradient(135deg,#050F0A 0%,#071A12 50%,#060E1A 100%);border-radius:20px;padding:48px 44px;margin:60px 0;position:relative;overflow:hidden}
+.chap-g{position:absolute;right:-60px;top:-60px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(5,150,105,.18),transparent 65%);pointer-events:none}
+.chap-part{font-size:10.5px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:.15em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.chap-n{font-size:60px;font-weight:900;font-family:var(--fm);line-height:1;margin-bottom:8px}
+.chap-h{font-family:var(--fs);font-size:24px;font-weight:900;color:#fff;line-height:1.3;margin-bottom:8px}
+.chap-s{font-size:14px;color:rgba(255,255,255,.45);font-weight:400;line-height:1.65}
+.chap-meta{font-size:11px;color:rgba(255,255,255,.25);font-family:var(--fm);margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+
+/* 배지 */
+.bdg{display:inline-flex;align-items:center;font-size:10px;font-weight:800;padding:3px 8px;border-radius:5px;font-family:var(--fm);vertical-align:middle;margin:0 2px}
+.bdg.g{background:rgba(5,150,105,.1);color:var(--b1)}
+.bdg.a{background:rgba(59,70,241,.1);color:var(--a1)}
+.bdg.o{background:rgba(180,83,9,.1);color:var(--xp)}
+.bdg.p{background:rgba(91,33,182,.1);color:var(--pu)}
+.bdg.r{background:rgba(153,27,27,.08);color:var(--rd)}
+.bdg.w{background:rgba(146,64,14,.1);color:var(--wn)}
+.bdg.c{background:rgba(14,116,144,.1);color:var(--cy)}
+
+/* 반응형 */
+@media(max-width:700px){.wrap{padding:0 16px 80px}.toc-grid{grid-template-columns:1fr}.vs-box{grid-template-columns:1fr}.chap{padding:32px 24px}.chap-n{font-size:44px}.cb-body,.pb-body{font-size:11.5px}}
+@media print{.nav{display:none}.cover{page-break-after:always;min-height:auto;padding:40px}.mod,.chap{page-break-before:auto}}
+</style>
+</head>
+<body>
+
+<!-- ═══ COVER ═══ -->
+<div class="cover" id="top">
+  <div class="cov-g1"></div><div class="cov-g2"></div><div class="cov-grid"></div>
+  <div class="cov-inner">
+    <div class="cov-series">AI OPENCOLLEGE LEARNING SYSTEM · TRACK B · VOLUME I</div>
+    <div class="cov-badge"><div class="cov-bdot"></div>기술 담당자 × API 심화 과정</div>
+    <h1 class="cov-title">Claude API로<br><em>AI 시스템을</em> 만든다</h1>
+    <p class="cov-sub">API 호출부터 MCP 서버 구축·에이전트 설계·프로덕션 배포까지<br>12모듈 · 56일 · 기술 담당자를 위한 실전 교안</p>
+    <div class="cov-rule"></div>
+    <div class="cov-stats">
+      <div class="cs"><div class="cs-n">12</div><div class="cs-l">모듈</div></div>
+      <div class="cs"><div class="cs-n">56</div><div class="cs-l">일</div></div>
+      <div class="cs"><div class="cs-n">Track</div><div class="cs-l">B</div></div>
+      <div class="cs"><div class="cs-n">Dev</div><div class="cs-l">심화</div></div>
+    </div>
+    <div class="cov-chips">
+      <div class="cc">🐍 Python / Node.js</div>
+      <div class="cc">🔌 MCP 서버 구축</div>
+      <div class="cc">🤖 에이전트 설계</div>
+      <div class="cc">🗄️ RAG 시스템</div>
+      <div class="cc">🚀 프로덕션 배포</div>
+    </div>
+  </div>
+  <div class="cov-footer">AI OpenCollege · Track B · 기술 담당자 API 심화 · 교안 v1.0 · 2026</div>
+</div>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav">
+  <div class="nav-wrap">
+    <div class="nt on" onclick="navTo(this,'toc')">목차</div>
+    <div class="nt" onclick="navTo(this,'m01')">M01</div>
+    <div class="nt" onclick="navTo(this,'m02')">M02</div>
+    <div class="nt" onclick="navTo(this,'m03')">M03</div>
+    <div class="nt" onclick="navTo(this,'m04')">M04</div>
+    <div class="nt" onclick="navTo(this,'m05')">M05</div>
+    <div class="nt" onclick="navTo(this,'m06')">M06</div>
+    <div class="nt" onclick="navTo(this,'m07')">M07</div>
+    <div class="nt" onclick="navTo(this,'m08')">M08</div>
+    <div class="nt" onclick="navTo(this,'m09')">M09</div>
+    <div class="nt" onclick="navTo(this,'m10')">M10</div>
+    <div class="nt" onclick="navTo(this,'m11')">M11</div>
+    <div class="nt" onclick="navTo(this,'m12')">M12</div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ─── TOC ─── -->
+<section id="toc" class="mod" style="border-top:none;padding-top:52px">
+  <div class="mod-ey">CONTENTS</div>
+  <h2 class="mod-h" style="font-size:30px">목차</h2>
+  <p style="font-size:14px;color:var(--ink4);margin-bottom:28px;line-height:1.7">12개 모듈 · 56일 과정. 각 모듈은 이론 · 코드 실습 · 아키텍처 설계 · 랩 과제로 구성됩니다.<br><strong style="color:var(--b1)">전제 조건:</strong> Python 또는 JavaScript 기초, API 개념 이해, 터미널 사용 가능.</p>
+  <div class="toc-grid">
+    <a class="ti" onclick="jumpTo('m01')"><div class="ti-num" style="background:#059669">01</div><div class="ti-bd"><div class="ti-wk">DAY 1–4</div><div class="ti-nm">API 첫 걸음 — Claude API 연결과 첫 호출</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m02')"><div class="ti-num" style="background:#047857">02</div><div class="ti-bd"><div class="ti-wk">DAY 5–9</div><div class="ti-nm">프롬프트 엔지니어링 심화 — 시스템 프롬프트 설계</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m03')"><div class="ti-num" style="background:#065F46">03</div><div class="ti-bd"><div class="ti-wk">DAY 10–14</div><div class="ti-nm">대화 관리 — 멀티턴·컨텍스트 윈도우 최적화</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m04')"><div class="ti-num" style="background:#1D4ED8">04</div><div class="ti-bd"><div class="ti-wk">DAY 15–19</div><div class="ti-nm">도구(Tools) 사용 — Function Calling 완전 정복</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m05')"><div class="ti-num" style="background:#1E40AF">05</div><div class="ti-bd"><div class="ti-wk">DAY 20–24</div><div class="ti-nm">MCP 이해 — Model Context Protocol 개념과 구조</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m06')"><div class="ti-num" style="background:#5B21B6">06</div><div class="ti-bd"><div class="ti-wk">DAY 25–30</div><div class="ti-nm">MCP 서버 구축 — 나만의 MCP 서버 만들기</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m07')"><div class="ti-num" style="background:#6D28D9">07</div><div class="ti-bd"><div class="ti-wk">DAY 31–35</div><div class="ti-nm">파일·문서 처리 — PDF·이미지·대용량 처리</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m08')"><div class="ti-num" style="background:#B45309">08</div><div class="ti-bd"><div class="ti-wk">DAY 36–39</div><div class="ti-nm">에이전트 설계 — 오케스트레이터·서브에이전트 패턴</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m09')"><div class="ti-num" style="background:#92400E">09</div><div class="ti-bd"><div class="ti-wk">DAY 40–44</div><div class="ti-nm">RAG 구축 — 벡터 DB + 검색 증강 생성</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m10')"><div class="ti-num" style="background:#0E7490">10</div><div class="ti-bd"><div class="ti-wk">DAY 45–48</div><div class="ti-nm">비용 최적화 — 모델 라우팅과 토큰 절약</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m11')"><div class="ti-num" style="background:#0F766E">11</div><div class="ti-bd"><div class="ti-wk">DAY 49–52</div><div class="ti-nm">프로덕션 배포 — 스케일링·모니터링·에러 처리</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m12')"><div class="ti-num" style="background:#1E1B4B">12</div><div class="ti-bd"><div class="ti-wk">DAY 53–56</div><div class="ti-nm">캡스톤 프로젝트 — 실전 AI 시스템 구축 및 발표</div></div><div class="ti-cnt">→</div></a>
+  </div>
+</section>
+
+<!-- ═══ PART 1 챕터 ═══ -->
+<div class="chap" id="part1">
+  <div class="chap-g"></div>
+  <div class="chap-part">PART ONE</div>
+  <div class="chap-n" style="color:#34D399">01–03</div>
+  <div class="chap-h">API 기초와 대화 설계</div>
+  <div class="chap-s">Claude API를 처음 연결하고, 프롬프트를 코드로 설계하고,<br>멀티턴 대화와 컨텍스트를 프로그래밍으로 제어합니다.</div>
+  <div class="chap-meta">M01 API 첫 걸음 · M02 프롬프트 엔지니어링 심화 · M03 대화 관리 · Day 1–14</div>
+</div>
+
+<!-- ═══ M01 ═══ -->
+<section class="mod" id="m01">
+  <div class="mod-ey">MODULE 01 · DAY 1–4</div>
+  <div class="mod-badge" style="background:rgba(5,150,105,.1);color:var(--b1)">M01 · API 기초</div>
+  <h2 class="mod-h">API 첫 걸음<br>— Claude API 연결과 첫 호출</h2>
+  <p class="mod-sub">Claude.ai 채팅창을 벗어나 코드로 Claude를 부릅니다. SDK 설치부터 첫 번째 API 호출까지, 모든 Claude 앱의 시작점입니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 1–4</div>
+    <div class="mchip">🐍 Python / Node.js</div>
+    <div class="mchip">🔧 실습 랩 2회</div>
+    <div class="mchip">❓ 퀴즈 3문항</div>
+    <div class="mchip">⏱ 총 학습 약 90분</div>
+  </div>
+
+  <div class="prereq">
+    <div class="prereq-l">전제 조건</div>
+    <ul>
+      <li>Python 3.9+ 또는 Node.js 18+ 설치 완료</li>
+      <li>터미널(명령 프롬프트) 기본 사용 가능</li>
+      <li>Anthropic Console 계정 및 API 키 발급 완료 (console.anthropic.com)</li>
+    </ul>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>Python/Node.js SDK로 Claude API를 호출하고 응답을 받을 수 있다</li>
+      <li>API 키 보안 관리 (.env, 환경변수)를 올바르게 구현할 수 있다</li>
+      <li>기본 request/response 구조와 주요 파라미터를 이해한다</li>
+      <li>스트리밍 응답을 구현해 실시간 출력을 처리할 수 있다</li>
+    </ul>
+  </div>
+
+  <div class="sec">이론 강의</div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--b1)">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">Claude API 개요 — REST vs SDK, 인증, 요금제</div>
+      <div class="les-dur">15분</div>
+    </div>
+    <div class="les-body">
+      <p>Claude API는 <strong>HTTP REST API</strong>이지만 대부분은 Anthropic 공식 SDK를 사용합니다. Python과 TypeScript/JavaScript SDK가 공식 지원됩니다.</p>
+      <table class="tbl">
+        <thead><tr><th>항목</th><th>내용</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td><strong>엔드포인트</strong></td><td><code>https://api.anthropic.com/v1/messages</code></td><td>단일 엔드포인트</td></tr>
+          <tr><td><strong>인증</strong></td><td><code>x-api-key: sk-ant-...</code> 헤더</td><td>절대 코드에 하드코딩 금지</td></tr>
+          <tr><td><strong>모델</strong></td><td>claude-sonnet-4, claude-haiku-4-5 등</td><td>용도별 선택</td></tr>
+          <tr><td><strong>요금</strong></td><td>입력 토큰 + 출력 토큰 과금</td><td>캐싱으로 절약 가능</td></tr>
+          <tr><td><strong>레이트 리밋</strong></td><td>분당 요청 수 + 토큰 수 제한</td><td>Tier별 상이</td></tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <div class="warn-l">⚠ API 키 보안</div>
+        <div class="warn-t">API 키는 <strong>절대 소스 코드에 직접 입력하지 마세요.</strong> GitHub에 올라간 API 키는 수 분 내에 악용됩니다. 반드시 <code>.env</code> 파일이나 환경변수로 관리하고, <code>.gitignore</code>에 <code>.env</code>를 포함하세요.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--b1)">2</div>
+      <div class="les-type pr">실습</div>
+      <div class="les-title">첫 번째 API 호출 — Hello Claude!</div>
+      <div class="les-dur">20분</div>
+    </div>
+    <div class="les-body">
+      <p>환경을 세팅하고 첫 번째 API 호출을 완성합니다. Python과 Node.js 두 가지 버전 모두 다룹니다.</p>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">코드 실습</div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">환경 설정</div><div class="cb-tag sh">bash</div></div>
+    <div class="cb-body"><span class="cm"># 1. Python SDK 설치</span>
+pip install anthropic python-dotenv
+
+<span class="cm"># 2. .env 파일 생성 (절대 git에 올리지 마세요)</span>
+echo "ANTHROPIC_API_KEY=sk-ant-your-key-here" > .env
+echo ".env" >> .gitignore
+
+<span class="cm"># 3. Node.js 사용시</span>
+npm install @anthropic-ai/sdk dotenv</div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">기본 호출 — Python</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="kw">import</span> anthropic
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+<span class="kw">import</span> os
+
+load_dotenv()  <span class="cm"># .env 파일 로드</span>
+
+<span class="cm"># 클라이언트 초기화</span>
+client = anthropic.<span class="fn">Anthropic</span>(
+    api_key=os.environ.<span class="fn">get</span>(<span class="st">"ANTHROPIC_API_KEY"</span>)
+)
+
+<span class="cm"># 기본 메시지 전송</span>
+message = client.messages.<span class="fn">create</span>(
+    model=<span class="st">"claude-sonnet-4-20250514"</span>,  <span class="cm"># 모델 지정</span>
+    max_tokens=<span class="num">1024</span>,                    <span class="cm"># 최대 출력 토큰</span>
+    messages=[
+        {
+            <span class="st">"role"</span>: <span class="st">"user"</span>,
+            <span class="st">"content"</span>: <span class="st">"안녕! 너는 뭘 잘해?"</span>
+        }
+    ]
+)
+
+<span class="cm"># 응답 출력</span>
+<span class="fn">print</span>(message.content[<span class="num">0</span>].text)
+
+<span class="cm"># 사용 토큰 확인 (과금 관리용)</span>
+<span class="fn">print</span>(<span class="st">f"입력: {message.usage.input_tokens} / 출력: {message.usage.output_tokens}"</span>)</div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">스트리밍 응답 — 실시간 출력</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="cm"># 스트리밍: 토큰이 생성되는 즉시 출력 (ChatGPT처럼)</span>
+<span class="kw">with</span> client.messages.<span class="fn">stream</span>(
+    model=<span class="st">"claude-sonnet-4-20250514"</span>,
+    max_tokens=<span class="num">1024</span>,
+    messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">"서울 여행 코스 5개 추천해줘"</span>}]
+) <span class="kw">as</span> stream:
+    <span class="kw">for</span> text <span class="kw">in</span> stream.text_stream:
+        <span class="fn">print</span>(text, end=<span class="st">""</span>, flush=<span class="num">True</span>)  <span class="cm"># 실시간 출력</span>
+
+<span class="cm"># Node.js 버전</span>
+<span class="comment">/*
+const stream = await client.messages.stream({
+  model: "claude-sonnet-4-20250514",
+  max_tokens: 1024,
+  messages: [{ role: "user", content: "서울 여행 코스 5개" }]
+});
+for await (const chunk of stream) {
+  if (chunk.type === 'content_block_delta')
+    process.stdout.write(chunk.delta.text);
+}
+*/</span></div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">응답 구조 이해 — MessageResponse 분석</div><div class="cb-tag json">JSON</div></div>
+    <div class="cb-body"><span class="cm">// API 응답 전체 구조</span>
+{
+  <span class="hl">"id"</span>: <span class="st">"msg_01XFDUDYJgAACzvnptvVoYEL"</span>,
+  <span class="hl">"type"</span>: <span class="st">"message"</span>,
+  <span class="hl">"role"</span>: <span class="st">"assistant"</span>,
+  <span class="hl">"content"</span>: [
+    {
+      <span class="st">"type"</span>: <span class="st">"text"</span>,        <span class="cm">// text | tool_use</span>
+      <span class="st">"text"</span>: <span class="st">"안녕하세요!..."</span>  <span class="cm">// 실제 응답 텍스트</span>
+    }
+  ],
+  <span class="hl">"model"</span>: <span class="st">"claude-sonnet-4-20250514"</span>,
+  <span class="hl">"stop_reason"</span>: <span class="st">"end_turn"</span>,  <span class="cm">// end_turn | max_tokens | tool_use</span>
+  <span class="hl">"usage"</span>: {
+    <span class="st">"input_tokens"</span>: <span class="num">25</span>,
+    <span class="st">"output_tokens"</span>: <span class="num">198</span>    <span class="cm">// 과금 단위</span>
+  }
+}</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">실습 과제</div>
+
+  <div class="prac">
+    <div class="prac-l">🔬 랩 1-A · API 연결 + 첫 호출</div>
+    <div class="prac-steps">
+      <div class="ps"><div class="ps-n">1</div>Anthropic Console에서 API 키 발급 후 <code>.env</code>에 저장합니다</div>
+      <div class="ps"><div class="ps-n">2</div>SDK 설치 후 기본 메시지 호출 코드를 실행합니다</div>
+      <div class="ps"><div class="ps-n">3</div>응답에서 <code>message.usage</code>를 출력해 토큰 수를 확인합니다</div>
+      <div class="ps"><div class="ps-n">4</div>스트리밍 버전으로 교체해 실시간 출력이 되는지 확인합니다</div>
+      <div class="ps"><div class="ps-n">5</div><code>max_tokens</code>를 10으로 줄여보고 <code>stop_reason</code>이 어떻게 바뀌는지 관찰합니다</div>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">퀴즈</div>
+
+  <div class="quiz">
+    <div class="quiz-l">Q1 · 객관식</div>
+    <div class="quiz-q">API 응답의 <code>stop_reason</code>이 <code>"max_tokens"</code>일 때 의미하는 것은?</div>
+    <div class="quiz-opts">
+      <div class="qo"><div class="qo-n">①</div>Claude가 답을 모른다는 의미</div>
+      <div class="qo ok"><div class="qo-n">②</div>✓ 설정한 <code>max_tokens</code> 한도에 도달해 출력이 잘렸다는 의미</div>
+      <div class="qo"><div class="qo-n">③</div>API 호출 한도 초과</div>
+      <div class="qo"><div class="qo-n">④</div>정상 완료 신호</div>
+    </div>
+    <div class="quiz-exp">💡 <code>stop_reason: "end_turn"</code>이 정상 완료입니다. <code>"max_tokens"</code>는 응답이 잘렸다는 의미이므로 max_tokens 값을 늘려야 합니다.</div>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-l">Q2 · 코드 빈칸</div>
+    <div class="quiz-q">다음 코드에서 빈칸 ___에 들어갈 올바른 코드는? <br><code>message = client.messages.create(model="claude-sonnet-4-20250514", max_tokens=1024, messages=[{"role": ___, "content": "안녕"}])</code></div>
+    <div class="quiz-opts">
+      <div class="qo"><div class="qo-n">①</div><code>"assistant"</code></div>
+      <div class="qo"><div class="qo-n">②</div><code>"system"</code></div>
+      <div class="qo ok"><div class="qo-n">③</div>✓ <code>"user"</code></div>
+      <div class="qo"><div class="qo-n">④</div><code>"human"</code></div>
+    </div>
+    <div class="quiz-exp">💡 messages 배열의 role은 "user" 또는 "assistant"입니다. "system"은 별도 파라미터로 전달합니다.</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 1–4 미션</div>
+    <div class="mis-t">나만의 첫 번째 Claude API 스크립트 완성하기</div>
+    <div class="mis-d">단순 hello world가 아닌, 실제 업무에 쓸 수 있는 기능을 하나 구현하세요. 예: "특정 텍스트 파일을 읽어서 요약하는 CLI 스크립트". 코드 파일 + 실행 결과 스크린샷 제출.</div>
+    <div class="mis-rewards"><div class="mr xp">+60 XP</div><div class="mr pt">+30 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>환경 설정 트러블슈팅:</strong>
+      <ul>
+        <li>Windows: <code>python</code> 명령이 안 될 때 → <code>py</code> 또는 <code>python3</code> 시도</li>
+        <li>API 키 오류(401): .env 파일 위치가 스크립트와 같은 디렉토리인지 확인</li>
+        <li>Rate limit(529): 발급 직후 약 5분 대기 필요한 경우 있음</li>
+      </ul>
+      <strong>중요:</strong> API 키 하드코딩 사례가 반드시 나옵니다. 수업 초반 5분을 보안 강조에 쓰는 것을 권장합니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M02 ═══ -->
+<section class="mod" id="m02">
+  <div class="mod-ey">MODULE 02 · DAY 5–9</div>
+  <div class="mod-badge" style="background:rgba(5,150,105,.1);color:var(--b1)">M02 · 프롬프트 설계</div>
+  <h2 class="mod-h">프롬프트 엔지니어링 심화<br>— 시스템 프롬프트 설계</h2>
+  <p class="mod-sub">코드로 Claude의 행동을 제어합니다. 시스템 프롬프트, temperature, top_p, XML 태그 구조화까지 — 일관된 결과를 뽑아내는 설계 기술을 배웁니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 5–9</div>
+    <div class="mchip">🐍 Python 실습</div>
+    <div class="mchip">🔧 랩 3회</div>
+    <div class="mchip">❓ 퀴즈 4문항</div>
+    <div class="mchip">⏱ 총 학습 약 100분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>시스템 프롬프트로 Claude의 역할·제약·출력 형식을 코드로 제어할 수 있다</li>
+      <li>temperature·top_p를 조정해 창의성과 일관성을 균형잡을 수 있다</li>
+      <li>XML 태그로 구조화된 출력을 받아 JSON 파싱하는 파이프라인을 만들 수 있다</li>
+      <li>프롬프트 버전 관리와 A/B 테스트 체계를 설계할 수 있다</li>
+    </ul>
+  </div>
+
+  <div class="sec">이론 강의</div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--b1)">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">시스템 프롬프트의 구조와 우선순위</div>
+      <div class="les-dur">18분</div>
+    </div>
+    <div class="les-body">
+      <p>시스템 프롬프트는 Claude에게 <strong>"어떻게 행동해야 하는지"</strong>를 지시하는 최상위 컨텍스트입니다. 사용자 메시지보다 먼저 처리되며, 모든 대화에 지속적으로 영향을 미칩니다.</p>
+
+      <div class="arch-box">
+        <div class="arch-title">우선순위 계층</div>
+<span class="arch-node">Anthropic 정책</span>         <span class="arch-comment">← Claude 학습 단계에서 적용, 최상위</span>
+    ↓
+<span class="arch-node">System Prompt</span>          <span class="arch-comment">← 개발자가 정의하는 제약과 역할</span>
+    ↓
+<span class="arch-node">User Message</span>           <span class="arch-comment">← 실제 사용자의 요청</span>
+    ↓
+<span class="arch-node">Assistant Prefill</span>       <span class="arch-comment">← 응답 시작점 제어 (고급)</span></div>
+
+      <table class="tbl">
+        <thead><tr><th>파라미터</th><th>범위</th><th>용도</th><th>권장값</th></tr></thead>
+        <tbody>
+          <tr><td><code>temperature</code></td><td>0.0–1.0</td><td>창의성 제어</td><td>분석: 0.1 / 창작: 0.7–0.9</td></tr>
+          <tr><td><code>top_p</code></td><td>0.0–1.0</td><td>어휘 다양성</td><td>일반: 1.0 (건드리지 않음)</td></tr>
+          <tr><td><code>top_k</code></td><td>정수</td><td>후보 토큰 수</td><td>기본값 사용 권장</td></tr>
+          <tr><td><code>max_tokens</code></td><td>정수</td><td>최대 출력 제한</td><td>예상 출력 × 1.5</td></tr>
+        </tbody>
+      </table>
+
+      <div class="kp">
+        <div class="kp-l">temperature 선택 가이드</div>
+        <div class="kp-t">
+          <strong>0.0–0.3:</strong> 분류, 구조화 추출, 코드 생성 — 일관된 답이 필요할 때<br>
+          <strong>0.5–0.7:</strong> 요약, 번역, 보고서 — 균형이 필요할 때<br>
+          <strong>0.8–1.0:</strong> 카피라이팅, 브레인스토밍 — 다양한 시도가 필요할 때
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--b1)">2</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">구조화된 출력 — XML 태그와 JSON 파싱</div>
+      <div class="les-dur">20분</div>
+    </div>
+    <div class="les-body">
+      <p>프로덕션 앱에서 Claude 응답을 그대로 사용자에게 보여주는 경우는 드뭅니다. 대부분 <strong>파싱해서 데이터로 처리</strong>해야 합니다. Claude는 XML 태그를 잘 따릅니다.</p>
+
+      <div class="vs-box">
+        <div class="vs-col bad">
+          <div class="vs-col-l">❌ 파싱하기 어려운 응답</div>
+          <p>시스템에 "감정을 분석해줘"라고 요청<br>→ "이 텍스트는 약간 부정적인 감정이 담겨있으며 긴장감도 느껴집니다..." (비구조적)</p>
+        </div>
+        <div class="vs-col good">
+          <div class="vs-col-l">✓ 파싱 가능한 구조화 응답</div>
+          <p>XML 또는 JSON 형식 요청<br>→ <code>&lt;sentiment&gt;negative&lt;/sentiment&gt;&lt;confidence&gt;0.82&lt;/confidence&gt;</code></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">코드 실습</div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">시스템 프롬프트 + 구조화 출력</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="kw">import</span> anthropic
+<span class="kw">import</span> json
+<span class="kw">import</span> re
+
+client = anthropic.<span class="fn">Anthropic</span>()
+
+<span class="cm"># 시스템 프롬프트: Claude의 역할과 출력 형식을 정의</span>
+SYSTEM_PROMPT = <span class="st">"""
+당신은 전문 감성 분석가입니다.
+
+[규칙]
+- 항상 아래 XML 형식으로만 응답하세요
+- 감성 레이블: positive / negative / neutral
+- confidence는 0.0~1.0 사이 소수점 2자리
+- 추가 설명 없이 XML만 출력
+
+[출력 형식]
+<analysis>
+  <sentiment>레이블</sentiment>
+  <confidence>0.00</confidence>
+  <keywords>핵심 감성 키워드들</keywords>
+</analysis>
+"""</span>
+
+<span class="kw">def</span> <span class="fn">analyze_sentiment</span>(<span class="param">text</span>: <span class="cls">str</span>) -> <span class="cls">dict</span>:
+    response = client.messages.<span class="fn">create</span>(
+        model=<span class="st">"claude-haiku-4-5-20251001"</span>,  <span class="cm"># 분류는 Haiku로 (비용 절약)</span>
+        max_tokens=<span class="num">256</span>,
+        temperature=<span class="num">0.0</span>,              <span class="cm"># 일관성을 위해 0</span>
+        system=SYSTEM_PROMPT,            <span class="cm"># 시스템 프롬프트 전달</span>
+        messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: text}]
+    )
+
+    <span class="cm"># XML 파싱</span>
+    xml = response.content[<span class="num">0</span>].text
+    <span class="kw">return</span> {
+        <span class="st">"sentiment"</span>: re.<span class="fn">search</span>(<span class="st">r'&lt;sentiment&gt;(.+?)&lt;/sentiment&gt;'</span>, xml).<span class="fn">group</span>(<span class="num">1</span>),
+        <span class="st">"confidence"</span>: <span class="fn">float</span>(re.<span class="fn">search</span>(<span class="st">r'&lt;confidence&gt;(.+?)&lt;/confidence&gt;'</span>, xml).<span class="fn">group</span>(<span class="num">1</span>)),
+        <span class="st">"keywords"</span>: re.<span class="fn">search</span>(<span class="st">r'&lt;keywords&gt;(.+?)&lt;/keywords&gt;'</span>, xml).<span class="fn">group</span>(<span class="num">1</span>)
+    }
+
+<span class="cm"># 테스트</span>
+result = <span class="fn">analyze_sentiment</span>(<span class="st">"이 제품 정말 최악이에요. 환불하고 싶어요."</span>)
+<span class="fn">print</span>(result)
+<span class="cm"># → {'sentiment': 'negative', 'confidence': 0.95, 'keywords': '최악, 환불'}</span></div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">JSON 스키마 강제 출력 — structured output</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="cm"># Claude에게 JSON 스키마를 명시하면 더 정확한 JSON이 나옵니다</span>
+
+SYSTEM_JSON = <span class="st">"""
+다음 JSON 스키마에 맞게만 응답하세요. 코드 블록 없이 순수 JSON만.
+
+스키마:
+{
+  "tasks": [
+    {
+      "title": "string",
+      "priority": "high|medium|low",
+      "estimated_minutes": number,
+      "tags": ["string"]
+    }
+  ],
+  "total_minutes": number
+}
+"""</span>
+
+response = client.messages.<span class="fn">create</span>(
+    model=<span class="st">"claude-sonnet-4-20250514"</span>,
+    max_tokens=<span class="num">1024</span>,
+    temperature=<span class="num">0.1</span>,
+    system=SYSTEM_JSON,
+    messages=[{
+        <span class="st">"role"</span>: <span class="st">"user"</span>,
+        <span class="st">"content"</span>: <span class="st">"오늘 할 일: 이메일 답장, 보고서 작성, 팀 미팅 참석, 코드 리뷰"</span>
+    }]
+)
+
+tasks = json.<span class="fn">loads</span>(response.content[<span class="num">0</span>].text)
+<span class="fn">print</span>(json.<span class="fn">dumps</span>(tasks, ensure_ascii=<span class="kw">False</span>, indent=<span class="num">2</span>))</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">시스템 프롬프트 템플릿</div>
+
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">프로덕션 시스템 프롬프트 설계 템플릿</div><div class="pb-tag sys">시스템</div></div>
+    <div class="pb-body"><span class="comment"># 좋은 시스템 프롬프트의 5가지 요소</span>
+
+당신은 <span class="slot">[역할/전문 영역]</span>입니다.
+
+[배경 및 목적]
+<span class="slot">[이 시스템이 무엇을 위한 것인지]</span>
+
+[행동 규칙]
+- <span class="slot">[규칙 1: 항상 해야 할 것]</span>
+- <span class="slot">[규칙 2: 절대 하지 말 것]</span>
+- <span class="slot">[규칙 3: 형식 요구사항]</span>
+
+[출력 형식]
+<span class="slot">[XML / JSON / 마크다운 등 구체적 형식 명시]</span>
+
+[예시]
+입력: <span class="slot">[입력 예시]</span>
+출력: <span class="slot">[기대 출력 예시]</span>
+
+<span class="comment"># Prefill 테크닉: 응답 시작점 강제 지정</span>
+messages = [
+    {"role": "user", "content": user_input},
+    {"role": "assistant", "content": '{"'}  <span class="comment"># JSON으로 시작 강제</span>
+]</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 5–9 미션</div>
+    <div class="mis-t">구조화 출력 파이프라인 구현하기</div>
+    <div class="mis-d">실무에서 쓸 수 있는 구조화 추출 스크립트를 만드세요. 예: 고객 리뷰에서 감성·키워드·카테고리를 JSON으로 추출하는 파이프라인. 코드 + 샘플 입출력 제출.</div>
+    <div class="mis-rewards"><div class="mr xp">+70 XP</div><div class="mr pt">+35 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>XML vs JSON 논쟁:</strong> Claude는 XML 파싱을 특히 잘 따릅니다. JSON을 직접 요청할 때보다 XML 래퍼를 쓰면 형식 준수율이 높습니다. 프로덕션에서는 재시도 로직(JSON 파싱 실패 시 재요청)을 반드시 추가하도록 지도하세요.<br><br>
+      <strong>Prefill 테크닉:</strong> assistant 역할로 응답 시작점을 지정하는 것은 강력한 기술입니다. <code>{"</code>로 시작하면 JSON 형식을 거의 강제할 수 있습니다. 단, 스트리밍에서는 작동하지 않습니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M03 ═══ -->
+<section class="mod" id="m03">
+  <div class="mod-ey">MODULE 03 · DAY 10–14</div>
+  <div class="mod-badge" style="background:rgba(5,150,105,.1);color:var(--b1)">M03 · 대화 관리</div>
+  <h2 class="mod-h">대화 관리<br>— 멀티턴·컨텍스트 윈도우 최적화</h2>
+  <p class="mod-sub">Claude는 메모리가 없습니다. 대화 이력을 어떻게 관리하느냐가 앱 품질을 결정합니다. 효율적인 대화 관리로 비용을 아끼고 성능을 높입니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 10–14</div>
+    <div class="mchip">🔧 랩 2회</div>
+    <div class="mchip">🧠 컨텍스트 최적화</div>
+    <div class="mchip">⏱ 총 학습 약 90분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>멀티턴 대화의 messages 배열을 올바르게 관리할 수 있다</li>
+      <li>컨텍스트 윈도우 한계를 이해하고 요약/슬라이딩 윈도우로 대응할 수 있다</li>
+      <li>프롬프트 캐싱으로 반복 요청의 비용을 최대 90% 절약할 수 있다</li>
+    </ul>
+  </div>
+
+  <div class="sec">이론 강의</div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--b1)">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">멀티턴 대화 — Claude에게 기억을 만들어주기</div>
+      <div class="les-dur">20분</div>
+    </div>
+    <div class="les-body">
+      <p>Claude API는 <strong>stateless</strong>입니다. 이전 대화를 자동으로 기억하지 않습니다. 개발자가 매 요청마다 전체 대화 이력을 <code>messages</code> 배열에 담아 전송해야 합니다.</p>
+
+      <div class="arch-box">
+        <div class="arch-title">멀티턴 대화 구조</div>
+<span class="arch-highlight">요청 1</span>: messages = [
+    {"role": "user", "content": "파이썬 배우고 싶어"}
+]
+
+<span class="arch-highlight">요청 2</span>: messages = [
+    {"role": "user",      "content": "파이썬 배우고 싶어"},
+    {"role": "assistant", "content": "좋아요! 먼저..."},  <span class="arch-comment">← 이전 응답 추가</span>
+    {"role": "user",      "content": "변수부터 알려줘"}
+]
+
+<span class="arch-highlight">요청 N</span>: messages = [이전 모든 대화 + 새 메시지]
+<span class="arch-comment">          ← 대화가 길어질수록 비용↑, 속도↓</span></div>
+
+      <div class="kp">
+        <div class="kp-l">컨텍스트 윈도우 관리 전략</div>
+        <div class="kp-t">
+          <strong>슬라이딩 윈도우:</strong> 최근 N개 메시지만 유지<br>
+          <strong>요약 압축:</strong> 오래된 대화를 요약해 하나의 메시지로 압축<br>
+          <strong>선택적 포함:</strong> 현재 질문과 관련 있는 대화만 포함<br>
+          <strong>프롬프트 캐싱:</strong> 변하지 않는 시스템 프롬프트·문서를 캐시
+        </td>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--b1)">2</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">프롬프트 캐싱 — 반복 비용 최대 90% 절약</div>
+      <div class="les-dur">18분</div>
+    </div>
+    <div class="les-body">
+      <p>시스템 프롬프트나 긴 문서를 매 요청마다 전송하면 비용이 누적됩니다. <strong>프롬프트 캐싱</strong>은 변하지 않는 부분을 서버에 캐시해두고 재사용합니다.</p>
+      <table class="tbl">
+        <thead><tr><th>구분</th><th>일반 요청</th><th>캐시 히트</th></tr></thead>
+        <tbody>
+          <tr><td>입력 토큰 비용</td><td>100% 과금</td><td>약 10% (캐시 읽기)</td></tr>
+          <tr><td>처리 속도</td><td>일반</td><td>더 빠름</td></tr>
+          <tr><td>캐시 기준</td><td>—</td><td>최소 1024 토큰 이상</td></tr>
+          <tr><td>캐시 유효기간</td><td>—</td><td>5분 (연장 가능)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">코드 실습</div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">멀티턴 대화 관리 클래스</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="kw">from</span> typing <span class="kw">import</span> List, Dict
+<span class="kw">import</span> anthropic
+
+<span class="kw">class</span> <span class="cls">ConversationManager</span>:
+    <span class="st">"""대화 이력을 관리하는 클래스"""</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="param">self</span>, system_prompt: <span class="cls">str</span>, max_turns: <span class="cls">int</span> = <span class="num">10</span>):
+        <span class="param">self</span>.client = anthropic.<span class="fn">Anthropic</span>()
+        <span class="param">self</span>.system = system_prompt
+        <span class="param">self</span>.max_turns = max_turns
+        <span class="param">self</span>.history: List[Dict] = []
+
+    <span class="kw">def</span> <span class="fn">chat</span>(<span class="param">self</span>, user_message: <span class="cls">str</span>) -> <span class="cls">str</span>:
+        <span class="cm"># 사용자 메시지 추가</span>
+        <span class="param">self</span>.history.<span class="fn">append</span>({
+            <span class="st">"role"</span>: <span class="st">"user"</span>,
+            <span class="st">"content"</span>: user_message
+        })
+
+        <span class="cm"># 슬라이딩 윈도우: 최근 N 턴만 유지</span>
+        trimmed = <span class="param">self</span>.history[-<span class="param">self</span>.max_turns * <span class="num">2</span>:]
+
+        response = <span class="param">self</span>.client.messages.<span class="fn">create</span>(
+            model=<span class="st">"claude-sonnet-4-20250514"</span>,
+            max_tokens=<span class="num">2048</span>,
+            system=<span class="param">self</span>.system,
+            messages=trimmed
+        )
+
+        assistant_reply = response.content[<span class="num">0</span>].text
+
+        <span class="cm"># 응답 이력에 추가</span>
+        <span class="param">self</span>.history.<span class="fn">append</span>({
+            <span class="st">"role"</span>: <span class="st">"assistant"</span>,
+            <span class="st">"content"</span>: assistant_reply
+        })
+
+        <span class="kw">return</span> assistant_reply
+
+    <span class="kw">def</span> <span class="fn">summarize_and_reset</span>(<span class="param">self</span>) -> <span class="cls">str</span>:
+        <span class="cm">"""대화가 너무 길어지면 요약 후 압축"""</span>
+        summary_prompt = <span class="st">f"""
+        다음 대화를 3줄로 핵심만 요약해줘:
+        {str(self.history)}
+        """</span>
+        summary = <span class="param">self</span>.client.messages.<span class="fn">create</span>(
+            model=<span class="st">"claude-haiku-4-5-20251001"</span>,
+            max_tokens=<span class="num">256</span>,
+            messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: summary_prompt}]
+        ).content[<span class="num">0</span>].text
+
+        <span class="cm"># 요약으로 이력 초기화</span>
+        <span class="param">self</span>.history = [{
+            <span class="st">"role"</span>: <span class="st">"user"</span>,
+            <span class="st">"content"</span>: <span class="st">f"[이전 대화 요약] {summary}"</span>
+        }, {<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: <span class="st">"이전 대화 내용을 기억하고 있습니다."</span>}]
+        <span class="kw">return</span> summary
+
+<span class="cm"># 사용 예시</span>
+bot = <span class="cls">ConversationManager</span>(<span class="st">"당신은 친절한 AI 어시스턴트입니다."</span>, max_turns=<span class="num">5</span>)
+<span class="fn">print</span>(bot.<span class="fn">chat</span>(<span class="st">"파이썬 배우고 싶어"</span>))
+<span class="fn">print</span>(bot.<span class="fn">chat</span>(<span class="st">"변수부터 알려줘"</span>))  <span class="cm"># 이전 맥락 유지됨</span></div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">프롬프트 캐싱 구현</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="cm"># 캐싱: 긴 문서를 여러 번 참조할 때 비용 절약</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"long_document.txt"</span>) <span class="kw">as</span> f:
+    document = f.<span class="fn">read</span>()
+
+<span class="kw">def</span> <span class="fn">query_document</span>(<span class="param">question</span>: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    response = client.messages.<span class="fn">create</span>(
+        model=<span class="st">"claude-sonnet-4-20250514"</span>,
+        max_tokens=<span class="num">1024</span>,
+        system=[
+            {
+                <span class="st">"type"</span>: <span class="st">"text"</span>,
+                <span class="st">"text"</span>: <span class="st">"당신은 문서 분석 전문가입니다."</span>,
+            },
+            {
+                <span class="st">"type"</span>: <span class="st">"text"</span>,
+                <span class="st">"text"</span>: <span class="st">f"&lt;document&gt;\n{document}\n&lt;/document&gt;"</span>,
+                <span class="hl">"cache_control"</span>: {<span class="st">"type"</span>: <span class="st">"ephemeral"</span>}  <span class="cm"># ← 캐시 지정</span>
+            }
+        ],
+        messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: question}]
+    )
+    <span class="kw">return</span> response.content[<span class="num">0</span>].text
+
+<span class="cm"># 첫 호출: 캐시 저장 (약간 느림)</span>
+<span class="fn">query_document</span>(<span class="st">"핵심 내용을 요약해줘"</span>)
+
+<span class="cm"># 이후 호출: 캐시 히트 (빠름, 90% 비용 절약)</span>
+<span class="fn">query_document</span>(<span class="st">"3페이지 내용은 뭐야?"</span>)
+<span class="fn">query_document</span>(<span class="st">"결론 부분을 영어로 번역해줘"</span>)</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 10–14 미션</div>
+    <div class="mis-t">대화형 CLI 챗봇 구현하기</div>
+    <div class="mis-d">ConversationManager 클래스를 확장해 터미널에서 실제 대화가 가능한 CLI 챗봇을 만드세요. "/clear" 명령으로 대화 초기화, "/summary"로 대화 요약 기능 포함 필수.</div>
+    <div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+40 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>컨텍스트 비용 계산:</strong> 수업 중 실제 비용을 계산해서 보여주면 효과적입니다. "10턴 대화가 누적되면 토큰이 몇 개?" → "그게 몇 원이야?" 직접 계산해보면 캐싱의 중요성을 몸으로 느낍니다.<br><br>
+      <strong>실무 패턴:</strong> 프로덕션에서는 대화 이력을 DB(Redis/PostgreSQL)에 저장하고, 요청마다 불러오는 패턴을 씁니다. 단순 배열로 관리하면 서버 재시작 시 이력이 사라집니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PART 2 챕터 ═══ -->
+<div class="chap" id="part2">
+  <div class="chap-g"></div>
+  <div class="chap-part">PART TWO</div>
+  <div class="chap-n" style="color:#60A5FA">04–07</div>
+  <div class="chap-h">도구·파일·MCP</div>
+  <div class="chap-s">Claude에게 도구를 주고, 파일을 처리하게 하고,<br>MCP 프로토콜로 나만의 서버를 구축합니다.</div>
+  <div class="chap-meta">M04 Tools · M05 MCP 이해 · M06 MCP 서버 구축 · M07 파일 처리 · Day 15–35</div>
+</div>
+
+<!-- ═══ M04 ═══ -->
+<section class="mod" id="m04">
+  <div class="mod-ey">MODULE 04 · DAY 15–19</div>
+  <div class="mod-badge" style="background:rgba(29,78,216,.1);color:#1D4ED8">M04 · Tools</div>
+  <h2 class="mod-h">도구(Tools) 사용<br>— Function Calling 완전 정복</h2>
+  <p class="mod-sub">Claude가 외부 함수를 호출하게 합니다. 날씨 API, DB 쿼리, 계산기 — Claude가 스스로 판단해 적절한 도구를 선택하고 호출하는 에이전트의 핵심 기술입니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 15–19</div>
+    <div class="mchip">🔧 랩 3회</div>
+    <div class="mchip">🤖 에이전트 기초</div>
+    <div class="mchip">⏱ 총 학습 약 110분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>tool_use 타입 응답을 파싱하고 실제 함수를 호출하는 사이클을 구현할 수 있다</li>
+      <li>JSON Schema로 도구 명세를 작성할 수 있다</li>
+      <li>여러 도구를 등록하고 Claude가 자동 선택하게 하는 에이전트 루프를 완성할 수 있다</li>
+    </ul>
+  </div>
+
+  <div class="sec">이론 강의</div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#1D4ED8">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">Tool Use 동작 원리 — 4단계 사이클</div>
+      <div class="les-dur">20분</div>
+    </div>
+    <div class="les-body">
+      <p>Tools(Function Calling)는 Claude가 "이 작업은 외부 도구가 필요해"라고 판단하면 도구 호출 요청을 반환하는 메커니즘입니다. 개발자가 실제 함수를 실행하고 결과를 다시 Claude에게 줍니다.</p>
+
+      <div class="arch-box">
+        <div class="arch-title">Tool Use 4단계 사이클</div>
+<span class="arch-highlight">1. 요청</span>: 사용자 메시지 + 사용 가능한 tools 목록 전송
+    ↓
+<span class="arch-highlight">2. Claude 판단</span>: stop_reason = "tool_use"
+    content = [{"type": "tool_use", "name": "get_weather", "input": {...}}]
+    ↓
+<span class="arch-highlight">3. 함수 실행</span>: 개발자가 실제 Python 함수 호출 → 결과 획득
+    ↓
+<span class="arch-highlight">4. 결과 전송</span>: tool_result 타입으로 결과 반환
+    → Claude가 결과를 바탕으로 최종 응답 생성
+    ↓
+<span class="arch-highlight">반복</span>: stop_reason = "end_turn"까지 Loop</div>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">코드 실습</div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">Tool Use 완전 구현 — 에이전트 루프</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="kw">import</span> anthropic
+<span class="kw">import</span> json
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+client = anthropic.<span class="fn">Anthropic</span>()
+
+<span class="cm"># 1. 도구 정의 (JSON Schema)</span>
+TOOLS = [
+    {
+        <span class="st">"name"</span>: <span class="st">"get_current_weather"</span>,
+        <span class="st">"description"</span>: <span class="st">"현재 도시의 날씨를 가져옵니다"</span>,
+        <span class="st">"input_schema"</span>: {
+            <span class="st">"type"</span>: <span class="st">"object"</span>,
+            <span class="st">"properties"</span>: {
+                <span class="st">"city"</span>: {<span class="st">"type"</span>: <span class="st">"string"</span>, <span class="st">"description"</span>: <span class="st">"도시명 (예: 서울, 부산)"</span>}
+            },
+            <span class="st">"required"</span>: [<span class="st">"city"</span>]
+        }
+    },
+    {
+        <span class="st">"name"</span>: <span class="st">"calculate"</span>,
+        <span class="st">"description"</span>: <span class="st">"수식을 계산합니다"</span>,
+        <span class="st">"input_schema"</span>: {
+            <span class="st">"type"</span>: <span class="st">"object"</span>,
+            <span class="st">"properties"</span>: {
+                <span class="st">"expression"</span>: {<span class="st">"type"</span>: <span class="st">"string"</span>, <span class="st">"description"</span>: <span class="st">"파이썬 수식 (예: 2**10)"</span>}
+            },
+            <span class="st">"required"</span>: [<span class="st">"expression"</span>]
+        }
+    }
+]
+
+<span class="cm"># 2. 실제 함수 구현</span>
+<span class="kw">def</span> <span class="fn">get_current_weather</span>(<span class="param">city</span>: <span class="cls">str</span>) -> <span class="cls">dict</span>:
+    <span class="cm"># 실제로는 날씨 API 호출</span>
+    <span class="kw">return</span> {<span class="st">"city"</span>: city, <span class="st">"temp"</span>: <span class="num">22</span>, <span class="st">"condition"</span>: <span class="st">"맑음"</span>}
+
+<span class="kw">def</span> <span class="fn">calculate</span>(<span class="param">expression</span>: <span class="cls">str</span>) -> <span class="cls">dict</span>:
+    <span class="kw">try</span>:
+        result = <span class="fn">eval</span>(expression)  <span class="cm"># 실제 환경에선 sandboxing 필요!</span>
+        <span class="kw">return</span> {<span class="st">"result"</span>: result}
+    <span class="kw">except</span>:
+        <span class="kw">return</span> {<span class="st">"error"</span>: <span class="st">"계산 실패"</span>}
+
+<span class="cm"># 3. 에이전트 루프</span>
+<span class="kw">def</span> <span class="fn">run_agent</span>(<span class="param">user_message</span>: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    messages = [{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user_message}]
+
+    <span class="kw">while True</span>:
+        response = client.messages.<span class="fn">create</span>(
+            model=<span class="st">"claude-sonnet-4-20250514"</span>,
+            max_tokens=<span class="num">4096</span>,
+            tools=TOOLS,
+            messages=messages
+        )
+
+        <span class="cm"># 완료되면 리턴</span>
+        <span class="kw">if</span> response.stop_reason == <span class="st">"end_turn"</span>:
+            <span class="kw">return</span> response.content[<span class="num">0</span>].text
+
+        <span class="cm"># tool_use 처리</span>
+        tool_results = []
+        <span class="kw">for</span> block <span class="kw">in</span> response.content:
+            <span class="kw">if</span> block.type == <span class="st">"tool_use"</span>:
+                <span class="fn">print</span>(<span class="st">f"🔧 도구 호출: {block.name}({block.input})"</span>)
+
+                <span class="cm"># 도구명에 따라 함수 실행</span>
+                <span class="kw">if</span> block.name == <span class="st">"get_current_weather"</span>:
+                    result = <span class="fn">get_current_weather</span>(**block.input)
+                <span class="kw">elif</span> block.name == <span class="st">"calculate"</span>:
+                    result = <span class="fn">calculate</span>(**block.input)
+
+                tool_results.<span class="fn">append</span>({
+                    <span class="st">"type"</span>: <span class="st">"tool_result"</span>,
+                    <span class="st">"tool_use_id"</span>: block.id,
+                    <span class="st">"content"</span>: json.<span class="fn">dumps</span>(result, ensure_ascii=<span class="kw">False</span>)
+                })
+
+        <span class="cm"># 도구 결과를 메시지에 추가하고 반복</span>
+        messages.<span class="fn">append</span>({<span class="st">"role"</span>: <span class="st">"assistant"</span>, <span class="st">"content"</span>: response.content})
+        messages.<span class="fn">append</span>({<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: tool_results})
+
+<span class="cm"># 테스트</span>
+<span class="fn">print</span>(<span class="fn">run_agent</span>(<span class="st">"서울 날씨 알려주고, 2의 10승도 계산해줘"</span>))
+<span class="cm"># Claude가 두 도구를 모두 자동 선택해서 호출</span></div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 15–19 미션</div>
+    <div class="mis-t">실제 API를 호출하는 도구 2개 이상 구현하기</div>
+    <div class="mis-d">공개 API(날씨, 환율, 뉴스 등)를 실제로 호출하는 도구를 2개 이상 만들고, Claude 에이전트 루프와 연결하세요. "오늘 서울 날씨와 현재 달러 환율을 알려줘" 같은 복합 질문이 작동해야 합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+85 XP</div><div class="mr pt">+45 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>eval() 보안:</strong> 계산기 예제에서 <code>eval()</code>을 쓰면 보안 취약점입니다. 실제 환경에서는 <code>numexpr</code>이나 별도 sandbox를 사용하라고 반드시 언급하세요.<br><br>
+      <strong>병렬 Tool 호출:</strong> Claude는 여러 도구를 병렬로 호출할 수 있습니다. response.content에 tool_use 블록이 여러 개 있을 수 있으므로 반복 처리가 필요합니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M05 ═══ -->
+<section class="mod" id="m05">
+  <div class="mod-ey">MODULE 05 · DAY 20–24</div>
+  <div class="mod-badge" style="background:rgba(30,64,175,.1);color:#1E40AF">M05 · MCP 이해</div>
+  <h2 class="mod-h">MCP 이해<br>— Model Context Protocol 개념과 구조</h2>
+  <p class="mod-sub">MCP는 Claude가 외부 도구·데이터·서비스에 접근하는 방식을 표준화한 프로토콜입니다. "USB 허브처럼 꽂으면 연결된다"는 아이디어를 개발자 관점에서 깊이 이해합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 20–24</div>
+    <div class="mchip">🔌 프로토콜 설계</div>
+    <div class="mchip">🔧 랩 2회</div>
+    <div class="mchip">⏱ 총 학습 약 90분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>MCP의 아키텍처 (Host · Client · Server)를 이해하고 설명할 수 있다</li>
+      <li>MCP 서버가 제공하는 3가지 원시 타입(Resources·Tools·Prompts)을 구분할 수 있다</li>
+      <li>기존 MCP 서버를 Claude Desktop에 연결해 로컬에서 테스트할 수 있다</li>
+    </ul>
+  </div>
+
+  <div class="sec">이론 강의</div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#1E40AF">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">MCP 아키텍처 — Host · Client · Server 삼각형</div>
+      <div class="les-dur">22분</div>
+    </div>
+    <div class="les-body">
+      <p>MCP(Model Context Protocol)는 Anthropic이 설계한 오픈 표준 프로토콜입니다. AI 앱(Host)이 다양한 데이터 소스 및 도구(Server)와 통신하는 방식을 표준화합니다.</p>
+
+      <div class="arch-box">
+        <div class="arch-title">MCP 아키텍처 삼각형</div>
+<span class="arch-highlight">Host</span> (Claude Desktop, Claude.ai, 커스텀 앱)
+    ├── MCP Client 1  ←→  <span class="arch-node">MCP Server A</span> (파일시스템)
+    ├── MCP Client 2  ←→  <span class="arch-node">MCP Server B</span> (GitHub)
+    └── MCP Client 3  ←→  <span class="arch-node">MCP Server C</span> (내가 만든 서버)
+
+<span class="arch-comment"># 각 역할</span>
+<span class="arch-highlight">Host</span>    : Claude를 실행하는 환경 (Claude Desktop 등)
+<span class="arch-highlight">Client</span>  : Host 내부에서 Server와 통신하는 컴포넌트
+<span class="arch-highlight">Server</span>  : 도구·데이터·기능을 제공하는 경량 프로세스</div>
+
+      <table class="tbl">
+        <thead><tr><th>MCP 원시 타입</th><th>역할</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Resources</strong></td><td>데이터/파일 노출</td><td>파일 내용, DB 레코드, API 응답</td></tr>
+          <tr><td><strong>Tools</strong></td><td>실행 가능한 함수</td><td>파일 쓰기, 이메일 발송, DB 쿼리</td></tr>
+          <tr><td><strong>Prompts</strong></td><td>재사용 가능한 프롬프트 템플릿</td><td>코드 리뷰 프롬프트, 번역 프롬프트</td></tr>
+        </tbody>
+      </table>
+
+      <div class="kp">
+        <div class="kp-l">MCP vs 기존 Tool Use 차이</div>
+        <div class="kp-t">
+          <strong>기존 Tool Use:</strong> 개발자가 직접 함수 정의 → Claude API에 전달 → 결과 처리 (앱 내부에서 모두 처리)<br>
+          <strong>MCP:</strong> 별도 서버 프로세스 → 표준 프로토콜로 통신 → 여러 앱이 같은 서버 재사용 가능 (플러그인 생태계)
+        </td>
+      </div>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#1E40AF">2</div>
+      <div class="les-type pr">실습</div>
+      <div class="les-title">기존 MCP 서버 연결 — Claude Desktop 설정</div>
+      <div class="les-dur">20분</div>
+    </div>
+    <div class="les-body">
+      <p>MCP 서버를 직접 만들기 전에, 먼저 공개 MCP 서버를 Claude Desktop에 연결해봅니다.</p>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">Claude Desktop MCP 설정 — claude_desktop_config.json</div><div class="cb-tag json">JSON</div></div>
+    <div class="cb-body"><span class="cm">// 위치: ~/Library/Application Support/Claude/claude_desktop_config.json (macOS)</span>
+<span class="cm">// 위치: %APPDATA%\Claude\claude_desktop_config.json (Windows)</span>
+{
+  <span class="hl">"mcpServers"</span>: {
+    <span class="st">"filesystem"</span>: {           <span class="cm">// 파일시스템 서버 (공식 제공)</span>
+      <span class="st">"command"</span>: <span class="st">"npx"</span>,
+      <span class="st">"args"</span>: [
+        <span class="st">"-y"</span>,
+        <span class="st">"@modelcontextprotocol/server-filesystem"</span>,
+        <span class="st">"/Users/your-name/Desktop"</span>  <span class="cm">// 접근 허용 디렉토리</span>
+      ]
+    },
+    <span class="st">"github"</span>: {               <span class="cm">// GitHub 서버</span>
+      <span class="st">"command"</span>: <span class="st">"npx"</span>,
+      <span class="st">"args"</span>: [<span class="st">"-y"</span>, <span class="st">"@modelcontextprotocol/server-github"</span>],
+      <span class="st">"env"</span>: {
+        <span class="st">"GITHUB_PERSONAL_ACCESS_TOKEN"</span>: <span class="st">"your-token"</span>
+      }
+    },
+    <span class="st">"my-custom-server"</span>: {     <span class="cm">// M06에서 직접 만들 서버</span>
+      <span class="st">"command"</span>: <span class="st">"python"</span>,
+      <span class="st">"args"</span>: [<span class="st">"/path/to/my_mcp_server.py"</span>]
+    }
+  }
+}</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 20–24 미션</div>
+    <div class="mis-t">공개 MCP 서버 2개 연결하고 기능 탐색하기</div>
+    <div class="mis-d">Claude Desktop에 filesystem + GitHub (또는 다른 공개 서버) MCP를 연결하고, 각 서버가 제공하는 Resources와 Tools 목록을 정리해서 제출하세요.</div>
+    <div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+40 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>MCP 생태계 현황:</strong> MCP는 2024년 말 오픈소스 공개 이후 빠르게 성장 중입니다. 수업 시점에 공식 서버 목록을 확인하고 최신 서버를 소개하세요. (github.com/modelcontextprotocol/servers)<br><br>
+      <strong>Windows 주의:</strong> Windows에서 npx가 안 될 경우 Node.js 재설치 또는 경로 설정이 필요합니다. 수업 전 OS별 트러블슈팅 가이드를 준비하세요.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M06 ═══ -->
+<section class="mod" id="m06">
+  <div class="mod-ey">MODULE 06 · DAY 25–30</div>
+  <div class="mod-badge" style="background:rgba(91,33,182,.1);color:#5B21B6">M06 · MCP 구축</div>
+  <h2 class="mod-h">MCP 서버 구축<br>— 나만의 MCP 서버 만들기</h2>
+  <p class="mod-sub">Track B의 핵심 모듈입니다. Python MCP SDK로 나만의 MCP 서버를 처음부터 구축합니다. 회사 내부 DB, 사내 시스템을 Claude에 연결하는 실전 기술을 배웁니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 25–30</div>
+    <div class="mchip">🔌 MCP SDK 활용</div>
+    <div class="mchip">🔧 랩 4회</div>
+    <div class="mchip">🎖 난이도 높음</div>
+    <div class="mchip">⏱ 총 학습 약 150분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>Python MCP SDK로 Tools·Resources를 제공하는 MCP 서버를 완성할 수 있다</li>
+      <li>Claude Desktop에 내 서버를 연결해 실제 동작을 검증할 수 있다</li>
+      <li>HTTP 엔드포인트를 MCP 도구로 래핑하는 패턴을 이해한다</li>
+      <li>보안(인증·권한)을 고려한 프로덕션 수준의 서버를 설계할 수 있다</li>
+    </ul>
+  </div>
+
+  <div class="sec">이론 + 코드 실습</div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#5B21B6">1</div>
+      <div class="les-type lab">핵심 랩</div>
+      <div class="les-title">나만의 MCP 서버 — 단계별 구현</div>
+      <div class="les-dur">60분</div>
+    </div>
+    <div class="les-body">
+      <p>Python MCP SDK를 사용해 서버를 만듭니다. 먼저 간단한 에코 서버부터 시작해 실제 데이터를 다루는 서버까지 단계적으로 구현합니다.</p>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">MCP 서버 기초 — 도구 1개</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="cm"># pip install mcp</span>
+<span class="kw">from</span> mcp.server <span class="kw">import</span> Server
+<span class="kw">from</span> mcp.server.stdio <span class="kw">import</span> stdio_server
+<span class="kw">from</span> mcp.types <span class="kw">import</span> Tool, TextContent
+<span class="kw">import</span> asyncio
+<span class="kw">import</span> json
+
+<span class="cm"># 서버 인스턴스 생성</span>
+server = <span class="fn">Server</span>(<span class="st">"my-first-server"</span>)
+
+<span class="cm"># 도구 목록 등록</span>
+<span class="kw">@server.list_tools</span>()
+<span class="kw">async def</span> <span class="fn">list_tools</span>():
+    <span class="kw">return</span> [
+        <span class="cls">Tool</span>(
+            name=<span class="st">"get_company_info"</span>,
+            description=<span class="st">"회사 부서 정보를 가져옵니다"</span>,
+            inputSchema={
+                <span class="st">"type"</span>: <span class="st">"object"</span>,
+                <span class="st">"properties"</span>: {
+                    <span class="st">"department"</span>: {
+                        <span class="st">"type"</span>: <span class="st">"string"</span>,
+                        <span class="st">"description"</span>: <span class="st">"부서명 (영업, 마케팅, 개발, 인사)"</span>
+                    }
+                },
+                <span class="st">"required"</span>: [<span class="st">"department"</span>]
+            }
+        )
+    ]
+
+<span class="cm"># 도구 실행 핸들러</span>
+<span class="kw">@server.call_tool</span>()
+<span class="kw">async def</span> <span class="fn">call_tool</span>(<span class="param">name</span>: <span class="cls">str</span>, <span class="param">arguments</span>: <span class="cls">dict</span>):
+    <span class="kw">if</span> name == <span class="st">"get_company_info"</span>:
+        dept = arguments.get(<span class="st">"department"</span>)
+        <span class="cm"># 실제 환경에서는 DB 쿼리</span>
+        data = {
+            <span class="st">"영업"</span>: {<span class="st">"head"</span>: <span class="st">"김팀장"</span>, <span class="st">"members"</span>: <span class="num">12</span>, <span class="st">"location"</span>: <span class="st">"3F"</span>},
+            <span class="st">"마케팅"</span>: {<span class="st">"head"</span>: <span class="st">"이팀장"</span>, <span class="st">"members"</span>: <span class="num">8</span>, <span class="st">"location"</span>: <span class="st">"4F"</span>},
+        }
+        result = data.<span class="fn">get</span>(dept, {<span class="st">"error"</span>: <span class="st">"부서를 찾을 수 없습니다"</span>})
+        <span class="kw">return</span> [<span class="cls">TextContent</span>(type=<span class="st">"text"</span>, text=json.<span class="fn">dumps</span>(result, ensure_ascii=<span class="kw">False</span>))]
+
+<span class="cm"># 서버 실행 (stdio 모드 - Claude Desktop과 통신)</span>
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    asyncio.<span class="fn">run</span>(<span class="fn">stdio_server</span>(server))</div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">MCP 서버 고급 — Resources + DB 연결</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="kw">from</span> mcp.server <span class="kw">import</span> Server
+<span class="kw">from</span> mcp.types <span class="kw">import</span> Resource, ResourceContent
+<span class="kw">import</span> sqlite3
+
+server = <span class="fn">Server</span>(<span class="st">"company-db-server"</span>)
+DB_PATH = <span class="st">"company.db"</span>
+
+<span class="cm"># Resources: 데이터 노출 (읽기 전용)</span>
+<span class="kw">@server.list_resources</span>()
+<span class="kw">async def</span> <span class="fn">list_resources</span>():
+    <span class="kw">return</span> [
+        <span class="cls">Resource</span>(
+            uri=<span class="st">"db://employees/all"</span>,
+            name=<span class="st">"전체 직원 목록"</span>,
+            description=<span class="st">"회사 전체 직원 정보"</span>,
+            mimeType=<span class="st">"application/json"</span>
+        )
+    ]
+
+<span class="kw">@server.read_resource</span>()
+<span class="kw">async def</span> <span class="fn">read_resource</span>(<span class="param">uri</span>: <span class="cls">str</span>):
+    <span class="kw">if</span> uri == <span class="st">"db://employees/all"</span>:
+        conn = sqlite3.<span class="fn">connect</span>(DB_PATH)
+        cursor = conn.<span class="fn">execute</span>(<span class="st">"SELECT name, dept, email FROM employees"</span>)
+        employees = [{<span class="st">"name"</span>: r[<span class="num">0</span>], <span class="st">"dept"</span>: r[<span class="num">1</span>], <span class="st">"email"</span>: r[<span class="num">2</span>]}
+                    <span class="kw">for</span> r <span class="kw">in</span> cursor.<span class="fn">fetchall</span>()]
+        conn.<span class="fn">close</span>()
+        <span class="kw">return</span> <span class="cls">ResourceContent</span>(
+            uri=uri,
+            mimeType=<span class="st">"application/json"</span>,
+            text=json.<span class="fn">dumps</span>(employees, ensure_ascii=<span class="kw">False</span>)
+        )
+
+<span class="cm"># Tools: 데이터 변경 (쓰기)</span>
+<span class="kw">@server.list_tools</span>()
+<span class="kw">async def</span> <span class="fn">list_tools</span>():
+    <span class="kw">return</span> [
+        <span class="cls">Tool</span>(
+            name=<span class="st">"search_employee"</span>,
+            description=<span class="st">"이름 또는 부서로 직원 검색"</span>,
+            inputSchema={
+                <span class="st">"type"</span>: <span class="st">"object"</span>,
+                <span class="st">"properties"</span>: {
+                    <span class="st">"query"</span>: {<span class="st">"type"</span>: <span class="st">"string"</span>}
+                },
+                <span class="st">"required"</span>: [<span class="st">"query"</span>]
+            }
+        )
+    ]</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 25–30 미션 (심화 랩)</div>
+    <div class="mis-t">실제 데이터를 다루는 MCP 서버 완성하기</div>
+    <div class="mis-d">다음 중 하나를 선택해 완성하세요:<br>① SQLite DB에서 데이터를 읽고 쓰는 MCP 서버<br>② REST API를 래핑하는 MCP 서버 (날씨, 환율 등 공개 API)<br>③ 로컬 파일 시스템을 조작하는 MCP 서버 (커스텀 기능 포함)<br><br>Claude Desktop에 연결해서 실제 동작하는 스크린샷 제출 필수.</div>
+    <div class="mis-rewards"><div class="mr xp">+100 XP</div><div class="mr pt">+60 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>이 모듈이 Track B의 핵심입니다.</strong> 대부분의 수강생이 여기서 가장 많이 막힙니다.<br><br>
+      <strong>자주 막히는 지점:</strong><br>
+      <ul>
+        <li>stdio 통신 이해 부족 → "MCP는 stdin/stdout으로 JSON 메시지를 주고받는다"를 반복 강조</li>
+        <li>Claude Desktop이 서버를 못 찾음 → config.json 경로와 python 경로 확인</li>
+        <li>비동기(async/await) 이해 부족 → asyncio 기초 보충 자료 배포</li>
+      </ul>
+      <strong>추천 순서:</strong> 에코 서버 → 정적 데이터 서버 → DB 연결 서버 → 외부 API 연결 순으로 단계를 나누어 진행.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M07 ═══ -->
+<section class="mod" id="m07">
+  <div class="mod-ey">MODULE 07 · DAY 31–35</div>
+  <div class="mod-badge" style="background:rgba(109,40,217,.1);color:#6D28D9">M07 · 파일·문서</div>
+  <h2 class="mod-h">파일·문서 처리<br>— PDF·이미지·대용량 처리</h2>
+  <p class="mod-sub">Claude에게 파일을 줍니다. PDF 읽기, 이미지 분석, 대용량 문서 처리, 배치 API로 수백 개 파일을 동시에 처리하는 프로덕션 패턴을 배웁니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 31–35</div>
+    <div class="mchip">📄 PDF · 이미지</div>
+    <div class="mchip">⚡ 배치 처리</div>
+    <div class="mchip">⏱ 총 학습 약 90분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>PDF와 이미지를 Base64 인코딩해 API로 전송할 수 있다</li>
+      <li>Messages Batches API로 수백 개 요청을 비동기 처리할 수 있다</li>
+      <li>대용량 문서를 청킹(chunking)해서 처리하는 패턴을 구현할 수 있다</li>
+    </ul>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">코드 실습</div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">PDF + 이미지 처리</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="kw">import</span> base64
+<span class="kw">import</span> anthropic
+
+client = anthropic.<span class="fn">Anthropic</span>()
+
+<span class="cm"># PDF 처리 (문서 읽기)</span>
+<span class="kw">def</span> <span class="fn">analyze_pdf</span>(<span class="param">pdf_path</span>: <span class="cls">str</span>, <span class="param">question</span>: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    <span class="kw">with</span> <span class="fn">open</span>(pdf_path, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+        pdf_data = base64.<span class="fn">standard_b64encode</span>(f.<span class="fn">read</span>()).<span class="fn">decode</span>(<span class="st">"utf-8"</span>)
+
+    response = client.messages.<span class="fn">create</span>(
+        model=<span class="st">"claude-sonnet-4-20250514"</span>,
+        max_tokens=<span class="num">4096</span>,
+        messages=[{
+            <span class="st">"role"</span>: <span class="st">"user"</span>,
+            <span class="st">"content"</span>: [
+                {
+                    <span class="st">"type"</span>: <span class="st">"document"</span>,
+                    <span class="st">"source"</span>: {
+                        <span class="st">"type"</span>: <span class="st">"base64"</span>,
+                        <span class="st">"media_type"</span>: <span class="st">"application/pdf"</span>,
+                        <span class="st">"data"</span>: pdf_data
+                    }
+                },
+                {<span class="st">"type"</span>: <span class="st">"text"</span>, <span class="st">"text"</span>: question}
+            ]
+        }]
+    )
+    <span class="kw">return</span> response.content[<span class="num">0</span>].text
+
+<span class="cm"># 이미지 분석</span>
+<span class="kw">def</span> <span class="fn">analyze_image</span>(<span class="param">image_path</span>: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    <span class="kw">with</span> <span class="fn">open</span>(image_path, <span class="st">"rb"</span>) <span class="kw">as</span> f:
+        img_data = base64.<span class="fn">standard_b64encode</span>(f.<span class="fn">read</span>()).<span class="fn">decode</span>(<span class="st">"utf-8"</span>)
+
+    ext = image_path.<span class="fn">split</span>(<span class="st">"."</span>)[-<span class="num">1</span>].<span class="fn">lower</span>()
+    media_types = {<span class="st">"jpg"</span>: <span class="st">"image/jpeg"</span>, <span class="st">"jpeg"</span>: <span class="st">"image/jpeg"</span>,
+                   <span class="st">"png"</span>: <span class="st">"image/png"</span>, <span class="st">"gif"</span>: <span class="st">"image/gif"</span>}
+
+    response = client.messages.<span class="fn">create</span>(
+        model=<span class="st">"claude-sonnet-4-20250514"</span>,
+        max_tokens=<span class="num">1024</span>,
+        messages=[{
+            <span class="st">"role"</span>: <span class="st">"user"</span>,
+            <span class="st">"content"</span>: [
+                {
+                    <span class="st">"type"</span>: <span class="st">"image"</span>,
+                    <span class="st">"source"</span>: {
+                        <span class="st">"type"</span>: <span class="st">"base64"</span>,
+                        <span class="st">"media_type"</span>: media_types.<span class="fn">get</span>(ext, <span class="st">"image/jpeg"</span>),
+                        <span class="st">"data"</span>: img_data
+                    }
+                },
+                {<span class="st">"type"</span>: <span class="st">"text"</span>, <span class="st">"text"</span>: <span class="st">"이 이미지를 설명해줘"</span>}
+            ]
+        }]
+    )
+    <span class="kw">return</span> response.content[<span class="num">0</span>].text</div>
+  </div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">Messages Batches API — 대량 처리</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="kw">import</span> anthropic
+<span class="kw">import</span> time
+
+client = anthropic.<span class="fn">Anthropic</span>()
+
+<span class="cm"># 배치: 수백 개 리뷰를 한 번에 처리 (비용 50% 절약)</span>
+reviews = [
+    <span class="st">"배송이 너무 느려요. 3일 걸렸어요."</span>,
+    <span class="st">"제품 품질이 훌륭합니다!"</span>,
+    <span class="st">"포장이 엉망이고 제품이 파손됐어요."</span>,
+    <span class="cm"># ... 수백 개</span>
+]
+
+<span class="cm"># 배치 요청 생성</span>
+requests = []
+<span class="kw">for</span> i, review <span class="kw">in</span> <span class="fn">enumerate</span>(reviews):
+    requests.<span class="fn">append</span>({
+        <span class="st">"custom_id"</span>: <span class="st">f"review-{i}"</span>,
+        <span class="st">"params"</span>: {
+            <span class="st">"model"</span>: <span class="st">"claude-haiku-4-5-20251001"</span>,
+            <span class="st">"max_tokens"</span>: <span class="num">128</span>,
+            <span class="st">"messages"</span>: [{
+                <span class="st">"role"</span>: <span class="st">"user"</span>,
+                <span class="st">"content"</span>: <span class="st">f"감성 분류 (positive/negative/neutral만): {review}"</span>
+            }]
+        }
+    })
+
+<span class="cm"># 배치 제출</span>
+batch = client.beta.messages.batches.<span class="fn">create</span>(requests=requests)
+<span class="fn">print</span>(<span class="st">f"배치 ID: {batch.id}, 상태: {batch.processing_status}"</span>)
+
+<span class="cm"># 완료 대기 (비동기: 수분~수시간)</span>
+<span class="kw">while</span> batch.processing_status != <span class="st">"ended"</span>:
+    time.<span class="fn">sleep</span>(<span class="num">60</span>)
+    batch = client.beta.messages.batches.<span class="fn">retrieve</span>(batch.id)
+
+<span class="cm"># 결과 수집</span>
+<span class="kw">for</span> result <span class="kw">in</span> client.beta.messages.batches.<span class="fn">results</span>(batch.id):
+    <span class="fn">print</span>(<span class="st">f"{result.custom_id}: {result.result.message.content[0].text}"</span>)</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 31–35 미션</div>
+    <div class="mis-t">PDF 분석 파이프라인 또는 배치 처리 구현</div>
+    <div class="mis-d">다음 중 하나:<br>① 여러 페이지 PDF를 페이지별로 청킹해 분석하고 요약을 합치는 파이프라인<br>② 50개 이상 텍스트 샘플을 배치 API로 처리하는 분류기<br>처리 시간과 비용(토큰 수)을 측정해서 보고하는 코드 포함 필수.</div>
+    <div class="mis-rewards"><div class="mr xp">+90 XP</div><div class="mr pt">+50 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>배치 API 제약:</strong> 배치 처리는 실시간이 아닌 비동기입니다. 완료에 수분~1시간이 걸릴 수 있습니다. 수업 중 실습할 때는 적은 수의 샘플로 테스트하도록 안내하세요.<br><br>
+      <strong>PDF 크기 제한:</strong> 단일 PDF는 32MB, 페이지당 1MB 이하 권장. 큰 PDF는 split 후 처리하는 패턴을 가르치세요.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PART 3 챕터 ═══ -->
+<div class="chap" id="part3">
+  <div class="chap-g"></div>
+  <div class="chap-part">PART THREE</div>
+  <div class="chap-n" style="color:#F472B6">08–10</div>
+  <div class="chap-h">에이전트 · RAG · 최적화</div>
+  <div class="chap-s">에이전트 시스템을 설계하고, RAG로 지식 기반을 구축하고,<br>비용과 성능을 동시에 잡는 프로덕션 최적화를 완성합니다.</div>
+  <div class="chap-meta">M08 에이전트 설계 · M09 RAG · M10 비용 최적화 · Day 36–48</div>
+</div>
+
+<!-- ═══ M08 ═══ -->
+<section class="mod" id="m08">
+  <div class="mod-ey">MODULE 08 · DAY 36–39</div>
+  <div class="mod-badge" style="background:rgba(180,83,9,.1);color:#B45309">M08 · 에이전트</div>
+  <h2 class="mod-h">에이전트 설계<br>— 오케스트레이터·서브에이전트 패턴</h2>
+  <p class="mod-sub">단순 API 호출을 넘어 자율적으로 판단하고 행동하는 에이전트 시스템을 설계합니다. 오케스트레이터가 서브에이전트를 지휘하는 다계층 패턴을 구현합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 36–39</div>
+    <div class="mchip">🤖 멀티에이전트</div>
+    <div class="mchip">🔧 랩 3회</div>
+    <div class="mchip">🎖 핵심 아키텍처</div>
+    <div class="mchip">⏱ 총 학습 약 120분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>오케스트레이터-서브에이전트 패턴으로 복잡한 작업을 분해·위임할 수 있다</li>
+      <li>도구 루프, 재시도 로직, 중단 조건을 갖춘 안정적인 에이전트를 구현할 수 있다</li>
+      <li>Human-in-the-loop 포인트를 설계해 에이전트가 위험 행동 전 승인을 요청하게 한다</li>
+      <li>에이전트 실행 로그와 디버깅 패턴을 이해한다</li>
+    </ul>
+  </div>
+
+  <div class="sec">이론 강의</div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#B45309">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">에이전트 아키텍처 패턴 — 언제 무엇을 쓸까</div>
+      <div class="les-dur">22분</div>
+    </div>
+    <div class="les-body">
+      <p>에이전트 아키텍처는 단일 에이전트부터 복잡한 멀티에이전트 시스템까지 다양합니다. 문제 복잡도에 따라 가장 단순한 패턴을 선택하는 것이 핵심입니다.</p>
+
+      <table class="tbl">
+        <thead><tr><th>패턴</th><th>구조</th><th>적합한 경우</th></tr></thead>
+        <tbody>
+          <tr><td><strong>단일 에이전트</strong></td><td>Claude + 도구들</td><td>단일 도메인, 단순 작업</td></tr>
+          <tr><td><strong>오케스트레이터-워커</strong></td><td>조율자 → 전문 에이전트들</td><td>복잡한 작업, 병렬 처리 필요</td></tr>
+          <tr><td><strong>체인</strong></td><td>A → B → C 순차 처리</td><td>단계별 변환 파이프라인</td></tr>
+          <tr><td><strong>라우터</strong></td><td>분류 → 전문 에이전트 선택</td><td>입력 유형에 따른 전문화</td></tr>
+          <tr><td><strong>병렬</strong></td><td>여러 에이전트 동시 실행</td><td>독립적인 하위 작업들</td></tr>
+        </tbody>
+      </table>
+
+      <div class="arch-box">
+        <div class="arch-title">오케스트레이터-서브에이전트 구조</div>
+사용자 요청: "경쟁사 3곳 분석 후 전략 보고서 작성해줘"
+    ↓
+<span class="arch-node">오케스트레이터 Claude</span>  (계획 수립, 작업 분배)
+    ├──→ <span class="arch-highlight">서브에이전트 A</span>: 경쟁사 A 웹사이트 분석
+    ├──→ <span class="arch-highlight">서브에이전트 B</span>: 경쟁사 B 뉴스 검색·요약
+    └──→ <span class="arch-highlight">서브에이전트 C</span>: 경쟁사 C 가격 정보 수집
+              ↓  (병렬 실행 → 결과 수집)
+<span class="arch-node">오케스트레이터</span>: 결과 통합 → 전략 보고서 생성
+    ↓
+<span class="arch-highlight">Human Review</span>: 보고서 확인 후 승인 (Human-in-the-loop)</div>
+
+      <div class="warn">
+        <div class="warn-l">⚠ 에이전트 설계 원칙</div>
+        <div class="warn-t">에이전트는 <strong>최소 권한 원칙</strong>으로 설계하세요. 파일 삭제, 이메일 발송, DB 쓰기 등 <strong>되돌릴 수 없는 행동</strong>은 반드시 Human-in-the-loop을 거쳐야 합니다. 에이전트를 신뢰하되, 검증하세요.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">코드 실습</div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">오케스트레이터-서브에이전트 패턴</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="kw">import</span> anthropic
+<span class="kw">from</span> typing <span class="kw">import</span> Callable
+<span class="kw">import</span> asyncio
+
+client = anthropic.<span class="fn">Anthropic</span>()
+
+<span class="cm"># 서브에이전트: 특화된 전문 에이전트</span>
+<span class="kw">def</span> <span class="fn">research_agent</span>(<span class="param">topic</span>: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    <span class="st">"""리서치 전문 서브에이전트"""</span>
+    response = client.messages.<span class="fn">create</span>(
+        model=<span class="st">"claude-haiku-4-5-20251001"</span>,  <span class="cm"># 서브에이전트는 빠른 모델</span>
+        max_tokens=<span class="num">1024</span>,
+        system=<span class="st">"당신은 정확한 정보 수집 전문가입니다. 팩트만 정리하세요."</span>,
+        messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: <span class="st">f"{topic}에 대해 핵심 정보 5가지"</span>}]
+    )
+    <span class="kw">return</span> response.content[<span class="num">0</span>].text
+
+<span class="kw">def</span> <span class="fn">writer_agent</span>(<span class="param">research_data</span>: <span class="cls">str</span>, <span class="param">format</span>: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    <span class="st">"""문서 작성 전문 서브에이전트"""</span>
+    response = client.messages.<span class="fn">create</span>(
+        model=<span class="st">"claude-sonnet-4-20250514"</span>,  <span class="cm"># 작성은 좋은 모델</span>
+        max_tokens=<span class="num">2048</span>,
+        system=<span class="st">"당신은 전문 보고서 작가입니다. 명확하고 구조적으로 작성하세요."</span>,
+        messages=[{
+            <span class="st">"role"</span>: <span class="st">"user"</span>,
+            <span class="st">"content"</span>: <span class="st">f"다음 데이터로 {format} 형식 보고서 작성:\n{research_data}"</span>
+        }]
+    )
+    <span class="kw">return</span> response.content[<span class="num">0</span>].text
+
+<span class="cm"># 오케스트레이터: 계획 수립 + 조율</span>
+<span class="kw">def</span> <span class="fn">orchestrator</span>(<span class="param">user_request</span>: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    <span class="st">"""메인 오케스트레이터"""</span>
+    <span class="fn">print</span>(<span class="st">f"🎯 요청 분석 중: {user_request}"</span>)
+
+    <span class="cm"># 1. 오케스트레이터가 계획 수립</span>
+    plan_response = client.messages.<span class="fn">create</span>(
+        model=<span class="st">"claude-sonnet-4-20250514"</span>,
+        max_tokens=<span class="num">512</span>,
+        system=<span class="st">"""당신은 작업 계획 전문가입니다.
+요청을 분석해 JSON으로 실행 계획을 반환하세요:
+{"steps": [{"agent": "research|writer", "task": "...", "input": "..."}]}"""</span>,
+        messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: user_request}]
+    )
+
+    <span class="cm"># 2. 계획에 따라 서브에이전트 실행</span>
+    collected_results = []
+    topics = [<span class="st">"시장 동향"</span>, <span class="st">"경쟁사 현황"</span>, <span class="st">"기술 트렌드"</span>]
+
+    <span class="kw">for</span> topic <span class="kw">in</span> topics:
+        <span class="fn">print</span>(<span class="st">f"  🔍 리서치: {topic}"</span>)
+        result = <span class="fn">research_agent</span>(topic)
+        collected_results.<span class="fn">append</span>(<span class="st">f"## {topic}\n{result}"</span>)
+
+    <span class="cm"># 3. Human-in-the-loop: 중요한 결정 전 확인</span>
+    combined = <span class="st">"\n\n"</span>.<span class="fn">join</span>(collected_results)
+    <span class="fn">print</span>(<span class="st">f"\n📋 수집된 데이터 요약:\n{combined[:300]}...\n"</span>)
+    confirm = <span class="fn">input</span>(<span class="st">"이 데이터로 보고서를 작성할까요? (y/n): "</span>)
+
+    <span class="kw">if</span> confirm.<span class="fn">lower</span>() != <span class="st">"y"</span>:
+        <span class="kw">return</span> <span class="st">"작업이 취소되었습니다."</span>
+
+    <span class="cm"># 4. 작성 에이전트에게 위임</span>
+    <span class="fn">print</span>(<span class="st">"  ✍️ 보고서 작성 중..."</span>)
+    report = <span class="fn">writer_agent</span>(combined, <span class="st">"임원 보고서"</span>)
+
+    <span class="kw">return</span> report
+
+<span class="cm"># 실행</span>
+result = <span class="fn">orchestrator</span>(<span class="st">"AI 시장 동향 분석 보고서를 만들어줘"</span>)
+<span class="fn">print</span>(<span class="st">"\n📄 최종 보고서:\n"</span> + result)</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 36–39 미션</div>
+    <div class="mis-t">3단계 이상 에이전트 파이프라인 완성하기</div>
+    <div class="mis-d">실제 유용한 작업을 처리하는 에이전트 파이프라인을 만드세요. Human-in-the-loop 포인트를 최소 1개 포함해야 합니다. 예: 입력 데이터 검증 → 분석 → 보고서 생성 → 승인 후 저장.</div>
+    <div class="mis-rewards"><div class="mr xp">+95 XP</div><div class="mr pt">+55 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>안전한 에이전트 설계 원칙 강조:</strong> "에이전트는 강력할수록 더 조심해야 한다"는 철학을 심어주세요. 특히 파일 삭제, 발송, DB 변경 등 비가역적 행동은 반드시 human approval을 거치도록.<br><br>
+      <strong>실무 패턴:</strong> 서브에이전트는 빠른 모델(Haiku), 오케스트레이터는 좋은 모델(Sonnet)을 쓰는 것이 비용 효율적입니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M09 ═══ -->
+<section class="mod" id="m09">
+  <div class="mod-ey">MODULE 09 · DAY 40–44</div>
+  <div class="mod-badge" style="background:rgba(146,64,14,.1);color:#92400E">M09 · RAG</div>
+  <h2 class="mod-h">RAG 구축<br>— 벡터 DB + 검색 증강 생성</h2>
+  <p class="mod-sub">Claude에게 회사의 방대한 문서를 장기 기억으로 제공합니다. 임베딩, 벡터 검색, RAG 파이프라인으로 Claude가 내부 지식을 기반으로 답하게 합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 40–44</div>
+    <div class="mchip">🗄️ 벡터 DB</div>
+    <div class="mchip">🔍 시맨틱 검색</div>
+    <div class="mchip">🔧 랩 3회</div>
+    <div class="mchip">⏱ 총 학습 약 130분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>문서를 임베딩하고 벡터 DB(ChromaDB/Pinecone)에 저장할 수 있다</li>
+      <li>시맨틱 검색으로 관련 문서 청크를 가져와 Claude 컨텍스트에 삽입할 수 있다</li>
+      <li>기본 RAG 파이프라인을 완성하고 답변 품질을 평가할 수 있다</li>
+      <li>청킹 전략(크기, 오버랩, 계층적 청킹)을 이해하고 선택할 수 있다</li>
+    </ul>
+  </div>
+
+  <div class="sec">이론 강의</div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#92400E">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">RAG 파이프라인 — 임베딩부터 생성까지</div>
+      <div class="les-dur">25분</div>
+    </div>
+    <div class="les-body">
+      <p>RAG(Retrieval Augmented Generation)는 Claude의 학습 데이터 한계를 넘어, 실시간으로 관련 문서를 검색해 컨텍스트로 제공하는 패턴입니다.</p>
+
+      <div class="arch-box">
+        <div class="arch-title">RAG 파이프라인 전체 흐름</div>
+<span class="cm">━━━━━━━ 오프라인 단계 (1회) ━━━━━━━</span>
+문서 로드 → 청킹 → <span class="arch-highlight">임베딩</span>(텍스트→벡터) → <span class="arch-node">벡터 DB</span> 저장
+
+<span class="cm">━━━━━━━ 온라인 단계 (매 요청) ━━━━━━━</span>
+사용자 질문
+    ↓
+질문 <span class="arch-highlight">임베딩</span> → 벡터 DB 유사도 검색
+    ↓
+관련 청크 Top-K 반환
+    ↓
+<span class="arch-node">Claude</span>에게 [청크들 + 질문] 전달
+    ↓
+컨텍스트 기반 답변 생성
+
+<span class="cm">━━━━ 핵심 파라미터 ━━━━</span>
+청크 크기: 256~2048 토큰
+오버랩:   10~20%
+Top-K:    3~10개 청크
+임베딩 모델: text-embedding-3-small (OpenAI) 또는 유사</div>
+
+      <table class="tbl">
+        <thead><tr><th>청킹 전략</th><th>장점</th><th>단점</th><th>적합한 경우</th></tr></thead>
+        <tbody>
+          <tr><td><strong>고정 크기</strong></td><td>단순, 빠름</td><td>문맥 단절</td><td>일반 문서</td></tr>
+          <tr><td><strong>문장 기반</strong></td><td>의미 완결</td><td>크기 불균일</td><td>기사, 보고서</td></tr>
+          <tr><td><strong>계층적</strong></td><td>요약+상세 혼합</td><td>복잡함</td><td>긴 기술 문서</td></tr>
+          <tr><td><strong>시맨틱</strong></td><td>주제 경계 고려</td><td>느림</td><td>다양한 주제 혼재</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">코드 실습</div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">RAG 파이프라인 완전 구현 (ChromaDB)</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="cm"># pip install chromadb sentence-transformers anthropic</span>
+<span class="kw">import</span> chromadb
+<span class="kw">from</span> sentence_transformers <span class="kw">import</span> SentenceTransformer
+<span class="kw">import</span> anthropic
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">import</span> re
+
+<span class="cm"># 임베딩 모델 로드 (로컬, 무료)</span>
+embedder = <span class="cls">SentenceTransformer</span>(<span class="st">"all-MiniLM-L6-v2"</span>)
+chroma = chromadb.<span class="fn">PersistentClient</span>(path=<span class="st">"./chroma_db"</span>)
+collection = chroma.<span class="fn">get_or_create_collection</span>(<span class="st">"company_docs"</span>)
+client = anthropic.<span class="fn">Anthropic</span>()
+
+<span class="cm"># ─── STEP 1: 문서 인덱싱 (1회) ───</span>
+<span class="kw">def</span> <span class="fn">chunk_text</span>(<span class="param">text</span>: <span class="cls">str</span>, <span class="param">size</span>: <span class="cls">int</span> = <span class="num">500</span>, <span class="param">overlap</span>: <span class="cls">int</span> = <span class="num">50</span>):
+    <span class="st">"""고정 크기 청킹"""</span>
+    words = text.<span class="fn">split</span>()
+    chunks = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="fn">len</span>(words), size - overlap):
+        chunk = <span class="st">" "</span>.<span class="fn">join</span>(words[i:i + size])
+        <span class="kw">if</span> chunk:
+            chunks.<span class="fn">append</span>(chunk)
+    <span class="kw">return</span> chunks
+
+<span class="kw">def</span> <span class="fn">index_documents</span>(<span class="param">docs_dir</span>: <span class="cls">str</span>):
+    <span class="st">"""디렉토리의 모든 .txt 문서를 인덱싱"""</span>
+    <span class="kw">for</span> path <span class="kw">in</span> <span class="cls">Path</span>(docs_dir).<span class="fn">glob</span>(<span class="st">"*.txt"</span>):
+        text = path.<span class="fn">read_text</span>(encoding=<span class="st">"utf-8"</span>)
+        chunks = <span class="fn">chunk_text</span>(text)
+
+        embeddings = embedder.<span class="fn">encode</span>(chunks).<span class="fn">tolist</span>()
+        ids = [<span class="st">f"{path.stem}-{i}"</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(chunks))]
+
+        collection.<span class="fn">add</span>(
+            documents=chunks,
+            embeddings=embeddings,
+            ids=ids,
+            metadatas=[{<span class="st">"source"</span>: path.name, <span class="st">"chunk"</span>: i}
+                       <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(chunks))]
+        )
+        <span class="fn">print</span>(<span class="st">f"  ✓ {path.name}: {len(chunks)}개 청크 인덱싱"</span>)
+
+<span class="cm"># ─── STEP 2: RAG 검색 + 생성 ───</span>
+<span class="kw">def</span> <span class="fn">rag_query</span>(<span class="param">question</span>: <span class="cls">str</span>, <span class="param">top_k</span>: <span class="cls">int</span> = <span class="num">5</span>) -> <span class="cls">str</span>:
+    <span class="st">"""질문에 관련된 문서를 검색해 Claude로 답변"""</span>
+
+    <span class="cm"># 질문 임베딩 + 유사도 검색</span>
+    q_embedding = embedder.<span class="fn">encode</span>([question]).<span class="fn">tolist</span>()
+    results = collection.<span class="fn">query</span>(
+        query_embeddings=q_embedding,
+        n_results=top_k
+    )
+
+    <span class="cm"># 관련 청크 조합</span>
+    context_parts = []
+    <span class="kw">for</span> doc, meta <span class="kw">in</span> <span class="fn">zip</span>(results[<span class="st">"documents"</span>][<span class="num">0</span>], results[<span class="st">"metadatas"</span>][<span class="num">0</span>]):
+        context_parts.<span class="fn">append</span>(<span class="st">f"[출처: {meta['source']}]\n{doc}"</span>)
+    context = <span class="st">"\n\n---\n\n"</span>.<span class="fn">join</span>(context_parts)
+
+    <span class="cm"># Claude에게 컨텍스트 + 질문 전달</span>
+    response = client.messages.<span class="fn">create</span>(
+        model=<span class="st">"claude-sonnet-4-20250514"</span>,
+        max_tokens=<span class="num">2048</span>,
+        system=<span class="st">"""당신은 내부 문서 기반 Q&A 어시스턴트입니다.
+반드시 제공된 문서 내용에만 기반해 답하세요.
+문서에 없는 내용이면 "제공된 문서에서 관련 정보를 찾을 수 없습니다"라고 하세요."""</span>,
+        messages=[{
+            <span class="st">"role"</span>: <span class="st">"user"</span>,
+            <span class="st">"content"</span>: <span class="st">f"[참고 문서]\n{context}\n\n[질문]\n{question}"</span>
+        }]
+    )
+
+    <span class="kw">return</span> response.content[<span class="num">0</span>].text
+
+<span class="cm"># 사용 예시</span>
+<span class="fn">index_documents</span>(<span class="st">"./company_docs"</span>)  <span class="cm"># 1회 실행</span>
+answer = <span class="fn">rag_query</span>(<span class="st">"신입사원 온보딩 절차가 어떻게 되나요?"</span>)
+<span class="fn">print</span>(answer)</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 40–44 미션</div>
+    <div class="mis-t">사내 문서 기반 Q&A 시스템 프로토타입</div>
+    <div class="mis-d">5개 이상의 텍스트 문서를 ChromaDB에 인덱싱하고, 10개 이상의 질문에 답변하는 RAG 시스템을 만드세요. 답변의 정확도(문서에 있는 정보를 맞게 인용하는지)를 수동으로 평가한 결과도 제출하세요.</div>
+    <div class="mis-rewards"><div class="mr xp">+100 XP</div><div class="mr pt">+60 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>청킹 크기 실험:</strong> 같은 문서에 청크 크기 256/512/1024로 각각 인덱싱해서 검색 품질을 비교하는 실험을 수업 중에 진행하면 매우 효과적입니다.<br><br>
+      <strong>환각 방지:</strong> RAG에서도 Claude가 문서에 없는 내용을 추가할 수 있습니다. 시스템 프롬프트에 "제공된 문서에만 기반할 것"을 명시하고, 답변에 출처를 포함하도록 요청하면 신뢰성이 올라갑니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M10 ═══ -->
+<section class="mod" id="m10">
+  <div class="mod-ey">MODULE 10 · DAY 45–48</div>
+  <div class="mod-badge" style="background:rgba(14,116,144,.1);color:#0E7490">M10 · 비용 최적화</div>
+  <h2 class="mod-h">비용 최적화<br>— 모델 라우팅과 토큰 절약</h2>
+  <p class="mod-sub">API 비용은 프로덕션에서 무시할 수 없습니다. 모델 라우팅, 프롬프트 캐싱, 토큰 관리로 같은 품질을 유지하면서 비용을 10배까지 줄이는 전략을 배웁니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 45–48</div>
+    <div class="mchip">💰 비용 최적화</div>
+    <div class="mchip">⚡ 성능 향상</div>
+    <div class="mchip">⏱ 총 학습 약 90분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>작업 유형별 최적 모델을 선택하는 라우팅 시스템을 설계할 수 있다</li>
+      <li>프롬프트 캐싱으로 반복 비용을 90%까지 절약할 수 있다</li>
+      <li>토큰 사용량을 모니터링하고 비용 예측 시스템을 구축할 수 있다</li>
+    </ul>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">코드 실습</div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">지능형 모델 라우터</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="kw">import</span> anthropic
+
+client = anthropic.<span class="fn">Anthropic</span>()
+
+<span class="cm"># 모델별 특성 (2026년 기준 예시 — 실제 가격 docs.anthropic.com 확인)</span>
+MODELS = {
+    <span class="st">"haiku"</span>:  {<span class="st">"id"</span>: <span class="st">"claude-haiku-4-5-20251001"</span>,   <span class="st">"cost"</span>: <span class="num">1</span>},   <span class="cm"># 빠름, 저비용</span>
+    <span class="st">"sonnet"</span>: {<span class="st">"id"</span>: <span class="st">"claude-sonnet-4-20250514"</span>,     <span class="st">"cost"</span>: <span class="num">10</span>},  <span class="cm"># 균형</span>
+    <span class="st">"opus"</span>:   {<span class="st">"id"</span>: <span class="st">"claude-opus-4-20250514"</span>,       <span class="st">"cost"</span>: <span class="num">100</span>}, <span class="cm"># 최고 품질</span>
+}
+
+<span class="kw">def</span> <span class="fn">route_model</span>(<span class="param">task_type</span>: <span class="cls">str</span>, <span class="param">complexity</span>: <span class="cls">str</span> = <span class="st">"medium"</span>) -> <span class="cls">str</span>:
+    <span class="st">"""작업 유형에 따라 최적 모델 선택"""</span>
+    routing_table = {
+        <span class="cm"># (task_type, complexity) → model</span>
+        (<span class="st">"classification"</span>, <span class="st">"low"</span>):    <span class="st">"haiku"</span>,
+        (<span class="st">"classification"</span>, <span class="st">"medium"</span>): <span class="st">"haiku"</span>,
+        (<span class="st">"summarization"</span>, <span class="st">"low"</span>):    <span class="st">"haiku"</span>,
+        (<span class="st">"summarization"</span>, <span class="st">"high"</span>):   <span class="st">"sonnet"</span>,
+        (<span class="st">"writing"</span>, <span class="st">"medium"</span>):       <span class="st">"sonnet"</span>,
+        (<span class="st">"analysis"</span>, <span class="st">"high"</span>):        <span class="st">"sonnet"</span>,
+        (<span class="st">"reasoning"</span>, <span class="st">"high"</span>):       <span class="st">"opus"</span>,
+        (<span class="st">"code_review"</span>, <span class="st">"high"</span>):     <span class="st">"opus"</span>,
+    }
+    key = (task_type, complexity)
+    model_name = routing_table.<span class="fn">get</span>(key, <span class="st">"sonnet"</span>)  <span class="cm"># 기본값 sonnet</span>
+    <span class="kw">return</span> MODELS[model_name][<span class="st">"id"</span>]
+
+<span class="cm"># 토큰 비용 추적기</span>
+<span class="kw">class</span> <span class="cls">CostTracker</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="param">self</span>):
+        <span class="param">self</span>.total_input = <span class="num">0</span>
+        <span class="param">self</span>.total_output = <span class="num">0</span>
+        <span class="param">self</span>.total_cache_read = <span class="num">0</span>
+
+    <span class="kw">def</span> <span class="fn">track</span>(<span class="param">self</span>, <span class="param">usage</span>):
+        <span class="param">self</span>.total_input += usage.input_tokens
+        <span class="param">self</span>.total_output += usage.output_tokens
+        <span class="kw">if</span> <span class="fn">hasattr</span>(usage, <span class="st">"cache_read_input_tokens"</span>):
+            <span class="param">self</span>.total_cache_read += usage.cache_read_input_tokens
+
+    <span class="kw">def</span> <span class="fn">report</span>(<span class="param">self</span>):
+        <span class="fn">print</span>(<span class="st">f"""
+💰 비용 리포트
+  입력 토큰:     {self.total_input:,}
+  출력 토큰:     {self.total_output:,}
+  캐시 히트:     {self.total_cache_read:,}
+  캐시 절약:     {self.total_cache_read / max(self.total_input, 1) * 100:.1f}%
+        """</span>)
+
+tracker = <span class="cls">CostTracker</span>()
+
+<span class="kw">def</span> <span class="fn">smart_call</span>(<span class="param">task_type</span>: <span class="cls">str</span>, <span class="param">prompt</span>: <span class="cls">str</span>, <span class="param">complexity</span>: <span class="cls">str</span> = <span class="st">"medium"</span>):
+    model = <span class="fn">route_model</span>(task_type, complexity)
+    <span class="fn">print</span>(<span class="st">f"📡 라우팅: {task_type}({complexity}) → {model.split('-')[1]}"</span>)
+
+    response = client.messages.<span class="fn">create</span>(
+        model=model, max_tokens=<span class="num">1024</span>,
+        messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span class="st">"content"</span>: prompt}]
+    )
+    tracker.<span class="fn">track</span>(response.usage)
+    <span class="kw">return</span> response.content[<span class="num">0</span>].text
+
+<span class="cm"># 사용 예시</span>
+<span class="fn">smart_call</span>(<span class="st">"classification"</span>, <span class="st">"이 리뷰를 긍정/부정으로 분류해줘: 정말 좋아요!"</span>, <span class="st">"low"</span>)
+<span class="fn">smart_call</span>(<span class="st">"writing"</span>, <span class="st">"CEO 취임 축하 연설문을 작성해줘"</span>, <span class="st">"medium"</span>)
+tracker.<span class="fn">report</span>()</div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 45–48 미션</div>
+    <div class="mis-t">비용 최적화 라우터 구현 + 절약 측정</div>
+    <div class="mis-d">동일한 작업 10개를 두 가지 방식으로 실행하세요: ① 모든 요청에 Sonnet ② 지능형 라우터로 Haiku/Sonnet 분배. 두 방식의 토큰 비용을 비교하고 절약율을 계산해서 제출하세요.</div>
+    <div class="mis-rewards"><div class="mr xp">+85 XP</div><div class="mr pt">+50 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>모델 선택의 현실:</strong> 실무에서는 "일단 Sonnet 쓰고 비용이 문제가 되면 최적화"가 흔한 패턴입니다. 하지만 대규모 처리(수만 건/일)에서는 Haiku를 적극 활용하면 비용이 10분의 1로 줄 수 있습니다.<br><br>
+      <strong>최신 모델 가격:</strong> 가격은 자주 변동됩니다. docs.anthropic.com/pricing을 수업 당일에 반드시 확인하고 최신 정보를 제공하세요.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PART 4 챕터 ═══ -->
+<div class="chap" id="part4">
+  <div class="chap-g"></div>
+  <div class="chap-part">PART FOUR</div>
+  <div class="chap-n" style="color:#A78BFA">11–12</div>
+  <div class="chap-h">프로덕션과 캡스톤</div>
+  <div class="chap-s">실제 서비스 환경에 배포하고, 모니터링하고,<br>56일간 배운 모든 것으로 실전 AI 시스템을 완성합니다.</div>
+  <div class="chap-meta">M11 프로덕션 배포 · M12 캡스톤 프로젝트 · Day 49–56</div>
+</div>
+
+<!-- ═══ M11 ═══ -->
+<section class="mod" id="m11">
+  <div class="mod-ey">MODULE 11 · DAY 49–52</div>
+  <div class="mod-badge" style="background:rgba(15,118,110,.1);color:#0F766E">M11 · 프로덕션</div>
+  <h2 class="mod-h">프로덕션 배포<br>— 스케일링·모니터링·에러 처리</h2>
+  <p class="mod-sub">로컬에서 작동하는 코드를 실제 서비스로 만드는 것은 다른 도전입니다. 에러 처리, 재시도 로직, 로깅, 모니터링, 비용 관리까지 프로덕션 준비를 완료합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 49–52</div>
+    <div class="mchip">🚀 배포</div>
+    <div class="mchip">📊 모니터링</div>
+    <div class="mchip">⏱ 총 학습 약 110분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>지수 백오프(Exponential Backoff)로 API 에러를 gracefully 처리할 수 있다</li>
+      <li>요청/응답 로깅과 비용 알림 시스템을 구축할 수 있다</li>
+      <li>FastAPI로 Claude 기반 API 서버를 구축하고 배포할 수 있다</li>
+      <li>레이트 리밋·토큰 한도 관리 미들웨어를 구현할 수 있다</li>
+    </ul>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">코드 실습</div>
+
+  <div class="cb">
+    <div class="cb-top"><div class="cb-dots"><div class="cd r"></div><div class="cd y"></div><div class="cd g"></div></div><div class="cb-lang">프로덕션 클라이언트 — 재시도 + 로깅</div><div class="cb-tag py">python</div></div>
+    <div class="cb-body"><span class="kw">import</span> anthropic
+<span class="kw">import</span> time
+<span class="kw">import</span> logging
+<span class="kw">from</span> functools <span class="kw">import</span> wraps
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+logging.<span class="fn">basicConfig</span>(level=logging.INFO,
+    format=<span class="st">"%(asctime)s [%(levelname)s] %(message)s"</span>)
+logger = logging.<span class="fn">getLogger</span>(<span class="st">"claude-prod"</span>)
+
+<span class="kw">def</span> <span class="fn">retry_with_backoff</span>(<span class="param">max_retries</span>=<span class="num">3</span>, <span class="param">base_delay</span>=<span class="num">1.0</span>):
+    <span class="st">"""지수 백오프 재시도 데코레이터"""</span>
+    <span class="kw">def</span> <span class="fn">decorator</span>(<span class="param">func</span>):
+        <span class="kw">@wraps</span>(func)
+        <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+            <span class="kw">for</span> attempt <span class="kw">in</span> <span class="fn">range</span>(max_retries):
+                <span class="kw">try</span>:
+                    <span class="kw">return</span> <span class="fn">func</span>(*args, **kwargs)
+                <span class="kw">except</span> anthropic.RateLimitError <span class="kw">as</span> e:
+                    <span class="kw">if</span> attempt == max_retries - <span class="num">1</span>:
+                        <span class="kw">raise</span>
+                    wait = base_delay * (<span class="num">2</span> ** attempt)
+                    logger.<span class="fn">warning</span>(<span class="st">f"Rate limit. 재시도 {attempt+1}/{max_retries}, {wait}초 대기"</span>)
+                    time.<span class="fn">sleep</span>(wait)
+                <span class="kw">except</span> anthropic.APIStatusError <span class="kw">as</span> e:
+                    logger.<span class="fn">error</span>(<span class="st">f"API 오류 {e.status_code}: {e.message}"</span>)
+                    <span class="kw">if</span> e.status_code >= <span class="num">500</span>:  <span class="cm"># 서버 오류만 재시도</span>
+                        time.<span class="fn">sleep</span>(base_delay * (<span class="num">2</span> ** attempt))
+                    <span class="kw">else</span>:
+                        <span class="kw">raise</span>
+        <span class="kw">return</span> wrapper
+    <span class="kw">return</span> decorator
+
+client = anthropic.<span class="fn">Anthropic</span>()
+
+<span class="kw">@retry_with_backoff</span>(max_retries=<span class="num">3</span>)
+<span class="kw">def</span> <span class="fn">safe_create</span>(**kwargs):
+    start = time.<span class="fn">time</span>()
+    response = client.messages.<span class="fn">create</span>(**kwargs)
+    elapsed = time.<span class="fn">time</span>() - start
+
+    <span class="cm"># 구조화된 로그</span>
+    logger.<span class="fn">info</span>(<span class="st">f"API 호출 성공 | 모델={kwargs.get('model','?')} | "</span>
+               <span class="st">f"입력={response.usage.input_tokens} | "</span>
+               <span class="st">f"출력={response.usage.output_tokens} | "</span>
+               <span class="st">f"시간={elapsed:.2f}s"</span>)
+    <span class="kw">return</span> response
+
+<span class="cm"># ── FastAPI 서버 예시 ──</span>
+<span class="comment">"""
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class ChatRequest(BaseModel):
+    message: str
+    session_id: str = "default"
+
+@app.post("/chat")
+async def chat(req: ChatRequest):
+    try:
+        response = safe_create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=1024,
+            messages=[{"role": "user", "content": req.message}]
+        )
+        return {"reply": response.content[0].text}
+    except anthropic.RateLimitError:
+        raise HTTPException(503, "서비스 일시 불가, 잠시 후 재시도")
+    except Exception as e:
+        logger.error(f"처리 오류: {e}")
+        raise HTTPException(500, "서버 오류")
+"""</span></div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 49–52 미션</div>
+    <div class="mis-t">FastAPI 기반 Claude 서비스 배포하기</div>
+    <div class="mis-d">재시도 로직 + 로깅 + 비용 추적이 포함된 FastAPI 서버를 만들고, Railway/Fly.io/Render 등에 배포하세요. 배포 URL과 curl 테스트 결과를 제출하면 완료입니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+100 XP</div><div class="mr pt">+70 P</div></div>
+  </div>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>배포 플랫폼 추천:</strong> Railway (가장 간단, 무료 티어 있음), Fly.io (컨테이너 기반), Render (GitHub 연동). AI OpenCollege API 서버도 Railway를 씁니다.<br><br>
+      <strong>환경변수 관리:</strong> 배포 환경에서 .env 파일 대신 플랫폼의 환경변수 기능을 사용하도록 안내. ANTHROPIC_API_KEY를 코드에 절대 포함하지 않도록 재강조.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M12 ═══ -->
+<section class="mod" id="m12">
+  <div class="mod-ey">MODULE 12 · DAY 53–56</div>
+  <div class="mod-badge" style="background:rgba(30,27,75,.12);color:#4338CA">M12 · 캡스톤</div>
+  <h2 class="mod-h">캡스톤 프로젝트<br>— 실전 AI 시스템 구축 및 발표</h2>
+  <p class="mod-sub">56일간 배운 모든 기술을 통합합니다. API 호출부터 MCP 서버, 에이전트, RAG, 프로덕션 배포까지 — 실제로 동작하는 AI 시스템을 완성하고 발표합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 53–56</div>
+    <div class="mchip">🎤 최종 발표</div>
+    <div class="mchip">🔧 팀/개인 프로젝트</div>
+    <div class="mchip">🏆 Track B 수료</div>
+    <div class="mchip">⏱ 총 200분</div>
+  </div>
+
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>실제로 배포되어 동작하는 Claude 기반 AI 시스템을 완성한다</li>
+      <li>아키텍처 다이어그램, 코드, 라이브 데모로 10분 발표를 진행한다</li>
+      <li>Track B 수료 자격을 획득하고 다음 학습 경로를 결정한다</li>
+    </ul>
+  </div>
+
+  <div class="sec">캡스톤 프로젝트 요구사항</div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#4338CA">1</div>
+      <div class="les-type arch">아키텍처</div>
+      <div class="les-title">필수 기술 요소 체크리스트</div>
+      <div class="les-dur">필수 항목 확인</div>
+    </div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>카테고리</th><th>필수 (70%)</th><th>선택 보너스 (30%)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>API 기본</strong></td><td>메시지 API 호출, 스트리밍, 에러 처리</td><td>배치 처리 활용</td></tr>
+          <tr><td><strong>프롬프트</strong></td><td>시스템 프롬프트, 구조화 출력</td><td>A/B 테스트 구현</td></tr>
+          <tr><td><strong>기능</strong></td><td>Tools (최소 2개) 또는 MCP 서버</td><td>RAG 파이프라인</td></tr>
+          <tr><td><strong>아키텍처</strong></td><td>에이전트 루프 또는 체인</td><td>멀티에이전트 시스템</td></tr>
+          <tr><td><strong>최적화</strong></td><td>모델 라우팅 또는 캐싱</td><td>비용 대시보드</td></tr>
+          <tr><td><strong>배포</strong></td><td>실제 배포 URL (접근 가능)</td><td>CI/CD 파이프라인</td></tr>
+          <tr><td><strong>문서화</strong></td><td>README + 아키텍처 다이어그램</td><td>API 문서 (Swagger)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#4338CA">2</div>
+      <div class="les-type pr">발표</div>
+      <div class="les-title">10분 발표 구조</div>
+      <div class="les-dur">발표당 10분 + 질의 5분</div>
+    </div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>섹션</th><th>내용</th><th>시간</th></tr></thead>
+        <tbody>
+          <tr><td><strong>문제 정의</strong></td><td>어떤 문제를 해결하려 했는지</td><td>1분</td></tr>
+          <tr><td><strong>아키텍처</strong></td><td>다이어그램으로 시스템 구조 설명</td><td>2분</td></tr>
+          <tr><td><strong>라이브 데모</strong></td><td>실제 동작하는 시스템 시연</td><td>4분</td></tr>
+          <tr><td><strong>기술 하이라이트</strong></td><td>가장 자랑하고 싶은 기술적 결정 1가지</td><td>2분</td></tr>
+          <tr><td><strong>회고 + 다음 단계</strong></td><td>배운 점, 개선할 점, 계획</td><td>1분</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#4338CA">3</div>
+      <div class="les-type th">안내</div>
+      <div class="les-title">캡스톤 프로젝트 아이디어 예시</div>
+      <div class="les-dur">참고</div>
+    </div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>프로젝트명</th><th>활용 기술</th><th>난이도</th></tr></thead>
+        <tbody>
+          <tr><td><strong>사내 문서 Q&A 챗봇</strong></td><td>RAG + FastAPI + 배포</td><td>⭐⭐⭐</td></tr>
+          <tr><td><strong>자동 코드 리뷰어</strong></td><td>GitHub MCP + 에이전트</td><td>⭐⭐⭐⭐</td></tr>
+          <tr><td><strong>이메일 분류·자동응답 시스템</strong></td><td>Gmail MCP + 라우터 + 템플릿</td><td>⭐⭐⭐</td></tr>
+          <tr><td><strong>데이터 파이프라인 모니터</strong></td><td>Tool Use + 알림 시스템</td><td>⭐⭐⭐</td></tr>
+          <tr><td><strong>고객 지원 에이전트</strong></td><td>RAG + 멀티에이전트 + DB</td><td>⭐⭐⭐⭐⭐</td></tr>
+          <tr><td><strong>리서치 자동화 에이전트</strong></td><td>웹 검색 Tool + 보고서 생성</td><td>⭐⭐⭐⭐</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">수료 기준</div>
+
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#4338CA">4</div>
+      <div class="les-type th">평가</div>
+      <div class="les-title">Track B 수료 자격 평가</div>
+      <div class="les-dur">평가 기준</div>
+    </div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>평가 항목</th><th>배점</th><th>기준</th></tr></thead>
+        <tbody>
+          <tr><td>캡스톤 프로젝트 (동작 여부)</td><td>40점</td><td>배포 URL 접근 가능, 기본 기능 작동</td></tr>
+          <tr><td>코드 품질</td><td>20점</td><td>에러 처리, 재시도, 로깅 포함</td></tr>
+          <tr><td>아키텍처 설계</td><td>20점</td><td>다이어그램, 기술 선택 이유 명확</td></tr>
+          <tr><td>발표 + 데모</td><td>20점</td><td>10분 발표, 질의 응답 가능</td></tr>
+        </tbody>
+      </table>
+      <div class="kp">
+        <div class="kp-l">수료 기준</div>
+        <div class="kp-t">
+          <strong>Track B Certificate:</strong> 총점 75점 이상 + 모듈 미션 완료율 80% 이상<br>
+          <strong>우수 수료 (Distinction):</strong> 총점 90점 이상 → Anthropic 공식 소개 기회 제공<br>
+          <strong>미수료:</strong> 재제출 1회 기회 (D+14까지)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hr"></div>
+  <div class="sec">다음 단계</div>
+
+  <table class="tbl">
+    <thead><tr><th>과정</th><th>대상</th><th>핵심 내용</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Track B 2차</strong></td><td>Track B 수료자</td><td>고급 에이전트, 멀티모달, 파인튜닝, 엔터프라이즈 배포</td></tr>
+      <tr><td><strong>Track C</strong></td><td>창업자·사업개발</td><td>AI 제품 기획, 비즈니스 모델, Go-to-Market</td></tr>
+      <tr><td><strong>IMLAB 파트너십</strong></td><td>기업 기술팀</td><td>사내 Claude 도입 컨설팅 및 커스텀 개발</td></tr>
+    </tbody>
+  </table>
+
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>캡스톤 전략:</strong> Day 50에 프로젝트 방향을 결정하고, Day 53까지 MVP를 완성하는 스케줄을 권장합니다. Day 54-55는 버그 수정과 발표 자료 준비에 집중.<br><br>
+      <strong>팀 프로젝트 옵션:</strong> 2인 팀까지 허용. 팀 프로젝트는 개인보다 높은 복잡도를 기대합니다.<br><br>
+      <strong>Anthropic API 비용 지원:</strong> 캡스톤 기간 중 크레딧 지원을 검토하세요. 과도한 비용으로 프로젝트를 포기하는 경우를 방지합니다.
+    </div>
+  </div>
+</section>
+
+<!-- ─── 부록 ─── -->
+<section class="mod" id="appendix" style="border-top:2px solid var(--p3)">
+  <div class="mod-ey">APPENDIX</div>
+  <h2 class="mod-h" style="font-size:26px">부록 — Track B 빠른 참조</h2>
+
+  <div class="sec">API 필수 레퍼런스</div>
+  <table class="tbl">
+    <thead><tr><th>항목</th><th>값/코드</th><th>참고</th></tr></thead>
+    <tbody>
+      <tr><td>최신 Sonnet 모델</td><td><code>claude-sonnet-4-20250514</code></td><td>docs.anthropic.com 확인</td></tr>
+      <tr><td>최신 Haiku 모델</td><td><code>claude-haiku-4-5-20251001</code></td><td>빠른 작업용</td></tr>
+      <tr><td>최대 컨텍스트</td><td>200,000 토큰</td><td>약 150,000 단어</td></tr>
+      <tr><td>SDK 설치 (Python)</td><td><code>pip install anthropic</code></td><td>v0.40+</td></tr>
+      <tr><td>SDK 설치 (Node)</td><td><code>npm install @anthropic-ai/sdk</code></td><td>v0.30+</td></tr>
+      <tr><td>MCP SDK (Python)</td><td><code>pip install mcp</code></td><td>v1.0+</td></tr>
+      <tr><td>벡터 DB (로컬)</td><td><code>pip install chromadb</code></td><td>개발용</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec" style="margin-top:24px">에러 코드 대응 가이드</div>
+  <table class="tbl">
+    <thead><tr><th>HTTP 코드</th><th>의미</th><th>대응</th></tr></thead>
+    <tbody>
+      <tr><td><code>401</code></td><td>API 키 오류</td><td>키 확인 + .env 파일 확인</td></tr>
+      <tr><td><code>403</code></td><td>권한 없음</td><td>Console에서 권한 설정 확인</td></tr>
+      <tr><td><code>413</code></td><td>요청 너무 큼</td><td>max_tokens 줄이기, 청킹</td></tr>
+      <tr><td><code>429</code></td><td>레이트 리밋</td><td>지수 백오프 재시도</td></tr>
+      <tr><td><code>500</code></td><td>서버 오류</td><td>재시도 (서버 일시적 오류)</td></tr>
+      <tr><td><code>529</code></td><td>과부하</td><td>대기 후 재시도</td></tr>
+    </tbody>
+  </table>
+
+  <div class="sec" style="margin-top:24px">Track B 전체 기술 스택 요약</div>
+  <div class="arch-box">
+    <div class="arch-title">56일 동안 마스터한 기술들</div>
+<span class="arch-highlight">API Layer</span>
+  ├── Messages API (기본 호출 · 스트리밍 · 멀티턴)
+  ├── Messages Batches API (대량 비동기 처리)
+  └── Prompt Caching (90% 비용 절약)
+
+<span class="arch-highlight">프롬프트 엔지니어링</span>
+  ├── System Prompt 설계 (역할·규칙·형식)
+  ├── 구조화 출력 (XML · JSON Schema)
+  ├── Prefill Technique
+  └── A/B 테스팅
+
+<span class="arch-highlight">Tool Use</span>
+  ├── Function Calling (JSON Schema 정의)
+  ├── 에이전트 루프 (stop_reason 처리)
+  └── 병렬 도구 호출
+
+<span class="arch-highlight">MCP (Model Context Protocol)</span>
+  ├── 아키텍처 (Host · Client · Server)
+  ├── Resources · Tools · Prompts
+  └── 커스텀 MCP 서버 구축 (Python SDK)
+
+<span class="arch-highlight">에이전트 시스템</span>
+  ├── 오케스트레이터-서브에이전트 패턴
+  ├── 체인 · 라우터 · 병렬 패턴
+  └── Human-in-the-loop
+
+<span class="arch-highlight">RAG</span>
+  ├── 임베딩 + 벡터 DB (ChromaDB)
+  ├── 청킹 전략
+  └── 검색 증강 생성 파이프라인
+
+<span class="arch-highlight">최적화 · 프로덕션</span>
+  ├── 모델 라우팅 (Haiku · Sonnet · Opus)
+  ├── 재시도 + 에러 처리
+  ├── 로깅 · 모니터링
+  └── FastAPI 배포 (Railway · Fly.io)</div>
+</section>
+
+</div><!-- /wrap -->
+
+<script>
+function navTo(el,id){
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+}
+function jumpTo(id){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+}
+const secs=['toc','m01','m02','m03','m04','m05','m06','m07','m08','m09','m10','m11','m12'];
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id=e.target.id;
+      document.querySelectorAll('.nt').forEach(t=>{
+        t.classList.toggle('on',t.textContent.trim().toLowerCase()===id||t.textContent.trim().toUpperCase()===id.toUpperCase());
+      });
+    }
+  });
+},{rootMargin:'-20% 0px -75% 0px'});
+secs.forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
+</script>
+</body>
+</html>

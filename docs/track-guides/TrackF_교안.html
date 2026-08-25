@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI OpenCollege 강의 교안 — Track F · 취업준비생 × AI 취업 전략</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0A0F1E;--ink2:#1A2035;--ink3:#2D3A55;--ink4:#5B6F99;--ink5:#8FA3CC;
+  --paper:#F6F8FF;--p2:#EEF2FF;--p3:#DDE4FF;--p4:#BBC6FF;--p5:#99AAFF;
+  --v1:#4338CA;--v2:#6366F1;--v3:#818CF8;--v4:rgba(67,56,202,.12);--v5:rgba(67,56,202,.06);
+  --v-border:rgba(67,56,202,.22);
+  --accent:#F59E0B;--accs:rgba(245,158,11,.12);
+  --gr:#059669;--grs:rgba(5,150,105,.1);
+  --rd:#DC2626;--rds:rgba(220,38,38,.08);
+  --pk:#DB2777;--pks:rgba(219,39,119,.1);
+  --cy:#0891B2;--cys:rgba(8,145,178,.1);
+  --fu:'Pretendard','Apple SD Gothic Neo',-apple-system,sans-serif;
+  --fs:'Noto Serif KR','Georgia',serif;
+  --fm:'JetBrains Mono','Courier New',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--fu);line-height:1.7;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--p2)}::-webkit-scrollbar-thumb{background:var(--p4);border-radius:3px}
+.cover{min-height:100vh;background:#07091A;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 36px;position:relative;overflow:hidden}
+.cov-g1{position:absolute;left:-100px;top:-100px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(99,102,241,.3),transparent 65%);pointer-events:none}
+.cov-g2{position:absolute;right:-80px;bottom:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.18),transparent 65%);pointer-events:none}
+.cov-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(99,102,241,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.cov-inner{position:relative;z-index:2;max-width:740px}
+.cov-series{font-size:11px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:.22em;font-family:var(--fm);margin-bottom:22px;text-transform:uppercase}
+.cov-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,.2);border:1px solid rgba(129,140,248,.4);border-radius:8px;padding:9px 22px;font-size:13px;font-weight:700;color:#C7D2FE;margin-bottom:30px}
+.cov-bdot{width:7px;height:7px;border-radius:50%;background:var(--v2);box-shadow:0 0 10px rgba(99,102,241,.9)}
+.cov-title{font-family:var(--fs);font-size:clamp(32px,5.2vw,52px);font-weight:900;color:#fff;line-height:1.12;letter-spacing:-.5px;margin-bottom:18px}
+.cov-title em{color:#FCD34D;font-style:normal}
+.cov-sub{font-size:17px;color:rgba(255,255,255,.5);font-weight:400;line-height:1.65;margin-bottom:36px;font-family:var(--fs)}
+.cov-rule{width:64px;height:2px;background:linear-gradient(90deg,transparent,rgba(99,102,241,.7),transparent);margin:0 auto 36px}
+.cov-stats{display:flex;justify-content:center;gap:40px;margin-bottom:42px}
+.cs{text-align:center}.cs-n{font-size:36px;font-weight:900;font-family:var(--fm);color:#A5B4FC;line-height:1}
+.cs-l{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);margin-top:5px;letter-spacing:.08em}
+.cov-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.cc{padding:7px 15px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-size:12px;font-weight:600;color:rgba(255,255,255,.5)}
+.cov-footer{position:absolute;bottom:24px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.2);font-family:var(--fm)}
+.nav{position:sticky;top:0;z-index:80;background:rgba(246,248,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--p3)}
+.nav-wrap{max-width:880px;margin:0 auto;padding:0 28px;display:flex;align-items:center;overflow-x:auto}
+.nt{padding:13px 15px;font-size:11.5px;font-weight:700;color:var(--ink4);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .12s}
+.nt:hover{color:var(--ink2)}.nt.on{color:var(--v1);border-bottom-color:var(--v1)}
+.wrap{max-width:880px;margin:0 auto;padding:0 28px 100px}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ti{display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:12px;border:1px solid var(--p3);cursor:pointer;transition:all .12s;background:var(--paper)}
+.ti:hover{border-color:var(--v-border);background:var(--v5);transform:translateY(-1px)}
+.ti-num{width:38px;height:38px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;font-family:var(--fm);color:#fff}
+.ti-bd{flex:1;min-width:0}.ti-wk{font-size:9.5px;font-weight:800;color:var(--ink5);font-family:var(--fm);margin-bottom:3px}
+.ti-nm{font-size:13px;font-weight:700;color:var(--ink2);line-height:1.3}.ti-cnt{font-size:11px;color:var(--ink5);flex-shrink:0}
+.mod{padding:60px 0;border-top:2px solid var(--p3)}
+.mod-ey{font-size:11px;font-weight:800;color:var(--v1);letter-spacing:.14em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.mod-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border-radius:6px;font-size:11px;font-weight:800;font-family:var(--fm);margin-bottom:16px}
+.mod-h{font-family:var(--fs);font-size:clamp(24px,3.8vw,34px);font-weight:900;color:var(--ink);line-height:1.18;letter-spacing:-.3px;margin-bottom:14px}
+.mod-sub{font-size:15px;color:var(--ink3);font-weight:400;line-height:1.7;margin-bottom:22px;font-family:var(--fs)}
+.mod-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px}
+.mchip{display:flex;align-items:center;gap:6px;background:white;border:1px solid var(--p3);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--ink3)}
+.obj{background:var(--v5);border:1px solid var(--v-border);border-radius:14px;padding:20px 24px;margin-bottom:28px}
+.obj-l{font-size:10px;font-weight:800;color:var(--v1);letter-spacing:.1em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.obj ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.obj li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--ink2);line-height:1.6}
+.obj li::before{content:'✓';font-size:12px;font-weight:900;color:var(--v1);flex-shrink:0;margin-top:2px}
+.sec{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;color:var(--ink5);letter-spacing:.1em;font-family:var(--fm);margin-bottom:14px;text-transform:uppercase}
+.sec::before{content:'';width:20px;height:2px;background:var(--v1);border-radius:1px;flex-shrink:0}
+.lesson{background:white;border:1px solid var(--p3);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.les-head{padding:14px 20px;border-bottom:1px solid var(--p3);display:flex;align-items:center;gap:10px;background:var(--p2)}
+.les-num{width:28px;height:28px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:900;font-family:var(--fm);color:#fff}
+.les-type{font-size:10px;font-weight:800;padding:3px 9px;border-radius:5px;font-family:var(--fm);flex-shrink:0;text-transform:uppercase;letter-spacing:.05em}
+.les-type.th{background:rgba(67,56,202,.12);color:var(--v1)}
+.les-type.ws{background:rgba(245,158,11,.12);color:#B45309}
+.les-type.pr{background:rgba(5,150,105,.1);color:var(--gr)}
+.les-type.case{background:rgba(8,145,178,.1);color:var(--cy)}
+.les-title{font-size:14px;font-weight:800;color:var(--ink);flex:1}
+.les-dur{font-size:11px;font-weight:700;color:var(--ink5);font-family:var(--fm);flex-shrink:0}
+.les-body{padding:20px 24px}
+.les-body p{font-size:14px;color:var(--ink2);line-height:1.8;margin-bottom:12px}
+.les-body p:last-child{margin-bottom:0}
+.les-body strong{font-weight:800;color:var(--ink)}
+.les-body ul{padding-left:18px;margin-bottom:12px}
+.les-body li{font-size:14px;color:var(--ink2);line-height:1.75;margin-bottom:4px}
+.kp{background:var(--v5);border-left:3px solid var(--v1);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0}
+.kp-l{font-size:10px;font-weight:800;color:var(--v1);font-family:var(--fm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.kp-t{font-size:13.5px;color:var(--ink2);line-height:1.65;font-weight:500}
+.insight{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:16px 20px;margin:14px 0}
+.ins-l{font-size:10px;font-weight:800;color:#B45309;font-family:var(--fm);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em}
+.ins-t{font-size:13.5px;color:var(--ink2);line-height:1.7;font-style:italic}
+.vs-box{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.vs-col{border-radius:10px;padding:14px 16px;border:1px solid}
+.vs-col.bad{background:rgba(220,38,38,.04);border-color:rgba(220,38,38,.15)}
+.vs-col.good{background:rgba(5,150,105,.04);border-color:rgba(5,150,105,.15)}
+.vs-col-l{font-size:10px;font-weight:800;font-family:var(--fm);margin-bottom:8px;letter-spacing:.08em}
+.vs-col.bad .vs-col-l{color:var(--rd)}.vs-col.good .vs-col-l{color:var(--gr)}
+.vs-col p{font-size:13px;color:var(--ink2);line-height:1.65}
+.pb{background:#070B18;border-radius:14px;overflow:hidden;margin:14px 0;border:1px solid rgba(99,102,241,.15)}
+.pb-top{padding:10px 18px;background:#0D1220;border-bottom:1px solid rgba(99,102,241,.12);display:flex;align-items:center;gap:8px}
+.pb-dots{display:flex;gap:5px}
+.pd{width:11px;height:11px;border-radius:50%}
+.pd.r{background:#FF5F57}.pd.y{background:#FEBC2E}.pd.g{background:#28C840}
+.pb-label{font-size:11px;font-weight:700;color:rgba(165,180,252,.5);font-family:var(--fm);margin-left:8px;flex:1}
+.pb-tag{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:4px;font-family:var(--fm)}
+.pb-tag.tpl{background:rgba(67,56,202,.25);color:#A5B4FC}
+.pb-tag.adv{background:rgba(245,158,11,.25);color:#FDE68A}
+.pb-body{padding:20px 22px;font-family:var(--fm);font-size:12.5px;color:#B0BFE0;line-height:1.9;white-space:pre-wrap}
+.slot{color:#FCD34D;font-weight:700}.comment{color:#2D3A55;font-style:italic}
+.prac{background:rgba(67,56,202,.05);border:1px solid var(--v-border);border-radius:14px;padding:18px 22px;margin:14px 0}
+.prac-l{font-size:10px;font-weight:800;color:var(--v1);font-family:var(--fm);margin-bottom:12px;text-transform:uppercase;letter-spacing:.1em}
+.prac-steps{display:flex;flex-direction:column;gap:9px}
+.ps{display:flex;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--ink2);line-height:1.65}
+.ps-n{width:24px;height:24px;border-radius:7px;background:var(--v1);color:#fff;font-size:11px;font-weight:900;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm)}
+.quiz{background:white;border-radius:14px;padding:18px 22px;margin:14px 0;border:1px solid var(--p3)}
+.quiz-l{font-size:10px;font-weight:800;color:#B45309;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase;letter-spacing:.1em}
+.quiz-q{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;line-height:1.55}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.qo{padding:10px 14px;border-radius:9px;font-size:13.5px;background:var(--paper);border:1px solid var(--p3);color:var(--ink3);display:flex;align-items:flex-start;gap:9px}
+.qo.ok{background:rgba(5,150,105,.07);border-color:rgba(5,150,105,.25);color:var(--gr);font-weight:700}
+.qo-n{font-family:var(--fm);font-size:10px;font-weight:900;width:18px;flex-shrink:0;margin-top:2px}
+.quiz-exp{font-size:12.5px;color:var(--ink4);padding:10px 14px;background:var(--paper);border-radius:8px;border-left:3px solid #B45309;line-height:1.65}
+.mission{background:var(--v5);border:1px solid var(--v-border);border-radius:14px;padding:18px 22px;margin:14px 0}
+.mis-l{font-size:10px;font-weight:800;color:var(--v1);font-family:var(--fm);margin-bottom:10px;text-transform:uppercase;letter-spacing:.1em}
+.mis-t{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px;font-family:var(--fs)}
+.mis-d{font-size:13.5px;color:var(--ink3);line-height:1.7;margin-bottom:12px}
+.mis-rewards{display:flex;gap:8px;flex-wrap:wrap}
+.mr{padding:4px 11px;border-radius:6px;font-size:11.5px;font-weight:800;font-family:var(--fm)}
+.mr.xp{background:rgba(245,158,11,.15);color:#B45309}
+.mr.pt{background:rgba(5,150,105,.12);color:var(--gr)}
+.inote{background:#070B18;border-radius:14px;padding:18px 22px;margin:14px 0;border:1px solid rgba(67,56,202,.25)}
+.inote-l{font-size:10px;font-weight:800;color:#A5B4FC;font-family:var(--fm);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.1em}
+.inote-l::after{content:'· 수강생 비공개';font-size:9px;color:rgba(239,68,68,.7)}
+.inote-body{font-size:13px;color:rgba(176,191,224,.65);line-height:1.8}
+.inote-body strong{color:rgba(176,191,224,.9);font-weight:700}
+.inote-body ul{padding-left:16px;margin-top:6px}.inote-body li{margin-bottom:5px}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--p3),transparent);margin:32px 0}
+.tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+.tbl th{padding:10px 14px;text-align:left;font-size:10.5px;font-weight:800;color:var(--ink3);letter-spacing:.06em;border-bottom:2px solid var(--p3);background:var(--p2)}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--p3);color:var(--ink2);line-height:1.6;vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}.tbl tr:hover td{background:var(--p2)}
+.chap{background:linear-gradient(135deg,#07091A 0%,#0F1530 55%,#080C1A 100%);border-radius:18px;padding:48px 44px;margin:60px 0;position:relative;overflow:hidden}
+.chap-g{position:absolute;right:-50px;top:-50px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.22),transparent 65%);pointer-events:none}
+.chap-g2{position:absolute;left:-30px;bottom:-30px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(245,158,11,.15),transparent 65%);pointer-events:none}
+.chap-part{font-size:10.5px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:.15em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.chap-n{font-size:60px;font-weight:900;font-family:var(--fm);line-height:1;margin-bottom:8px}
+.chap-h{font-family:var(--fs);font-size:24px;font-weight:900;color:#fff;line-height:1.3;margin-bottom:8px}
+.chap-s{font-size:14px;color:rgba(255,255,255,.45);line-height:1.65}
+.chap-meta{font-size:11px;color:rgba(255,255,255,.25);font-family:var(--fm);margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+/* 특화 박스 */
+.resume-box{background:white;border:2px solid var(--p3);border-radius:14px;padding:20px 24px;margin:14px 0;font-family:var(--fm);font-size:12.5px;color:var(--ink2);line-height:1.9}
+.resume-section{font-size:10px;font-weight:800;color:var(--v1);letter-spacing:.1em;margin-bottom:8px;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid var(--p3)}
+.resume-content{margin-bottom:14px;font-family:var(--fu);font-size:13.5px}
+.score-bar{background:var(--p2);border-radius:12px;padding:14px 18px;margin:14px 0;display:flex;align-items:center;gap:14px}
+.score-label{font-size:12px;font-weight:800;color:var(--ink3);width:120px;flex-shrink:0}
+.score-track{flex:1;background:var(--p3);border-radius:4px;height:8px;overflow:hidden}
+.score-fill{height:100%;border-radius:4px}
+.score-num{font-size:12px;font-weight:800;color:var(--v1);font-family:var(--fm);width:36px;text-align:right;flex-shrink:0}
+@media(max-width:700px){.wrap{padding:0 16px 80px}.toc-grid{grid-template-columns:1fr}.vs-box{grid-template-columns:1fr}.chap{padding:32px 22px}.chap-n{font-size:44px}}
+</style>
+</head>
+<body>
+<div class="cover" id="top">
+  <div class="cov-g1"></div><div class="cov-g2"></div><div class="cov-grid"></div>
+  <div class="cov-inner">
+    <div class="cov-series">AI OPENCOLLEGE LEARNING SYSTEM · TRACK F · VOLUME I</div>
+    <div class="cov-badge"><div class="cov-bdot"></div>취업준비생 × AI 취업 전략</div>
+    <h1 class="cov-title">AI로 <em>취업의 문을</em><br>먼저 열어라</h1>
+    <p class="cov-sub">이력서·자소서·면접·포트폴리오·네트워킹까지<br>12모듈 · 56일 · 취준생을 위한 AI 취업 전략 교안</p>
+    <div class="cov-rule"></div>
+    <div class="cov-stats">
+      <div class="cs"><div class="cs-n">12</div><div class="cs-l">모듈</div></div>
+      <div class="cs"><div class="cs-n">56</div><div class="cs-l">일</div></div>
+      <div class="cs"><div class="cs-n">Track</div><div class="cs-l">F</div></div>
+      <div class="cs"><div class="cs-n">Job</div><div class="cs-l">전략</div></div>
+    </div>
+    <div class="cov-chips">
+      <div class="cc">📄 AI 이력서 최적화</div>
+      <div class="cc">✍️ 자소서 전략</div>
+      <div class="cc">🎤 AI 면접 코치</div>
+      <div class="cc">💼 포트폴리오 기획</div>
+      <div class="cc">🌐 LinkedIn 전략</div>
+    </div>
+  </div>
+  <div class="cov-footer">AI OpenCollege · Track F · 취업준비생 AI 전략 · 교안 v1.0 · 2026</div>
+</div>
+<nav class="nav">
+  <div class="nav-wrap">
+    <div class="nt on" onclick="navTo(this,'toc')">목차</div>
+    <div class="nt" onclick="navTo(this,'m01')">M01</div>
+    <div class="nt" onclick="navTo(this,'m02')">M02</div>
+    <div class="nt" onclick="navTo(this,'m03')">M03</div>
+    <div class="nt" onclick="navTo(this,'m04')">M04</div>
+    <div class="nt" onclick="navTo(this,'m05')">M05</div>
+    <div class="nt" onclick="navTo(this,'m06')">M06</div>
+    <div class="nt" onclick="navTo(this,'m07')">M07</div>
+    <div class="nt" onclick="navTo(this,'m08')">M08</div>
+    <div class="nt" onclick="navTo(this,'m09')">M09</div>
+    <div class="nt" onclick="navTo(this,'m10')">M10</div>
+    <div class="nt" onclick="navTo(this,'m11')">M11</div>
+    <div class="nt" onclick="navTo(this,'m12')">M12</div>
+  </div>
+</nav>
+<div class="wrap">
+<section id="toc" class="mod" style="border-top:none;padding-top:52px">
+  <div class="mod-ey">CONTENTS</div>
+  <h2 class="mod-h" style="font-size:30px">목차</h2>
+  <p style="font-size:14px;color:var(--ink4);margin-bottom:32px;line-height:1.7">12개 모듈 · 56일 과정. AI를 활용해 경쟁자보다 빠르고, 더 설득력 있는 취업 자료를 만들고, 면접을 전략적으로 준비하는 취준생 전용 트랙입니다.</p>
+  <div class="toc-grid">
+    <a class="ti" onclick="jumpTo('m01')"><div class="ti-num" style="background:#4338CA">01</div><div class="ti-bd"><div class="ti-wk">DAY 1–4</div><div class="ti-nm">나를 분석하라 — 강점·가치관·커리어 방향 설정</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m02')"><div class="ti-num" style="background:#3730A3">02</div><div class="ti-bd"><div class="ti-wk">DAY 5–9</div><div class="ti-nm">직무·산업 리서치 — AI로 업계를 꿰뚫는 분석</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m03')"><div class="ti-num" style="background:#312E81">03</div><div class="ti-bd"><div class="ti-wk">DAY 10–14</div><div class="ti-nm">AI 이력서 최적화 — ATS 통과 + 채용담당자 주목</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m04')"><div class="ti-num" style="background:#B45309">04</div><div class="ti-bd"><div class="ti-wk">DAY 15–19</div><div class="ti-nm">자기소개서 전략 — 스토리텔링으로 차별화</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m05')"><div class="ti-num" style="background:#92400E">05</div><div class="ti-bd"><div class="ti-wk">DAY 20–23</div><div class="ti-nm">AI 면접 코치 — 모의 면접과 답변 최적화</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m06')"><div class="ti-num" style="background:#DB2777">06</div><div class="ti-bd"><div class="ti-wk">DAY 24–27</div><div class="ti-nm">포트폴리오 기획 — AI로 성과를 보여주는 방법</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m07')"><div class="ti-num" style="background:#9D174D">07</div><div class="ti-bd"><div class="ti-wk">DAY 28–31</div><div class="ti-nm">LinkedIn·네트워킹 전략 — 디지털 존재감 구축</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m08')"><div class="ti-num" style="background:#065F46">08</div><div class="ti-bd"><div class="ti-wk">DAY 32–35</div><div class="ti-nm">회사별 맞춤 지원 — 공고 분석과 타겟 전략</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m09')"><div class="ti-num" style="background:#0E7490">09</div><div class="ti-bd"><div class="ti-wk">DAY 36–39</div><div class="ti-nm">인턴·공모전 전략 — 스펙을 경험으로 바꾸는 법</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m10')"><div class="ti-num" style="background:#1D4ED8">10</div><div class="ti-bd"><div class="ti-wk">DAY 40–44</div><div class="ti-nm">합격 후 온보딩 준비 — 첫 직장 성공 전략</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m11')"><div class="ti-num" style="background:#6D28D9">11</div><div class="ti-bd"><div class="ti-wk">DAY 45–49</div><div class="ti-nm">커리어 브랜딩 — 장기적 전문성 구축 전략</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m12')"><div class="ti-num" style="background:#1E1B4B">12</div><div class="ti-bd"><div class="ti-wk">DAY 50–56</div><div class="ti-nm">캡스톤 — AI 취업 전략 포트폴리오 완성</div></div><div class="ti-cnt">→</div></a>
+  </div>
+</section>
+
+<!-- PART 1 -->
+<div class="chap" id="part1">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART ONE</div>
+  <div class="chap-n" style="color:#A5B4FC">01–03</div>
+  <div class="chap-h">나를 알고, 업계를 읽고,<br>이력서로 첫인상을 만든다</div>
+  <div class="chap-s">강점·방향성 설정부터 직무 분석, ATS 최적화 이력서까지<br>취업 준비의 가장 중요한 첫 3단계를 AI와 함께 완성합니다.</div>
+  <div class="chap-meta">M01 자기 분석 · M02 직무·산업 리서치 · M03 이력서 최적화 · Day 1–14</div>
+</div>
+
+<!-- M01 -->
+<section class="mod" id="m01">
+  <div class="mod-ey">MODULE 01 · DAY 1–4</div>
+  <div class="mod-badge" style="background:rgba(67,56,202,.12);color:var(--v1)">M01 · 자기 분석</div>
+  <h2 class="mod-h">나를 분석하라<br>— 강점·가치관·커리어 방향 설정</h2>
+  <p class="mod-sub">취업 준비에서 가장 먼저 해야 할 것은 회사 리스트가 아닙니다. 나 자신을 객관적으로 아는 것입니다. AI는 내가 보지 못한 강점과 패턴을 찾아내는 데 탁월한 파트너입니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 1–4</div>
+    <div class="mchip">🧭 자기 분석</div>
+    <div class="mchip">🎯 방향 설정</div>
+    <div class="mchip">⏱ 약 90분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>STAR 방법론으로 과거 경험을 취업 자산으로 전환할 수 있다</li>
+      <li>Claude와 함께 나만의 강점 키워드 10개를 도출할 수 있다</li>
+      <li>목표 직군 2~3개를 구체적으로 설정하고 그 이유를 설명할 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">이론 강의</div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--v1)">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">AI 자기 분석 — "나를 모르면 자소서를 못 쓴다"</div>
+      <div class="les-dur">18분</div>
+    </div>
+    <div class="les-body">
+      <p>자기소개서의 80%가 평범한 이유는 자신을 모른 채 쓰기 때문입니다. "열정적이고 책임감 있으며 소통을 잘합니다"라는 문장은 1000명이 똑같이 씁니다. AI를 활용해 나만의 구체적인 경험과 강점을 발굴하는 것이 먼저입니다.</p>
+      <div class="kp">
+        <div class="kp-l">STAR 프레임워크</div>
+        <div class="kp-t"><strong>S</strong>ituation (상황) → <strong>T</strong>ask (과제) → <strong>A</strong>ction (행동) → <strong>R</strong>esult (결과)<br>이 구조로 경험을 정리하면 어떤 질문에도 구체적으로 답할 수 있습니다. Claude가 경험 하나를 STAR로 분해해줍니다.</div>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>분석 영역</th><th>물어볼 질문</th><th>Claude 활용법</th></tr></thead>
+        <tbody>
+          <tr><td><strong>강점 발굴</strong></td><td>내가 남들보다 쉽게 잘하는 것?</td><td>경험 목록 → 패턴 분석 → 강점 키워드</td></tr>
+          <tr><td><strong>동기 발견</strong></td><td>언제 가장 몰입하고 보람을 느꼈나?</td><td>최고 경험 → 공통 요소 → 동기 파악</td></tr>
+          <tr><td><strong>가치관 정리</strong></td><td>일을 통해 얻고 싶은 것은?</td><td>가치관 목록 → 우선순위 → 직무 매칭</td></tr>
+          <tr><td><strong>약점 관리</strong></td><td>어떤 상황에서 성과가 떨어지나?</td><td>약점 → 개선 노력 → 긍정적 서술 전환</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">자기 분석 마스터 템플릿</div><div class="pb-tag tpl">취업 분석</div></div>
+    <div class="pb-body"><span class="comment"># STEP 1: 경험 STAR 분해</span>
+내 경험을 STAR 방법론으로 분석해줘.
+
+[경험 설명]
+<span class="slot">[대학 수업 팀프로젝트, 동아리 활동, 아르바이트, 봉사활동 등 구체적으로]</span>
+
+각 경험에서:
+- Situation: 어떤 상황이었는지
+- Task: 내 역할과 과제
+- Action: 내가 한 구체적 행동 (동사 중심)
+- Result: 결과와 배운 것 (수치 포함 가능하면)
+
+<span class="comment"># STEP 2: 강점 키워드 도출</span>
+위 경험들에서 반복되는 나의 강점 패턴을 찾아줘.
+
+포함할 것:
+- 강점 키워드 10개 (동사 + 명사 형태로)
+- 각 강점의 근거 경험 (위에서 분석한 것)
+- 이 강점이 빛나는 직무 유형
+- 면접에서 자주 나오는 강점 질문 5개 + 내 경험 기반 답변
+
+<span class="comment"># STEP 3: 커리어 방향 설정</span>
+나의 강점, 흥미, 가치관을 바탕으로
+지원하기 좋은 직무 방향 TOP 3를 추천해줘.
+
+내 정보:
+- 전공: <span class="slot">[전공]</span>
+- 흥미 분야: <span class="slot">[관심 분야들]</span>
+- 강점: <span class="slot">[위에서 나온 강점]</span>
+- 원하는 워크스타일: <span class="slot">[사무직/현장/재택/출장 등]</span>
+
+각 직무 방향에 대해:
+- 직무명 + 하는 일 설명
+- 내 강점이 어떻게 적합한지
+- 주요 취업 회사 예시 5개
+- 필요한 추가 역량</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">오늘의 과제</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 1–4 미션</div>
+    <div class="mis-t">나의 강점 키워드 10개 + 목표 직군 2개 확정</div>
+    <div class="mis-d">과거 경험 5개를 STAR로 분해하고, 강점 키워드 10개를 도출한 뒤 목표 직군 2개를 근거와 함께 확정하세요. 이것이 이후 모든 취업 자료의 기반이 됩니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+60 XP</div><div class="mr pt">+30 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>가장 흔한 실수:</strong> "저는 특별한 경험이 없어요"라는 말. 수업, 팀프로젝트, 알바, 동아리 — 모두 STAR로 분해하면 강점이 나옵니다. 경험의 크기가 아니라 그 경험에서 무엇을 했는지가 중요함을 강조하세요.<br><br>
+      <strong>방향 설정 팁:</strong> 처음부터 하나를 못 고르는 수강생이 많습니다. "2개 방향으로 준비하면서 지원해보고 결정한다"가 현실적인 조언입니다.
+    </div>
+  </div>
+</section>
+
+<!-- M02 -->
+<section class="mod" id="m02">
+  <div class="mod-ey">MODULE 02 · DAY 5–9</div>
+  <div class="mod-badge" style="background:rgba(55,48,163,.12);color:#3730A3">M02 · 직무 리서치</div>
+  <h2 class="mod-h">직무·산업 리서치<br>— AI로 업계를 꿰뚫는 분석</h2>
+  <p class="mod-sub">면접관은 지원자가 우리 업계를 얼마나 아는지 봅니다. 모르면 탈락입니다. Claude로 업계 트렌드·회사 분석·직무 역량을 빠르게 파악해 '업계를 아는 지원자'로 보이세요.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 5–9</div>
+    <div class="mchip">🔍 업계 분석</div>
+    <div class="mchip">🏢 회사 리서치</div>
+    <div class="mchip">⏱ 약 85분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>목표 직무의 핵심 역량과 채용 트렌드를 Claude로 빠르게 분석할 수 있다</li>
+      <li>지원 회사의 사업 모델·최근 이슈·경쟁사를 정리한 '회사 분석 노트'를 만들 수 있다</li>
+      <li>JD(직무기술서)에서 중요 키워드를 추출하고 내 경험에 연결할 수 있다</li>
+    </ul>
+  </div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">직무·회사·JD 분석 마스터 템플릿</div><div class="pb-tag tpl">리서치 도구</div></div>
+    <div class="pb-body"><span class="comment"># 직무 역량 분석</span>
+다음 직무에서 실제로 요구하는 역량을 분석해줘.
+
+직무명: <span class="slot">[마케팅 기획 / 개발자 / 영업 등]</span>
+산업: <span class="slot">[IT / 소비재 / 금융 등]</span>
+
+분석해줄 것:
+1. 이 직무에서 실제로 하는 일 (하루 일과 중심)
+2. 신입에게 기대하는 핵심 역량 5가지
+3. 이 직무에서 성장하는 사람의 특징
+4. 최근 업계 트렌드 (AI 영향 포함)
+5. 면접에서 자주 나오는 직무 지식 질문 5개
+
+<span class="comment"># 회사 심층 분석</span>
+다음 회사에 지원하기 위한 분석을 해줘.
+
+회사명: <span class="slot">[회사명]</span>
+
+분석해줄 것:
+1. 사업 모델 (어떻게 돈을 버는가)
+2. 최근 1년 주요 뉴스·이슈 (좋은 것·나쁜 것 포함)
+3. 주요 경쟁사 3개 + 이 회사의 차별점
+4. 회사의 인재상과 문화
+5. 이 회사가 지원자에게 물어볼 가능성 높은 질문
+6. "왜 우리 회사인가요?" 답변 힌트
+
+<span class="comment"># JD 키워드 추출 + 내 경험 연결</span>
+다음 채용공고(JD)를 분석해줘.
+
+[JD 내용 붙여넣기]
+<span class="slot">[채용공고 전체 텍스트]</span>
+
+분석해줄 것:
+1. 이 JD에서 반복되는 핵심 키워드 TOP 10
+2. 필수 역량 vs 우대 역량 분류
+3. 내 경험 <span class="slot">[경험 요약]</span>과 JD 연결 포인트
+4. 이 JD 기반 예상 면접 질문 5개</div>
+  </div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 5–9 미션</div>
+    <div class="mis-t">목표 회사 3개 분석 노트 완성</div>
+    <div class="mis-d">지원 의향 있는 회사 3개를 Claude로 분석해 "회사 분석 노트"를 만드세요. 각 회사의 채용공고 JD에서 핵심 키워드를 추출하고, 내 경험과 연결 포인트를 정리합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+65 XP</div><div class="mr pt">+35 P</div></div>
+  </div>
+</section>
+
+<!-- M03 -->
+<section class="mod" id="m03">
+  <div class="mod-ey">MODULE 03 · DAY 10–14</div>
+  <div class="mod-badge" style="background:rgba(49,46,129,.12);color:#312E81">M03 · 이력서</div>
+  <h2 class="mod-h">AI 이력서 최적화<br>— ATS 통과 + 채용담당자 주목</h2>
+  <p class="mod-sub">이력서는 5~7초 안에 판단됩니다. ATS(자동 스크리닝 시스템)도 통과하고, 사람도 읽고 싶게 만드는 이력서를 Claude와 함께 완성합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 10–14</div>
+    <div class="mchip">📄 ATS 최적화</div>
+    <div class="mchip">📊 성과 수치화</div>
+    <div class="mchip">⏱ 약 95분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>JD 키워드를 자연스럽게 녹인 ATS 통과 이력서를 작성할 수 있다</li>
+      <li>"~담당했다" 대신 "~으로 X% 개선했다"처럼 성과를 수치화할 수 있다</li>
+      <li>직무별로 이력서를 빠르게 커스터마이징하는 시스템을 만들 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">이론 강의</div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#312E81">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">ATS란 무엇인가 — 기계가 먼저 읽는 이력서</div>
+      <div class="les-dur">16분</div>
+    </div>
+    <div class="les-body">
+      <p>대기업의 80% 이상이 ATS(Applicant Tracking System)로 이력서를 자동 필터링합니다. JD에 있는 키워드가 이력서에 없으면 사람이 보기 전에 탈락합니다. 그래서 <strong>같은 경험이라도 회사·직무마다 다른 키워드로 표현</strong>해야 합니다.</p>
+      <div class="vs-box">
+        <div class="vs-col bad">
+          <div class="vs-col-l">❌ ATS 탈락 이력서</div>
+          <p>- 팀프로젝트 참여하여 맡은 역할 수행<br>- 고객 응대 담당<br>- 마케팅 업무 보조<br>→ 키워드 없음, 성과 없음</p>
+        </div>
+        <div class="vs-col good">
+          <div class="vs-col-l">✓ ATS 통과 이력서</div>
+          <p>- 5인 팀 데이터 분석 프로젝트 리드, Python으로 처리 시간 40% 단축<br>- SNS 콘텐츠 기획·제작으로 팔로워 2,000명 증가 (3개월)<br>→ 키워드 + 수치 + 동사</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">이력서 최적화 + 성과 수치화 + ATS 점수</div><div class="pb-tag tpl">이력서 도구</div></div>
+    <div class="pb-body"><span class="comment"># 경험 성과 수치화</span>
+다음 경험을 이력서 항목으로 최적화해줘.
+
+[원본 경험]
+<span class="slot">[내가 했던 일을 자유롭게 설명]</span>
+
+[지원 직무]
+<span class="slot">[직무명]</span>
+
+[JD 핵심 키워드]
+<span class="slot">[JD에서 추출한 키워드들]</span>
+
+최적화 조건:
+- 강한 행동 동사로 시작 (이끌었다, 개발했다, 달성했다)
+- 수치 포함 (%, 명, 원, 배, 회 등)
+- JD 키워드 자연스럽게 포함
+- 1~2줄로 압축
+- 3가지 버전 제안
+
+<span class="comment"># 이력서 전체 ATS 점검</span>
+다음 이력서를 ATS 관점에서 점검해줘.
+
+[JD]
+<span class="slot">[채용공고 붙여넣기]</span>
+
+[현재 이력서]
+<span class="slot">[이력서 내용 붙여넣기]</span>
+
+분석해줄 것:
+1. JD 키워드 포함률 (%) 및 누락 키워드 목록
+2. 각 항목별 개선 포인트
+3. 개선된 버전 제안
+4. 예상 ATS 통과 가능성 평가</div>
+  </div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 10–14 미션</div>
+    <div class="mis-t">목표 JD 맞춤 이력서 1개 완성</div>
+    <div class="mis-d">가장 원하는 회사의 JD를 기준으로 이력서를 완성하세요. 모든 경험 항목에 성과 수치가 포함되어야 하고, Claude로 ATS 점검까지 마친 버전을 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+45 P</div></div>
+  </div>
+</section>
+
+<!-- PART 2 -->
+<div class="chap" id="part2">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART TWO</div>
+  <div class="chap-n" style="color:#FCD34D">04–07</div>
+  <div class="chap-h">자소서로 설득하고<br>면접을 이기고 존재감을 만든다</div>
+  <div class="chap-s">스토리텔링 자소서, AI 면접 코치, 포트폴리오 기획,<br>LinkedIn 전략으로 취업 경쟁에서 앞서나갑니다.</div>
+  <div class="chap-meta">M04 자소서 · M05 면접 코치 · M06 포트폴리오 · M07 LinkedIn · Day 15–31</div>
+</div>
+
+<!-- M04 -->
+<section class="mod" id="m04">
+  <div class="mod-ey">MODULE 04 · DAY 15–19</div>
+  <div class="mod-badge" style="background:rgba(180,83,9,.12);color:#B45309">M04 · 자소서</div>
+  <h2 class="mod-h">자기소개서 전략<br>— 스토리텔링으로 차별화</h2>
+  <p class="mod-sub">"지원동기를 적어주세요"에 "귀사는 세계 최고의 기업이라서..."로 시작하면 탈락입니다. 기억에 남는 자소서는 나만의 구체적인 이야기에서 시작합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 15–19</div>
+    <div class="mchip">📝 스토리텔링</div>
+    <div class="mchip">🎯 지원동기 설계</div>
+    <div class="mchip">⏱ 약 90분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>자소서 각 항목에 맞는 스토리 구조(피라미드 원칙)를 적용할 수 있다</li>
+      <li>"지원동기 → 성장과정 → 성격 → 포부" 4대 항목을 차별화해 쓸 수 있다</li>
+      <li>Claude로 초안을 만들고 내 목소리로 편집하는 워크플로우를 완성할 수 있다</li>
+    </ul>
+  </div>
+  <div class="insight">
+    <div class="ins-l">💡 합격 자소서의 공통점</div>
+    <div class="ins-t">"이 지원자라면 같이 일하고 싶다"는 느낌을 주는 자소서입니다. 스펙이 아니라 '이 사람은 어떤 사람인가', '우리 팀에서 어떻게 기여할 수 있나'를 보여주는 것이 핵심입니다.</div>
+  </div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">자소서 4대 항목 작성 마스터 템플릿</div><div class="pb-tag tpl">자소서 도구</div></div>
+    <div class="pb-body"><span class="comment"># 지원동기 (가장 중요)</span>
+다음 정보로 지원동기를 작성해줘. 진부하지 않게, 나만의 이야기로.
+
+회사: <span class="slot">[회사명]</span> / 직무: <span class="slot">[직무명]</span>
+이 회사·직무에 관심 갖게 된 계기: <span class="slot">[구체적인 에피소드나 경험]</span>
+이 회사에서 이루고 싶은 것: <span class="slot">[구체적 목표]</span>
+분량: <span class="slot">[N자 이내]</span>
+
+조건:
+- 첫 문장에서 훅(hook)으로 시작 — 질문, 사건, 수치로
+- "귀사는..." "저는 항상..."으로 시작 금지
+- 내 경험과 회사의 방향이 연결되도록
+- 마지막에 입사 후 기여할 구체적 내용
+
+<span class="comment"># 성장과정 (강점 스토리)</span>
+다음 경험으로 성장과정을 써줘.
+
+핵심 경험: <span class="slot">[STAR로 정리한 경험]</span>
+강점 키워드: <span class="slot">[강점 2~3개]</span>
+분량: <span class="slot">[N자 이내]</span>
+
+구조: 도전 상황 → 내 행동 → 결과 → 배운 점 → 직무 연결
+
+<span class="comment"># 입사 후 포부</span>
+현실적이고 구체적인 포부를 작성해줘.
+
+목표 직무: <span class="slot">[직무]</span>
+3년 후 내 모습: <span class="slot">[구체적 비전]</span>
+회사가 나에게 기대하는 것: <span class="slot">[JD에서 파악한 것]</span>
+
+조건: "최고의 직원이 되겠습니다" 같은 추상적 표현 금지
+구체적 역량 개발 계획 포함</div>
+  </div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 15–19 미션</div>
+    <div class="mis-t">자소서 1개 회사 완성 (4항목 모두)</div>
+    <div class="mis-d">가장 원하는 1개 회사의 자소서 4항목을 Claude 보조로 초안 작성 후 편집해 완성하세요. 반드시 각 항목에 구체적인 경험 에피소드가 1개 이상 포함되어야 합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+80 XP</div><div class="mr pt">+50 P</div></div>
+  </div>
+</section>
+
+<!-- M05 -->
+<section class="mod" id="m05">
+  <div class="mod-ey">MODULE 05 · DAY 20–23</div>
+  <div class="mod-badge" style="background:rgba(146,64,14,.12);color:#92400E">M05 · 면접 코치</div>
+  <h2 class="mod-h">AI 면접 코치<br>— 모의 면접과 답변 최적화</h2>
+  <p class="mod-sub">면접은 연습한 만큼 실력이 늘어납니다. Claude를 면접관으로 설정해 언제든지 모의 면접을 하고, 즉각적인 피드백으로 빠르게 개선합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 20–23</div>
+    <div class="mchip">🎤 모의 면접</div>
+    <div class="mchip">💡 답변 최적화</div>
+    <div class="mchip">⏱ 약 90분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>Claude를 면접관으로 설정해 실전 모의 면접을 언제든지 진행할 수 있다</li>
+      <li>자주 나오는 면접 질문 50개에 대한 나만의 답변 라이브러리를 만들 수 있다</li>
+      <li>압박 면접·심층 면접·AI 역량 면접에 각각 대비할 수 있다</li>
+    </ul>
+  </div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">AI 면접 코치 — 모의 면접 + 피드백 + 답변 최적화</div><div class="pb-tag tpl">면접 도구</div></div>
+    <div class="pb-body"><span class="comment"># 모의 면접 설정</span>
+지금부터 나의 면접관이 되어줘.
+
+[회사 정보]
+회사명: <span class="slot">[회사명]</span> / 직무: <span class="slot">[직무명]</span>
+나의 이력서·자소서: <span class="slot">[요약 내용]</span>
+
+면접 방식: 1차 인성 면접 / 30분 / 질문 10개
+
+시작 시 나에게 한 번에 1개 질문만 해줘.
+내가 답하면 피드백을 주고 다음 질문으로 넘어가줘.
+
+피드백 기준:
+- 답변의 구체성 (1~10점)
+- STAR 구조 활용 여부
+- 개선할 표현 제안
+- 이 답변의 강점과 약점
+
+<span class="comment"># 답변 최적화</span>
+다음 면접 질문에 내 경험 기반 최적 답변을 써줘.
+
+질문: "<span class="slot">[면접 질문]</span>"
+내 관련 경험: <span class="slot">[경험 내용]</span>
+분량: 1분30초 분량 (약 250~300자)
+
+답변 조건:
+- STAR 구조 적용
+- 첫 문장에서 결론 먼저 (두괄식)
+- 수치와 구체적 행동 포함
+- "~습니다"체로 끝맺음
+
+<span class="comment"># 압박 면접 대비</span>
+내 이력서·자소서에서 약점을 찾아서
+압박 질문 10개를 만들어줘.
+그리고 각각에 대한 모범 답변도 함께.
+
+약점 예시: 짧은 경력, 관련 직무 경험 부족, 낮은 학점 등</div>
+  </div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 20–23 미션</div>
+    <div class="mis-t">30분 AI 모의 면접 3회 실시 + 답변 라이브러리 구축</div>
+    <div class="mis-d">Claude와 목표 회사 모의 면접을 최소 3회 진행하고, 자주 나오는 질문 20개에 대한 나만의 답변 라이브러리를 완성하세요. 가장 어렵게 느껴진 질문과 그 답변을 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+80 XP</div><div class="mr pt">+50 P</div></div>
+  </div>
+</section>
+
+<!-- M06 -->
+<section class="mod" id="m06">
+  <div class="mod-ey">MODULE 06 · DAY 24–27</div>
+  <div class="mod-badge" style="background:rgba(219,39,119,.1);color:var(--pk)">M06 · 포트폴리오</div>
+  <h2 class="mod-h">포트폴리오 기획<br>— AI로 성과를 보여주는 방법</h2>
+  <p class="mod-sub">포트폴리오는 디자이너만 만드는 것이 아닙니다. 직무 불문, 내 역량을 시각적으로 보여주는 포트폴리오가 경쟁력을 만듭니다. AI로 기획하고 구성합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 24–27</div>
+    <div class="mchip">💼 포트폴리오 기획</div>
+    <div class="mchip">📂 케이스 스터디</div>
+    <div class="mchip">⏱ 약 85분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>직무에 맞는 포트폴리오 구성 전략을 설계할 수 있다</li>
+      <li>프로젝트 1개를 케이스 스터디 형식으로 정리할 수 있다</li>
+      <li>Notion·PDF·웹사이트 중 적합한 포트폴리오 형식을 선택하고 초안을 만들 수 있다</li>
+    </ul>
+  </div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">포트폴리오 기획 + 케이스 스터디 작성</div><div class="pb-tag tpl">포트폴리오 도구</div></div>
+    <div class="pb-body"><span class="comment"># 포트폴리오 전체 구성 기획</span>
+다음 직무 지원을 위한 포트폴리오 구성을 기획해줘.
+
+목표 직무: <span class="slot">[직무명]</span>
+보유 프로젝트·경험: <span class="slot">[프로젝트 목록]</span>
+포트폴리오 형식: <span class="slot">[Notion / PDF / 개인 웹사이트]</span>
+
+기획해줄 것:
+1. 전체 목차 구조 (섹션별 구성)
+2. 각 섹션에 들어갈 내용
+3. 프로젝트 선별 기준 (어떤 것을 넣고 빼야 하는지)
+4. 채용담당자가 5분 안에 파악하게 하는 구조
+
+<span class="comment"># 케이스 스터디 작성</span>
+다음 프로젝트를 포트폴리오 케이스 스터디로 작성해줘.
+
+프로젝트: <span class="slot">[프로젝트 설명]</span>
+내 역할: <span class="slot">[내가 한 것]</span>
+결과: <span class="slot">[결과와 성과]</span>
+
+케이스 스터디 구조:
+- 헤드라인 (이 프로젝트가 무엇을 해결했는지 한 줄)
+- 배경 (왜 이 프로젝트가 필요했는가)
+- 나의 역할 (구체적 기여)
+- 핵심 의사결정 과정 (어떤 선택을 했고 왜)
+- 결과 + 학습 (수치 + 배운 것)
+- 다음 단계 (이 경험이 어떻게 성장으로 이어지는지)</div>
+  </div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 24–27 미션</div>
+    <div class="mis-t">포트폴리오 구성 기획 + 케이스 스터디 1개 완성</div>
+    <div class="mis-d">포트폴리오 전체 구성을 기획하고, 가장 대표적인 프로젝트 1개를 케이스 스터디 형식으로 완성하세요. Notion 또는 PDF로 초안을 만들어 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+80 XP</div><div class="mr pt">+50 P</div></div>
+  </div>
+</section>
+
+<!-- M07 -->
+<section class="mod" id="m07">
+  <div class="mod-ey">MODULE 07 · DAY 28–31</div>
+  <div class="mod-badge" style="background:rgba(157,23,77,.1);color:#9D174D">M07 · LinkedIn</div>
+  <h2 class="mod-h">LinkedIn·네트워킹 전략<br>— 디지털 존재감 구축</h2>
+  <p class="mod-sub">채용담당자는 지원서를 받기 전에 LinkedIn으로 검색합니다. 프로필이 없으면 없는 사람, 있어도 빈약하면 지원하기 전에 인상을 깎습니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 28–31</div>
+    <div class="mchip">🌐 LinkedIn 최적화</div>
+    <div class="mchip">🤝 네트워킹</div>
+    <div class="mchip">⏱ 약 80분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>검색에 노출되는 LinkedIn 프로필을 Claude로 완성할 수 있다</li>
+      <li>업계 선배·채용담당자에게 보내는 개인화 연결 메시지를 만들 수 있다</li>
+      <li>취업에 도움이 되는 LinkedIn 포스팅을 주 1회 이상 할 수 있다</li>
+    </ul>
+  </div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">LinkedIn 프로필 + 네트워킹 메시지</div><div class="pb-tag tpl">네트워킹 도구</div></div>
+    <div class="pb-body"><span class="comment"># LinkedIn 헤드라인 + About 섹션</span>
+다음 정보로 LinkedIn 프로필을 최적화해줘.
+
+내 정보:
+- 현재 상태: <span class="slot">[취업준비생 / 대학교 N학년]</span>
+- 목표 직무: <span class="slot">[직무명]</span>
+- 핵심 강점: <span class="slot">[강점 3가지]</span>
+- 보유 기술: <span class="slot">[기술 목록]</span>
+
+최적화할 것:
+1. 헤드라인 (120자 이내, 키워드 포함, 기억에 남게)
+2. About 섹션 (2000자 이내, 나의 스토리 + 목표 + 가치)
+3. 각 경험 항목 (STAR 기반, 수치 포함)
+4. 추천 스킬 20개 (검색 최적화)
+
+<span class="comment"># 업계 선배에게 연결 메시지</span>
+다음 분에게 보낼 LinkedIn 연결 요청 메시지를 써줘.
+
+상대방: <span class="slot">[이름, 직책, 회사, 공통점]</span>
+목적: <span class="slot">[조언 요청 / 커피챗 / 인포멀 인터뷰]</span>
+
+조건:
+- 300자 이내 (LinkedIn 연결 메시지 한도)
+- 나를 소개하되 너무 길지 않게
+- 상대방에게 이익이 되는 이유 포함
+- 구체적인 질문 또는 요청 1개만
+- 부담 없이 읽힐 수 있는 톤</div>
+  </div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 28–31 미션</div>
+    <div class="mis-t">LinkedIn 프로필 완성 + 업계 선배 3명에게 연결 메시지 발송</div>
+    <div class="mis-d">Claude로 LinkedIn 프로필을 완성하고, 관심 업계 선배 3명에게 개인화 연결 메시지를 실제로 보내세요. 응답 여부와 관계없이 발송 화면 제출로 완료.</div>
+    <div class="mis-rewards"><div class="mr xp">+80 XP</div><div class="mr pt">+50 P</div></div>
+  </div>
+</section>
+
+<!-- PART 3 -->
+<div class="chap" id="part3">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART THREE</div>
+  <div class="chap-n" style="color:#86EFAC">08–11</div>
+  <div class="chap-h">전략적으로 지원하고<br>경험을 쌓고 브랜드를 만든다</div>
+  <div class="chap-s">회사별 맞춤 지원 전략, 인턴·공모전으로 스펙 업그레이드,<br>합격 후 온보딩, 장기 커리어 브랜딩까지 완성합니다.</div>
+  <div class="chap-meta">M08 맞춤 지원 · M09 인턴·공모전 · M10 온보딩 · M11 커리어 브랜딩 · Day 32–49</div>
+</div>
+
+<!-- M08 -->
+<section class="mod" id="m08">
+  <div class="mod-ey">MODULE 08 · DAY 32–35</div>
+  <div class="mod-badge" style="background:rgba(6,95,70,.1);color:#065F46">M08 · 맞춤 지원</div>
+  <h2 class="mod-h">회사별 맞춤 지원<br>— 공고 분석과 타겟 전략</h2>
+  <p class="mod-sub">무작위 지원은 시간 낭비입니다. 회사·직무별로 이력서와 자소서를 빠르게 커스터마이징하는 시스템을 만들면 지원 속도와 품질을 동시에 높일 수 있습니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 32–35</div><div class="mchip">🎯 타겟 지원 전략</div><div class="mchip">⚡ 빠른 커스터마이징</div><div class="mchip">⏱ 약 80분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>JD 분석 → 이력서 수정 → 자소서 수정을 2시간 안에 완료하는 워크플로우를 만들 수 있다</li>
+    <li>지원할 회사와 건너뛸 회사를 전략적으로 판단하는 기준을 가질 수 있다</li>
+    <li>지원 현황을 추적하고 개선하는 취업 CRM을 설계할 수 있다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">맞춤 지원 빠른 커스터마이징 시스템</div><div class="pb-tag tpl">지원 도구</div></div>
+    <div class="pb-body"><span class="comment"># 지원 가치 판단 (20분 분석)</span>
+다음 회사·공고에 지원할 가치가 있는지 분석해줘.
+
+[JD 내용]
+<span class="slot">[채용공고 붙여넣기]</span>
+
+[나의 현황]
+<span class="slot">[이력서·자소서 요약]</span>
+
+판단해줄 것:
+1. 나와의 적합도 점수 (1~10)
+2. 내 강점이 이 JD에서 빛나는 부분
+3. 내가 부족한 요건 (치명적 / 보완 가능)
+4. 합격 가능성 예측과 근거
+5. 지원 여부 권고 (Yes/No/조건부)
+
+<span class="comment"># 빠른 이력서·자소서 커스터마이징</span>
+기존 이력서·자소서를 이 JD에 맞게 빠르게 수정해줘.
+
+[기존 이력서 핵심 내용]
+<span class="slot">[현재 이력서 요약]</span>
+
+[JD 핵심 키워드]
+<span class="slot">[JD에서 추출한 것]</span>
+
+수정해줄 것:
+1. 이력서: JD 키워드를 반영해 수정할 항목 3가지
+2. 지원동기: 이 회사 맞춤으로 3단락 재작성
+3. 추가하면 좋을 경험·활동
+4. 면접에서 강조해야 할 포인트
+
+<span class="comment"># 취업 현황 추적 시스템 설계</span>
+지원 현황을 관리하는 취업 CRM 노션 템플릿을 설계해줘.
+
+포함할 항목:
+- 회사명·직무·공고링크·마감일
+- 지원 단계 (서류/면접1/면접2/최종)
+- 합격 여부·피드백
+- 다음 액션·메모
+
+그리고 이 데이터를 기반으로 매주 전략을 점검하는 루틴 제안.</div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 32–35 미션</div><div class="mis-t">이번 주 5개 공고에 맞춤 지원 완료</div><div class="mis-d">5개 회사 공고를 분석하고, 각각에 맞춤화된 서류로 실제 지원하세요. 지원 현황 추적 시트를 만들어 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+85 XP</div><div class="mr pt">+55 P</div></div></div>
+</section>
+
+<!-- M09 -->
+<section class="mod" id="m09">
+  <div class="mod-ey">MODULE 09 · DAY 36–39</div>
+  <div class="mod-badge" style="background:rgba(14,116,144,.1);color:#0E7490">M09 · 인턴·공모전</div>
+  <h2 class="mod-h">인턴·공모전 전략<br>— 스펙을 경험으로 바꾸는 법</h2>
+  <p class="mod-sub">취업 공백기가 길어질 때 가장 효과적인 전략은 인턴십·공모전으로 실전 경험을 만드는 것입니다. AI로 지원서·기획서·발표자료까지 빠르게 완성합니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 36–39</div><div class="mchip">🏆 공모전 전략</div><div class="mchip">📋 인턴 지원서</div><div class="mchip">⏱ 약 80분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>공모전 기획서를 Claude로 빠르게 초안 작성할 수 있다</li>
+    <li>인턴십 지원서를 직무·회사에 맞게 최적화할 수 있다</li>
+    <li>인턴십에서 정직원 전환 확률을 높이는 전략을 이해한다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">공모전 기획서 + 인턴 전략</div><div class="pb-tag tpl">경험 도구</div></div>
+    <div class="pb-body"><span class="comment"># 공모전 아이디어 발굴 + 기획서</span>
+다음 공모전에 제출할 아이디어와 기획서 구조를 만들어줘.
+
+공모전: <span class="slot">[공모전명·주제]</span>
+주최사: <span class="slot">[회사/기관]</span>
+내 팀: <span class="slot">[명수, 전공/역할]</span>
+
+아이디어 발굴:
+1. 주제에 맞는 차별화된 아이디어 5개 (발산)
+2. 실행 가능성·독창성·임팩트 기준 TOP 1 선정
+3. 선택 아이디어의 기획서 목차 구조
+
+기획서 각 섹션 초안:
+- 문제 정의 (현황·Pain Point·타겟)
+- 솔루션 (어떻게 해결하는가)
+- 기대 효과 (수치 기반)
+- 실행 계획 (일정·역할 분배)
+
+<span class="comment"># 인턴에서 정직원으로 — 전략</span>
+인턴십에서 정직원 전환 확률을 높이는 전략을 알려줘.
+
+인턴 시작 전 준비사항:
+- 첫 주에 해야 할 것
+- 매니저와 관계 구축 방법
+- 성과를 가시화하는 방법
+
+그리고 인턴 기간 주간 성과 보고 템플릿도 만들어줘.</div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 36–39 미션</div><div class="mis-t">공모전 1개 지원 OR 인턴 지원서 완성</div><div class="mis-d">지금 당장 지원 가능한 공모전 1개를 찾아 기획서 초안을 만들거나, 인턴십 지원서를 완성해 제출하세요.</div><div class="mis-rewards"><div class="mr xp">+85 XP</div><div class="mr pt">+55 P</div></div></div>
+</section>
+
+<!-- M10 -->
+<section class="mod" id="m10">
+  <div class="mod-ey">MODULE 10 · DAY 40–44</div>
+  <div class="mod-badge" style="background:rgba(29,78,216,.1);color:#1D4ED8">M10 · 온보딩 준비</div>
+  <h2 class="mod-h">합격 후 온보딩 준비<br>— 첫 직장 성공 전략</h2>
+  <p class="mod-sub">합격이 끝이 아닙니다. 입사 첫 90일이 나머지 직장 생활을 결정합니다. AI로 온보딩을 전략적으로 준비하고 빠르게 팀에 기여하는 방법을 배웁니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 40–44</div><div class="mchip">🚀 첫 90일 전략</div><div class="mchip">💪 빠른 기여</div><div class="mchip">⏱ 약 75분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>입사 첫 주·30일·90일 계획을 구체적으로 세울 수 있다</li>
+    <li>직장 내 커뮤니케이션과 보고 방법을 준비할 수 있다</li>
+    <li>AI를 업무에 자연스럽게 활용해 빠른 성과를 내는 전략을 갖는다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">첫 90일 온보딩 플랜</div><div class="pb-tag tpl">온보딩 도구</div></div>
+    <div class="pb-body"><span class="comment"># 입사 첫 90일 계획</span>
+다음 직무로 입사하는 신입의 첫 90일 계획을 만들어줘.
+
+직무: <span class="slot">[직무명]</span> / 회사: <span class="slot">[회사명]</span>
+팀 규모: <span class="slot">[N명]</span> / 상사: <span class="slot">[직책]</span>
+
+Month 1 (학습 단계):
+- 파악해야 할 것 (업무·관계·프로세스)
+- 매니저에게 할 질문 목록
+- 첫 주 해야 할 행동
+
+Month 2 (기여 단계):
+- 맡게 될 업무에서 작은 성과 만들기
+- 팀 내 신뢰 구축 방법
+
+Month 3 (확장 단계):
+- 나만의 기여 영역 만들기
+- 성과 가시화 방법
+
+그리고 신입이 AI로 빠른 성과를 내는 방법 5가지도 포함.</div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 40–44 미션</div><div class="mis-t">입사 첫 90일 계획서 완성</div><div class="mis-d">가장 원하는 회사·직무로 가정하고 첫 90일 계획서를 Claude로 완성하세요. 아직 취업 전이라도 미래를 준비하는 것이 목표입니다.</div><div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+45 P</div></div></div>
+</section>
+
+<!-- M11 -->
+<section class="mod" id="m11">
+  <div class="mod-ey">MODULE 11 · DAY 45–49</div>
+  <div class="mod-badge" style="background:rgba(109,40,217,.1);color:#6D28D9">M11 · 커리어 브랜딩</div>
+  <h2 class="mod-h">커리어 브랜딩<br>— 장기적 전문성 구축 전략</h2>
+  <p class="mod-sub">취업은 시작일 뿐입니다. 3년 후, 5년 후 어떤 전문가가 되고 싶은지 지금부터 설계해야 합니다. AI로 개인 브랜드와 전문성 로드맵을 만듭니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 45–49</div><div class="mchip">🌐 개인 브랜드</div><div class="mchip">📈 전문성 로드맵</div><div class="mchip">⏱ 약 75분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>3년 후 내가 되고 싶은 전문가상을 구체적으로 그릴 수 있다</li>
+    <li>개인 브랜드 콘텐츠(LinkedIn·블로그·유튜브)를 AI로 지속 생성할 수 있다</li>
+    <li>AI 활용 능력을 나만의 커리어 차별화 포인트로 포지셔닝할 수 있다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">커리어 브랜딩 + 전문성 로드맵</div><div class="pb-tag tpl">브랜딩 도구</div></div>
+    <div class="pb-body"><span class="comment"># 커리어 브랜드 정의</span>
+내 커리어 브랜드를 정의해줘.
+
+[내 정보]
+목표 직무: <span class="slot">[직무]</span>
+핵심 강점: <span class="slot">[강점]</span>
+관심 전문 분야: <span class="slot">[분야]</span>
+
+정의해줄 것:
+1. 나를 한 문장으로 표현하는 포지셔닝 (예: "AI를 쓰는 마케터")
+2. 3년 후 내가 목표하는 전문가 프로필
+3. 그 목표를 위해 지금부터 할 것 (월별)
+4. 개인 브랜드 구축을 위한 콘텐츠 주제 10개
+5. AI 활용 능력을 커리어에 어떻게 포지셔닝할지
+
+<span class="comment"># 전문 지식 콘텐츠 생성</span>
+취업준비생의 관점에서 LinkedIn에 올릴
+나만의 인사이트 포스팅을 3개 만들어줘.
+
+주제: <span class="slot">[내가 경험하거나 공부한 것]</span>
+스타일: 솔직하고 구체적, 취준생 공감 포인트
+
+각 포스팅:
+- 훅 문장 (첫 2줄에서 멈추게 만드는 것)
+- 핵심 내용 (3~5가지 인사이트)
+- 마무리 (행동 유도 또는 질문)
+- 해시태그 5개</div>
+  </div>
+  <div class="mission"><div class="mis-l">🎯 DAY 45–49 미션</div><div class="mis-t">커리어 브랜드 선언 + LinkedIn 포스팅 1개 게시</div><div class="mis-d">나의 커리어 포지셔닝을 정의하고, LinkedIn에 인사이트 포스팅을 실제로 게시하세요. "첫 포스팅의 반응"을 기록해 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+80 XP</div><div class="mr pt">+50 P</div></div></div>
+</section>
+
+<!-- PART 4 -->
+<div class="chap" id="part4">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART FOUR</div>
+  <div class="chap-n" style="color:#FDE68A">12</div>
+  <div class="chap-h">AI 취업 전략 포트폴리오를<br>완성하고 취업을 실현한다</div>
+  <div class="chap-meta">M12 캡스톤 · Day 50–56</div>
+</div>
+
+<!-- M12 -->
+<section class="mod" id="m12">
+  <div class="mod-ey">MODULE 12 · DAY 50–56</div>
+  <div class="mod-badge" style="background:rgba(30,27,75,.1);color:#4338CA">M12 · 캡스톤</div>
+  <h2 class="mod-h">캡스톤<br>— AI 취업 전략 포트폴리오 완성</h2>
+  <p class="mod-sub">56일간 만든 모든 취업 자산을 통합합니다. 이력서·자소서·포트폴리오·면접 답변 라이브러리가 하나의 완성된 패키지가 됩니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 50–56</div><div class="mchip">📦 취업 패키지</div><div class="mchip">🎤 모의 면접 발표</div><div class="mchip">🏆 Track F 수료</div><div class="mchip">⏱ 총 200분</div></div>
+  <div class="sec">최종 결과물</div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#4338CA">1</div><div class="les-type pr">통합</div><div class="les-title">Track F 취업 패키지 — 7가지 결과물</div><div class="les-dur">필수 제출</div></div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>결과물</th><th>내용</th><th>출처 모듈</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1. 강점 키워드 카드</strong></td><td>강점 10개 + 근거 경험 + 면접 연결</td><td>M01</td></tr>
+          <tr><td><strong>2. 회사 분석 노트 (3개사)</strong></td><td>사업 모델·이슈·예상 질문</td><td>M02</td></tr>
+          <tr><td><strong>3. ATS 최적화 이력서</strong></td><td>직무 맞춤 이력서 1개 (완성본)</td><td>M03</td></tr>
+          <tr><td><strong>4. 자기소개서 (1개사)</strong></td><td>4항목 완성본</td><td>M04</td></tr>
+          <tr><td><strong>5. 면접 답변 라이브러리</strong></td><td>질문 20개 + 나만의 답변</td><td>M05</td></tr>
+          <tr><td><strong>6. 포트폴리오 (초안)</strong></td><td>케이스 스터디 1개 포함</td><td>M06</td></tr>
+          <tr><td><strong>7. LinkedIn 프로필</strong></td><td>완성된 프로필 URL</td><td>M07</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#4338CA">2</div><div class="les-type th">평가</div><div class="les-title">Track F 수료 평가 기준</div><div class="les-dur">평가 기준</div></div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>평가 항목</th><th>배점</th><th>기준</th></tr></thead>
+        <tbody>
+          <tr><td>취업 패키지 완성도</td><td>40점</td><td>7가지 결과물 완성</td></tr>
+          <tr><td>실제 지원 행동</td><td>30점</td><td>5개 이상 실제 지원 증빙</td></tr>
+          <tr><td>모의 면접 발표</td><td>20점</td><td>10분 면접 시뮬레이션</td></tr>
+          <tr><td>동료 피드백 참여</td><td>10점</td><td>다른 수강생 서류·면접 피드백</td></tr>
+        </tbody>
+      </table>
+      <div class="kp"><div class="kp-l">수료 기준</div><div class="kp-t"><strong>Track F Certificate:</strong> 총점 75점 이상 + 미션 완료율 80%<br><strong>우수 수료 (취업 성공 보고):</strong> 수료 후 3개월 내 취업 성공 시 AI OpenCollege 서포터즈 자격</div></div>
+    </div>
+  </div>
+  <div class="mission"><div class="mis-l">🏆 최종 미션 (M12)</div><div class="mis-t">취업 패키지 완성 + 실전 지원 10개 완료</div><div class="mis-d">7가지 취업 패키지를 완성하고, 실제 회사에 10개 이상 지원하세요. 수료 후 취업 성공 소식을 전해주시면 AI OpenCollege 취업 성공 사례로 소개됩니다.</div><div class="mis-rewards"><div class="mr xp">+200 XP</div><div class="mr pt">+150 P</div></div></div>
+
+  <div class="hr"></div>
+  <div class="sec">전체 트랙과의 연계</div>
+  <table class="tbl">
+    <thead><tr><th>상황</th><th>추천 다음 트랙</th><th>이유</th></tr></thead>
+    <tbody>
+      <tr><td>IT/개발 직군 취업 희망</td><td>Track B (기술·개발자)</td><td>API·AI 기술 역량으로 차별화</td></tr>
+      <tr><td>마케팅·콘텐츠 직군 지원</td><td>크리에이티브 과정</td><td>AI 디자인·영상 제작 능력 추가</td></tr>
+      <tr><td>창업·스타트업 관심</td><td>Track C (창업자)</td><td>사이드 프로젝트→사업 전환</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 부록 -->
+<section class="mod" id="appendix" style="border-top:2px solid var(--p3)">
+  <div class="mod-ey">APPENDIX</div>
+  <h2 class="mod-h" style="font-size:26px">부록 — 취준생 AI 활용 빠른 참조</h2>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">Track F 핵심 프롬프트 전체 요약</div><div class="pb-tag tpl">빠른 참조</div></div>
+    <div class="pb-body"><span class="comment">━━ 자기 분석 ━━</span>
+경험 STAR 분해 → 강점 키워드 도출 → 목표 직군 설정
+
+<span class="comment">━━ 리서치 ━━</span>
+직무 역량 분석 → 회사 심층 분석 → JD 키워드 추출
+
+<span class="comment">━━ 이력서 ━━</span>
+경험 수치화 → ATS 키워드 삽입 → 직무별 커스터마이징
+
+<span class="comment">━━ 자소서 ━━</span>
+지원동기(훅→연결→기여) → 성장과정(STAR) → 포부(구체적)
+
+<span class="comment">━━ 면접 ━━</span>
+모의 면접 설정 → 피드백 받기 → 답변 최적화 → 라이브러리 구축
+
+<span class="comment">━━ 포트폴리오 ━━</span>
+구성 기획 → 케이스 스터디 작성 → Notion/PDF 제작
+
+<span class="comment">━━ 네트워킹 ━━</span>
+LinkedIn 헤드라인·About → 연결 메시지 → 콘텐츠 게시</div>
+  </div>
+</section>
+</div>
+
+<script>
+function navTo(el,id){document.querySelectorAll('.nt').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
+function jumpTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
+const secs=['toc','m01','m02','m03','m04','m05','m06','m07','m08','m09','m10','m11','m12'];
+const obs=new IntersectionObserver((e)=>{e.forEach(x=>{if(x.isIntersecting){const id=x.target.id;document.querySelectorAll('.nt').forEach(t=>{t.classList.toggle('on',t.textContent.trim().toLowerCase()===id||t.textContent.trim().toUpperCase()===id.toUpperCase());});}});},{rootMargin:'-20% 0px -75% 0px'});
+secs.forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
+</script>
+</body>
+</html>

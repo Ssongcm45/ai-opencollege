@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI OpenCollege 강의 교안 — 바이브코딩 과정 · AI로 앱 만들기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#080F0A;--ink2:#0F1A10;--ink3:#1A2E1C;--ink4:#3D6B42;--ink5:#6A9B6F;
+  --paper:#F4FFF5;--p2:#E8FFE9;--p3:#C8F5CA;--p4:#96E89A;--p5:#5DD663;
+  --g1:#00C851;--g2:#00E676;--g3:#69F0AE;--g4:rgba(0,200,81,.12);--g5:rgba(0,200,81,.06);
+  --g-border:rgba(0,200,81,.25);
+  --acc:#FF6B35;--accs:rgba(255,107,53,.12);
+  --cy:#00B8D4;--cys:rgba(0,184,212,.1);
+  --yw:#FFD600;--yws:rgba(255,214,0,.12);
+  --pu:#AA00FF;--pus:rgba(170,0,255,.1);
+  --rd:#FF1744;--rds:rgba(255,23,68,.08);
+  --fu:'Pretendard','Apple SD Gothic Neo',-apple-system,sans-serif;
+  --fs:'Noto Serif KR','Georgia',serif;
+  --fm:'JetBrains Mono','Fira Code','Courier New',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--fu);line-height:1.7;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--p2)}::-webkit-scrollbar-thumb{background:var(--p4);border-radius:3px}
+
+/* ── COVER ── */
+.cover{min-height:100vh;background:#030A04;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 36px;position:relative;overflow:hidden}
+.cov-scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,200,81,.02) 2px,rgba(0,200,81,.02) 4px);pointer-events:none;animation:scan 8s linear infinite}
+@keyframes scan{0%{background-position:0 0}100%{background-position:0 100px}}
+.cov-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,200,81,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,81,.05) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
+.cov-g1{position:absolute;left:-80px;top:-80px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(0,200,81,.2),transparent 60%);pointer-events:none;animation:pulse 4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+.cov-g2{position:absolute;right:-60px;bottom:-60px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,53,.15),transparent 60%);pointer-events:none}
+.cov-inner{position:relative;z-index:2;max-width:760px}
+.cov-series{font-size:11px;font-weight:800;color:rgba(0,200,81,.5);letter-spacing:.22em;font-family:var(--fm);margin-bottom:20px;text-transform:uppercase}
+.cov-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,200,81,.12);border:1px solid rgba(0,200,81,.4);border-radius:6px;padding:8px 20px;font-size:13px;font-weight:700;color:#69F0AE;margin-bottom:28px;font-family:var(--fm)}
+.cov-cursor{display:inline-block;width:8px;height:16px;background:#00C851;animation:blink .8s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.cov-title{font-family:var(--fs);font-size:clamp(32px,5.2vw,54px);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-.5px;margin-bottom:18px}
+.cov-title em{color:#00E676;font-style:normal}
+.cov-title span{background:linear-gradient(135deg,#69F0AE,#00C851);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cov-rule{width:64px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,200,81,.7),transparent);margin:0 auto 32px}
+.cov-sub{font-size:16px;color:rgba(255,255,255,.45);font-weight:400;line-height:1.7;margin-bottom:36px;font-family:var(--fs)}
+.cov-stats{display:flex;justify-content:center;gap:40px;margin-bottom:40px}
+.cs{text-align:center}.cs-n{font-size:36px;font-weight:900;font-family:var(--fm);color:#00E676;line-height:1}
+.cs-l{font-size:11px;font-weight:700;color:rgba(255,255,255,.3);margin-top:4px;letter-spacing:.08em}
+.cov-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.cc{padding:6px 14px;border-radius:5px;background:rgba(0,200,81,.07);border:1px solid rgba(0,200,81,.2);font-size:12px;font-weight:600;color:rgba(0,200,81,.8);font-family:var(--fm)}
+.cov-footer{position:absolute;bottom:20px;left:0;right:0;text-align:center;font-size:11px;color:rgba(0,200,81,.25);font-family:var(--fm)}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:80;background:rgba(244,255,245,.95);backdrop-filter:blur(14px);border-bottom:2px solid var(--p3)}
+.nav-wrap{max-width:900px;margin:0 auto;padding:0 28px;display:flex;align-items:center;overflow-x:auto}
+.nt{padding:12px 14px;font-size:11.5px;font-weight:700;color:var(--ink4);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .12s;font-family:var(--fm)}
+.nt:hover{color:var(--ink2)}.nt.on{color:var(--g1);border-bottom-color:var(--g1)}
+
+/* ── WRAP ── */
+.wrap{max-width:900px;margin:0 auto;padding:0 28px 100px}
+
+/* ── TOC ── */
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ti{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:10px;border:1px solid var(--p3);cursor:pointer;transition:all .12s;background:var(--paper)}
+.ti:hover{border-color:var(--g-border);background:var(--g5);transform:translateY(-1px)}
+.ti-num{width:40px;height:40px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;font-family:var(--fm);color:#fff}
+.ti-bd{flex:1}.ti-wk{font-size:9.5px;font-weight:800;color:var(--ink5);font-family:var(--fm);margin-bottom:2px}
+.ti-nm{font-size:13px;font-weight:700;color:var(--ink2);line-height:1.3}.ti-cnt{font-size:12px;color:var(--ink5)}
+
+/* ── MODULE ── */
+.mod{padding:56px 0;border-top:2px solid var(--p3)}
+.mod-ey{font-size:11px;font-weight:800;color:var(--g1);letter-spacing:.14em;font-family:var(--fm);margin-bottom:10px;text-transform:uppercase}
+.mod-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:5px;font-size:11px;font-weight:800;font-family:var(--fm);margin-bottom:14px}
+.mod-h{font-family:var(--fs);font-size:clamp(24px,3.8vw,34px);font-weight:900;color:var(--ink);line-height:1.18;letter-spacing:-.3px;margin-bottom:12px}
+.mod-sub{font-size:15px;color:var(--ink3);font-weight:400;line-height:1.7;margin-bottom:22px;font-family:var(--fs)}
+.mod-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:26px}
+.mchip{display:flex;align-items:center;gap:5px;background:white;border:1px solid var(--p3);border-radius:6px;padding:5px 11px;font-size:11.5px;font-weight:600;color:var(--ink3)}
+.obj{background:var(--g5);border:1px solid var(--g-border);border-radius:12px;padding:18px 22px;margin-bottom:26px}
+.obj-l{font-size:10px;font-weight:800;color:var(--g1);letter-spacing:.1em;font-family:var(--fm);margin-bottom:10px;text-transform:uppercase}
+.obj ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.obj li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--ink2);line-height:1.6}
+.obj li::before{content:'→';font-size:12px;font-weight:900;color:var(--g1);flex-shrink:0;margin-top:2px;font-family:var(--fm)}
+.sec{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;color:var(--ink5);letter-spacing:.1em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.sec::before{content:'';width:20px;height:2px;background:var(--g1);border-radius:1px;flex-shrink:0}
+
+/* ── LESSON ── */
+.lesson{background:white;border:1px solid var(--p3);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.les-head{padding:12px 18px;border-bottom:1px solid var(--p3);display:flex;align-items:center;gap:9px;background:var(--p2)}
+.les-num{width:26px;height:26px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;font-family:var(--fm);color:#fff}
+.les-type{font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px;font-family:var(--fm);flex-shrink:0;text-transform:uppercase;letter-spacing:.04em}
+.les-type.th{background:rgba(0,200,81,.12);color:var(--g1)}
+.les-type.lab{background:rgba(255,107,53,.12);color:#C2410C}
+.les-type.ws{background:rgba(0,184,212,.1);color:#0E7490}
+.les-type.demo{background:rgba(170,0,255,.1);color:#7C3AED}
+.les-title{font-size:14px;font-weight:800;color:var(--ink);flex:1}
+.les-dur{font-size:11px;font-weight:700;color:var(--ink5);font-family:var(--fm);flex-shrink:0}
+.les-body{padding:18px 22px}
+.les-body p{font-size:14px;color:var(--ink2);line-height:1.8;margin-bottom:11px}
+.les-body p:last-child{margin-bottom:0}
+.les-body strong{font-weight:800;color:var(--ink)}
+.les-body ul{padding-left:18px;margin-bottom:11px}
+.les-body li{font-size:14px;color:var(--ink2);line-height:1.75;margin-bottom:4px}
+
+/* ── 코드 블록 ── */
+.code-block{background:#030A04;border-radius:12px;overflow:hidden;margin:12px 0;border:1px solid rgba(0,200,81,.2)}
+.code-top{padding:9px 16px;background:#060F07;border-bottom:1px solid rgba(0,200,81,.15);display:flex;align-items:center;gap:8px}
+.code-dots{display:flex;gap:5px}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot.r{background:#FF5F57}.dot.y{background:#FEBC2E}.dot.g{background:#28C840}
+.code-label{font-size:11px;font-weight:700;color:rgba(105,240,174,.45);font-family:var(--fm);margin-left:8px;flex:1}
+.code-tag{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:4px;font-family:var(--fm)}
+.code-tag.prompt{background:rgba(0,200,81,.2);color:#69F0AE}
+.code-tag.result{background:rgba(255,107,53,.2);color:#FDBA74}
+.code-tag.note{background:rgba(0,184,212,.2);color:#67E8F9}
+.code-body{padding:18px 20px;font-family:var(--fm);font-size:12.5px;color:#A8E6B8;line-height:1.9;white-space:pre-wrap}
+.slot{color:#FFD600;font-weight:700}
+.comment{color:#1E4020;font-style:italic}
+.keyword{color:#00E676;font-weight:700}
+.string{color:#FF9800}
+.ai-out{color:#69F0AE}
+
+/* ── 특화 박스들 ── */
+.kp{background:var(--g5);border-left:3px solid var(--g1);border-radius:0 10px 10px 0;padding:13px 17px;margin:12px 0}
+.kp-l{font-size:10px;font-weight:800;color:var(--g1);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}
+.kp-t{font-size:13.5px;color:var(--ink2);line-height:1.65;font-weight:500}
+.warn{background:rgba(255,23,68,.04);border-left:3px solid var(--rd);border-radius:0 10px 10px 0;padding:13px 17px;margin:12px 0}
+.warn-l{font-size:10px;font-weight:800;color:var(--rd);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em}
+.warn-t{font-size:13.5px;color:var(--ink2);line-height:1.65}
+.tip{background:rgba(0,184,212,.06);border:1px solid rgba(0,184,212,.2);border-radius:10px;padding:13px 17px;margin:12px 0}
+.tip-l{font-size:10px;font-weight:800;color:var(--cy);font-family:var(--fm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.tip-t{font-size:13.5px;color:var(--ink2);line-height:1.65}
+.vs-box{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:12px 0}
+.vs-col{border-radius:10px;padding:13px 16px;border:1px solid}
+.vs-col.bad{background:rgba(255,23,68,.04);border-color:rgba(255,23,68,.15)}
+.vs-col.good{background:rgba(0,200,81,.04);border-color:rgba(0,200,81,.2)}
+.vs-col-l{font-size:10px;font-weight:800;font-family:var(--fm);margin-bottom:7px;letter-spacing:.06em}
+.vs-col.bad .vs-col-l{color:var(--rd)}.vs-col.good .vs-col-l{color:var(--g1)}
+.vs-col p{font-size:13px;color:var(--ink2);line-height:1.65}
+.quiz{background:white;border-radius:12px;padding:17px 21px;margin:12px 0;border:1px solid var(--p3)}
+.quiz-l{font-size:10px;font-weight:800;color:var(--acc);font-family:var(--fm);margin-bottom:11px;text-transform:uppercase;letter-spacing:.1em}
+.quiz-q{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:11px;line-height:1.55}
+.quiz-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:11px}
+.qo{padding:9px 13px;border-radius:8px;font-size:13.5px;background:var(--paper);border:1px solid var(--p3);color:var(--ink3);display:flex;gap:8px}
+.qo.ok{background:rgba(0,200,81,.07);border-color:rgba(0,200,81,.25);color:var(--g1);font-weight:700}
+.qo-n{font-family:var(--fm);font-size:10px;font-weight:900;width:18px;flex-shrink:0;margin-top:2px}
+.quiz-exp{font-size:12.5px;color:var(--ink4);padding:10px 13px;background:var(--paper);border-radius:8px;border-left:3px solid var(--acc);line-height:1.65}
+.mission{background:var(--g5);border:1px solid var(--g-border);border-radius:12px;padding:17px 21px;margin:12px 0}
+.mis-l{font-size:10px;font-weight:800;color:var(--g1);font-family:var(--fm);margin-bottom:9px;text-transform:uppercase;letter-spacing:.1em}
+.mis-t{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:5px;font-family:var(--fs)}
+.mis-d{font-size:13.5px;color:var(--ink3);line-height:1.7;margin-bottom:11px}
+.mis-rewards{display:flex;gap:7px;flex-wrap:wrap}
+.mr{padding:4px 10px;border-radius:5px;font-size:11.5px;font-weight:800;font-family:var(--fm)}
+.mr.xp{background:rgba(255,107,53,.15);color:#C2410C}.mr.pt{background:rgba(0,200,81,.12);color:var(--g1)}
+.inote{background:#030A04;border-radius:12px;padding:17px 21px;margin:12px 0;border:1px solid rgba(0,200,81,.2)}
+.inote-l{font-size:10px;font-weight:800;color:#69F0AE;font-family:var(--fm);margin-bottom:9px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.1em}
+.inote-l::after{content:'· 수강생 비공개';font-size:9px;color:rgba(239,68,68,.7)}
+.inote-body{font-size:13px;color:rgba(168,230,184,.6);line-height:1.8}
+.inote-body strong{color:rgba(168,230,184,.9);font-weight:700}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--p3),transparent);margin:30px 0}
+.tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+.tbl th{padding:10px 13px;text-align:left;font-size:10.5px;font-weight:800;color:var(--ink3);letter-spacing:.06em;border-bottom:2px solid var(--p3);background:var(--p2)}
+.tbl td{padding:10px 13px;border-bottom:1px solid var(--p3);color:var(--ink2);line-height:1.6;vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}.tbl tr:hover td{background:var(--p2)}
+.chap{background:linear-gradient(135deg,#020706 0%,#05140A 55%,#020906 100%);border-radius:16px;padding:44px 40px;margin:56px 0;position:relative;overflow:hidden}
+.chap-g{position:absolute;right:-50px;top:-50px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(0,200,81,.2),transparent 65%);pointer-events:none}
+.chap-g2{position:absolute;left:-30px;bottom:-30px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,53,.15),transparent 65%);pointer-events:none}
+.chap-code{position:absolute;top:16px;right:20px;font-family:var(--fm);font-size:10px;color:rgba(0,200,81,.2)}
+.chap-part{font-size:10.5px;font-weight:800;color:rgba(0,200,81,.4);letter-spacing:.15em;font-family:var(--fm);margin-bottom:10px;text-transform:uppercase}
+.chap-n{font-size:56px;font-weight:900;font-family:var(--fm);line-height:1;margin-bottom:7px}
+.chap-h{font-family:var(--fs);font-size:23px;font-weight:900;color:#fff;line-height:1.3;margin-bottom:7px}
+.chap-s{font-size:14px;color:rgba(255,255,255,.4);line-height:1.65}
+.chap-meta{font-size:11px;color:rgba(0,200,81,.25);font-family:var(--fm);margin-top:18px;padding-top:14px;border-top:1px solid rgba(0,200,81,.1)}
+
+/* ── 스택 카드 ── */
+.stack-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.stack-card{background:white;border:1px solid var(--p3);border-radius:12px;padding:14px 16px;text-align:center}
+.sc-ic{font-size:28px;margin-bottom:7px}
+.sc-name{font-size:14px;font-weight:900;color:var(--ink);margin-bottom:3px}
+.sc-role{font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:7px;font-family:var(--fm)}
+.sc-desc{font-size:12px;color:var(--ink4);line-height:1.55}
+
+/* ── 프로젝트 진행 단계 ── */
+.build-flow{display:flex;flex-direction:column;gap:10px;margin:12px 0}
+.bf-row{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;background:white;border:1px solid var(--p3);border-radius:12px}
+.bf-step{width:32px;height:32px;border-radius:8px;background:var(--g1);color:var(--ink);font-size:13px;font-weight:900;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm)}
+.bf-body{flex:1}
+.bf-title{font-size:13.5px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.bf-desc{font-size:13px;color:var(--ink3);line-height:1.6}
+.bf-code{font-size:11.5px;color:var(--g1);font-family:var(--fm);margin-top:4px;background:var(--g5);padding:3px 8px;border-radius:4px;display:inline-block}
+
+@media(max-width:700px){.wrap{padding:0 16px 80px}.toc-grid,.stack-grid{grid-template-columns:1fr}.vs-box{grid-template-columns:1fr}.chap{padding:28px 20px}.chap-n{font-size:42px}}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover" id="top">
+  <div class="cov-scan"></div><div class="cov-grid"></div><div class="cov-g1"></div><div class="cov-g2"></div>
+  <div class="cov-inner">
+    <div class="cov-series">AI OPENCOLLEGE LEARNING SYSTEM · VIBE CODING · VOLUME I</div>
+    <div class="cov-badge">$ airo --course vibe-coding<div class="cov-cursor"></div></div>
+    <h1 class="cov-title">코드 한 줄 몰라도<br><em>앱을 만들 수 있다</em></h1>
+    <p class="cov-sub">Claude Code · Cursor · v0 · Bolt로 아이디어를 실제 동작하는<br>서비스로 만드는 AI 네이티브 개발 실전 과정</p>
+    <div class="cov-rule"></div>
+    <div class="cov-stats">
+      <div class="cs"><div class="cs-n">8</div><div class="cs-l">모듈</div></div>
+      <div class="cs"><div class="cs-n">32</div><div class="cs-l">일</div></div>
+      <div class="cs"><div class="cs-n">4</div><div class="cs-l">핵심 툴</div></div>
+      <div class="cs"><div class="cs-n">Build</div><div class="cs-l">만들기</div></div>
+    </div>
+    <div class="cov-chips">
+      <div class="cc">// Claude Code</div>
+      <div class="cc">// Cursor IDE</div>
+      <div class="cc">// v0 by Vercel</div>
+      <div class="cc">// Bolt.new</div>
+      <div class="cc">// 배포까지</div>
+    </div>
+  </div>
+  <div class="cov-footer">AI OpenCollege · 바이브코딩 과정 · AI 네이티브 개발 · 교안 v1.0 · 2026</div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-wrap">
+    <div class="nt on" onclick="navTo(this,'toc')">목차</div>
+    <div class="nt" onclick="navTo(this,'m01')">M01</div>
+    <div class="nt" onclick="navTo(this,'m02')">M02</div>
+    <div class="nt" onclick="navTo(this,'m03')">M03</div>
+    <div class="nt" onclick="navTo(this,'m04')">M04</div>
+    <div class="nt" onclick="navTo(this,'m05')">M05</div>
+    <div class="nt" onclick="navTo(this,'m06')">M06</div>
+    <div class="nt" onclick="navTo(this,'m07')">M07</div>
+    <div class="nt" onclick="navTo(this,'m08')">M08</div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- TOC -->
+<section id="toc" class="mod" style="border-top:none;padding-top:48px">
+  <div class="mod-ey">CONTENTS</div>
+  <h2 class="mod-h" style="font-size:30px">목차</h2>
+  <p style="font-size:14px;color:var(--ink4);margin-bottom:28px;line-height:1.7">8개 모듈 · 32일 과정. <strong>코드를 외우는 것이 아니라 AI와 대화로 만드는 것</strong>입니다. 기획자·디자이너·창업자·마케터 — 아이디어만 있으면 됩니다.</p>
+  <div class="toc-grid">
+    <a class="ti" onclick="jumpTo('m01')"><div class="ti-num" style="background:#00C851">01</div><div class="ti-bd"><div class="ti-wk">DAY 1–4</div><div class="ti-nm">바이브코딩이란 — 코딩 없는 개발의 시대</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m02')"><div class="ti-num" style="background:#00A844">02</div><div class="ti-bd"><div class="ti-wk">DAY 5–8</div><div class="ti-nm">툴 세팅 — Claude Code · Cursor · v0 · Bolt 완전 정복</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m03')"><div class="ti-num" style="background:#008F38">03</div><div class="ti-bd"><div class="ti-wk">DAY 9–12</div><div class="ti-nm">첫 번째 앱 — 랜딩 페이지를 1시간에 만들기</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m04')"><div class="ti-num" style="background:#FF6B35">04</div><div class="ti-bd"><div class="ti-wk">DAY 13–16</div><div class="ti-nm">프론트엔드 마스터 — UI 컴포넌트와 인터랙션</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m05')"><div class="ti-num" style="background:#E65A26">05</div><div class="ti-bd"><div class="ti-wk">DAY 17–20</div><div class="ti-nm">백엔드 연결 — DB·API·인증을 AI로 구현</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m06')"><div class="ti-num" style="background:#00B8D4">06</div><div class="ti-bd"><div class="ti-wk">DAY 21–24</div><div class="ti-nm">AI 기능 탑재 — 내 앱에 Claude API 붙이기</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m07')"><div class="ti-num" style="background:#0097A7">07</div><div class="ti-bd"><div class="ti-wk">DAY 25–28</div><div class="ti-nm">배포 & 런칭 — Vercel·Railway로 서비스 공개</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m08')"><div class="ti-num" style="background:#1E1B4B">08</div><div class="ti-bd"><div class="ti-wk">DAY 29–32</div><div class="ti-nm">캡스톤 — 나만의 서비스 완성 & 런칭 발표</div></div><div class="ti-cnt">→</div></a>
+  </div>
+</section>
+
+<!-- PART 1 -->
+<div class="chap" id="part1">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-code">// vibe_coding_v1.js</div>
+  <div class="chap-part">PART ONE</div>
+  <div class="chap-n" style="color:#69F0AE">01–03</div>
+  <div class="chap-h">개념을 이해하고, 툴을 세팅하고,<br>첫 번째 앱을 배포한다</div>
+  <div class="chap-s">바이브코딩이 무엇인지 이해하고, 개발 환경을 세팅하고,<br>랜딩 페이지 하나를 직접 만들어 세상에 공개합니다.</div>
+  <div class="chap-meta">M01 개념 · M02 툴 세팅 · M03 첫 번째 앱 · Day 1–12</div>
+</div>
+
+<!-- M01 -->
+<section class="mod" id="m01">
+  <div class="mod-ey">MODULE 01 · DAY 1–4</div>
+  <div class="mod-badge" style="background:rgba(0,200,81,.12);color:var(--g1)">M01 · 개념</div>
+  <h2 class="mod-h">바이브코딩이란<br>— 코딩 없는 개발의 시대</h2>
+  <p class="mod-sub">2025년 Andrej Karpathy(전 Tesla·OpenAI)가 처음 쓴 용어 "Vibe Coding" — AI에게 "이런 걸 만들어줘"라고 말하면 코드를 써주는 새로운 개발 패러다임입니다. 코드를 외우는 것이 아닌, 무엇을 만들지 명확하게 설명하는 것이 핵심 기술입니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 1–4</div>
+    <div class="mchip">💡 개념 이해</div>
+    <div class="mchip">🧭 패러다임 전환</div>
+    <div class="mchip">⏱ 약 80분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>바이브코딩이 기존 개발과 어떻게 다른지 설명할 수 있다</li>
+      <li>Claude Code·Cursor·v0·Bolt 각 툴의 역할과 차이를 이해한다</li>
+      <li>바이브코딩에서 가장 중요한 기술이 "설명 능력"임을 이해한다</li>
+    </ul>
+  </div>
+  <div class="sec">이론 강의</div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:var(--g1)">1</div><div class="les-type th">이론</div><div class="les-title">개발의 패러다임이 바뀌었다 — 코더에서 디렉터로</div><div class="les-dur">20분</div></div>
+    <div class="les-body">
+      <p>과거의 개발은 <strong>문법을 암기하고 코드를 직접 타이핑하는 것</strong>이었습니다. 바이브코딩 시대의 개발은 <strong>"무엇을, 어떻게, 왜 만드는지"를 AI에게 명확하게 설명하는 것</strong>입니다.</p>
+      <div class="vs-box">
+        <div class="vs-col bad">
+          <div class="vs-col-l">❌ 전통 개발 방식</div>
+          <p>Python 문법 암기 → HTML/CSS 직접 작성 → 버그 수동 디버깅 → Stack Overflow 검색<br>→ 진입 장벽 높음</p>
+        </div>
+        <div class="vs-col good">
+          <div class="vs-col-l">✓ 바이브코딩 방식</div>
+          <p>"사용자가 로그인하고 글을 쓸 수 있는 블로그 만들어줘. 디자인은 미니멀하게."<br>→ AI가 전체 코드 생성</p>
+        </div>
+      </div>
+      <div class="kp">
+        <div class="kp-l">바이브코딩의 핵심 역량</div>
+        <div class="kp-t"><strong>1. 명세 능력:</strong> 원하는 것을 구체적으로 설명하는 능력<br><strong>2. 검증 능력:</strong> AI가 만든 결과물이 원하는 것인지 판단하는 능력<br><strong>3. 이터레이션:</strong> "이건 아니고, 이렇게 바꿔줘"를 반복하는 능력<br><strong>4. 디버깅 요청:</strong> "이 부분에서 오류가 나는데 고쳐줘"를 정확히 표현</div>
+      </div>
+      <table class="tbl">
+        <thead><tr><th>툴</th><th>주요 용도</th><th>특징</th><th>추천 대상</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Claude Code</strong></td><td>터미널 기반 AI 개발 에이전트</td><td>전체 프로젝트 이해·수정 가능, 파일 직접 편집</td><td>실제 서비스 개발</td></tr>
+          <tr><td><strong>Cursor</strong></td><td>AI 탑재 코드 에디터</td><td>VS Code 기반, AI 코드 완성·설명·리팩터링</td><td>코드를 보며 이해하고 싶은 분</td></tr>
+          <tr><td><strong>v0 (Vercel)</strong></td><td>UI 컴포넌트 생성</td><td>프롬프트→React 컴포넌트, 실시간 프리뷰</td><td>UI/프론트엔드 집중</td></tr>
+          <tr><td><strong>Bolt.new</strong></td><td>풀스택 앱 즉시 생성</td><td>브라우저에서 바로 실행, 원클릭 배포</td><td>빠른 프로토타입</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">첫 번째 바이브코딩 체험</div>
+  <div class="code-block">
+    <div class="code-top"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><div class="code-label">Claude.ai 또는 Claude Code — 첫 번째 프롬프트</div><div class="code-tag prompt">따라해보기</div></div>
+    <div class="code-body"><span class="comment"># 지금 당장 Claude에게 이렇게 말해보세요</span>
+
+<span class="keyword">나는 [직업/목적]이고 다음을 만들고 싶어:</span>
+
+<span class="string">"[내 아이디어를 자유롭게 설명]"</span>
+
+이걸 HTML/CSS/JavaScript로 만들어줘.
+파일 하나로 완결되게, 외부 라이브러리 최소화로.
+디자인은 깔끔하고 모던하게.
+
+<span class="comment"># 예시:</span>
+<span class="string">"나는 카페 사장인데, 메뉴판을 QR로 보여주는
+간단한 웹페이지를 만들고 싶어.
+메뉴 이름, 가격, 설명이 카드 형태로 보이고
+카테고리별로 탭으로 분류되면 좋겠어."</span>
+
+<span class="ai-out">→ Claude가 완성된 HTML 파일을 바로 만들어줍니다</span></div>
+  </div>
+  <div class="quiz">
+    <div class="quiz-l">Q1 · 개념 확인</div>
+    <div class="quiz-q">바이브코딩에서 가장 중요한 능력은?</div>
+    <div class="quiz-opts">
+      <div class="qo"><div class="qo-n">①</div>Python 문법을 빠르게 타이핑하는 속도</div>
+      <div class="qo"><div class="qo-n">②</div>Stack Overflow에서 답변을 빠르게 찾는 검색 능력</div>
+      <div class="qo ok"><div class="qo-n">③</div>✓ 만들고 싶은 것을 구체적으로 설명하고, 결과를 검증하고, 수정 요청하는 능력</div>
+      <div class="qo"><div class="qo-n">④</div>다양한 프로그래밍 언어를 알고 있는 것</div>
+    </div>
+    <div class="quiz-exp">💡 바이브코딩은 코드 문법보다 "무엇을 만들지 명확하게 표현하는 능력"이 핵심입니다. 좋은 프롬프트 = 좋은 결과물입니다.</div>
+  </div>
+  <div class="mission"><div class="mis-l">🛠 DAY 1–4 미션</div><div class="mis-t">Claude로 아이디어 하나를 즉석 앱으로</div><div class="mis-d">평소 만들고 싶었던 간단한 것(계산기, 할일 목록, 메뉴판, 포트폴리오 페이지 등)을 Claude에게 설명해 HTML 파일로 만들어보세요. 결과물 스크린샷을 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+50 XP</div><div class="mr pt">+20 P</div></div></div>
+</section>
+
+<!-- M02 -->
+<section class="mod" id="m02">
+  <div class="mod-ey">MODULE 02 · DAY 5–8</div>
+  <div class="mod-badge" style="background:rgba(0,168,68,.12);color:#00A844">M02 · 툴 세팅</div>
+  <h2 class="mod-h">툴 세팅<br>— Claude Code · Cursor · v0 · Bolt 완전 정복</h2>
+  <p class="mod-sub">4가지 핵심 툴을 실제로 세팅하고 기본 사용법을 익힙니다. 설치가 반입니다 — 한 번 세팅해두면 이후 모든 프로젝트에서 재사용합니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 5–8</div><div class="mchip">⚙️ 환경 세팅</div><div class="mchip">🔧 툴 실습</div><div class="mchip">⏱ 약 120분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>Claude Code를 터미널에서 실행하고 기본 명령어를 쓸 수 있다</li>
+    <li>Cursor IDE에서 AI와 대화하며 코드를 수정할 수 있다</li>
+    <li>v0에서 프롬프트로 React 컴포넌트를 생성할 수 있다</li>
+    <li>Bolt.new에서 풀스택 앱을 5분 안에 만들고 미리보기할 수 있다</li>
+  </ul></div>
+  <div class="sec">Claude Code 세팅</div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#00A844">1</div><div class="les-type lab">실습</div><div class="les-title">Claude Code 설치 + 첫 번째 프로젝트</div><div class="les-dur">30분</div></div>
+    <div class="les-body">
+      <p>Claude Code는 터미널에서 동작하는 AI 개발 에이전트입니다. 전체 프로젝트 폴더를 이해하고, 파일을 직접 생성·수정·삭제하며, 명령어를 실행할 수 있습니다.</p>
+      <div class="code-block">
+        <div class="code-top"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><div class="code-label">터미널 — Claude Code 설치 & 실행</div><div class="code-tag note">설치 가이드</div></div>
+        <div class="code-body"><span class="comment"># 1. Node.js 설치 확인 (없으면 nodejs.org에서 설치)</span>
+$ node --version   <span class="comment"># v18 이상이어야 함</span>
+
+<span class="comment"># 2. Claude Code 전역 설치</span>
+$ npm install -g @anthropic-ai/claude-code
+
+<span class="comment"># 3. 프로젝트 폴더로 이동</span>
+$ mkdir my-first-app && cd my-first-app
+
+<span class="comment"># 4. Claude Code 실행</span>
+$ claude
+
+<span class="comment"># 5. 첫 번째 대화</span>
+<span class="ai-out">> 안녕하세요! 어떤 것을 만들까요?</span>
+
+<span class="keyword">You: 간단한 할일 관리 앱을 만들어줘.
+HTML/CSS/JS 단일 파일로, 할일 추가/완료/삭제 가능하게.
+디자인은 깔끔한 미니멀 스타일로.</span>
+
+<span class="ai-out">> index.html 파일을 생성하겠습니다...</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#00A844">2</div><div class="les-type lab">실습</div><div class="les-title">Cursor IDE + v0 + Bolt 세팅 & 비교</div><div class="les-dur">35분</div></div>
+    <div class="les-body">
+      <div class="stack-grid">
+        <div class="stack-card">
+          <div class="sc-ic">🖊</div>
+          <div class="sc-name">Cursor</div>
+          <div class="sc-role" style="background:rgba(0,200,81,.1);color:var(--g1)">IDE</div>
+          <div class="sc-desc">cursor.sh 에서 다운로드. VS Code처럼 생겼지만 Cmd+K로 AI에게 코드 수정 요청 가능. 기존 파일 열어서 작업하기 최적.</div>
+        </div>
+        <div class="stack-card">
+          <div class="sc-ic">⚡</div>
+          <div class="sc-name">v0.dev</div>
+          <div class="sc-role" style="background:rgba(0,184,212,.1);color:var(--cy)">UI 생성</div>
+          <div class="sc-desc">v0.dev 접속. 프롬프트 입력 → React+Tailwind 컴포넌트 즉시 생성. 코드 복사해서 프로젝트에 붙여넣기.</div>
+        </div>
+        <div class="stack-card">
+          <div class="sc-ic">🔥</div>
+          <div class="sc-name">Bolt.new</div>
+          <div class="sc-role" style="background:rgba(255,107,53,.12);color:#C2410C">풀스택</div>
+          <div class="sc-desc">bolt.new 접속. 아이디어 입력 → 브라우저에서 바로 실행. Netlify 원클릭 배포. 가장 빠른 프로토타입.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mission"><div class="mis-l">🛠 DAY 5–8 미션</div><div class="mis-t">4가지 툴 모두 세팅 + 같은 아이디어로 비교 테스트</div><div class="mis-d">4가지 툴(Claude Code·Cursor·v0·Bolt)을 모두 세팅하고, 같은 아이디어(예: "사용자가 글을 작성할 수 있는 간단한 노트앱")로 각 툴에서 만들어보세요. 어떤 툴이 어떤 상황에 더 좋은지 비교 분석을 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+65 XP</div><div class="mr pt">+35 P</div></div></div>
+</section>
+
+<!-- M03 -->
+<section class="mod" id="m03">
+  <div class="mod-ey">MODULE 03 · DAY 9–12</div>
+  <div class="mod-badge" style="background:rgba(0,143,56,.12);color:#008F38">M03 · 첫 앱</div>
+  <h2 class="mod-h">첫 번째 앱<br>— 랜딩 페이지를 1시간에 만들기</h2>
+  <p class="mod-sub">모든 서비스의 시작점 — 랜딩 페이지. Hero Section, 기능 소개, CTA 버튼, 반응형 디자인까지 갖춘 실제 수준의 랜딩 페이지를 Claude Code로 완성합니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 9–12</div><div class="mchip">🏗 랜딩 페이지</div><div class="mchip">📱 반응형 디자인</div><div class="mchip">⏱ 약 110분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>랜딩 페이지의 핵심 섹션 구조(Hero·Feature·CTA·Footer)를 이해한다</li>
+    <li>Claude Code로 완성된 랜딩 페이지를 1~2시간 안에 만들 수 있다</li>
+    <li>반응형(모바일/태블릿/데스크탑)으로 자동 조정되는 레이아웃을 구현할 수 있다</li>
+  </ul></div>
+  <div class="tip"><div class="tip-l">💡 웹 용어 참고</div><div class="tip-t">Hero Section, Modal, CTA 같은 웹 용어가 낯설다면? → <strong>AI OpenCollege 웹 용어 가이드</strong> 참고 자료를 함께 제공합니다. 시각적으로 움직이는 예제로 각 용어가 무엇인지 바로 이해할 수 있습니다.</div></div>
+  <div class="hr"></div>
+  <div class="code-block">
+    <div class="code-top"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><div class="code-label">Claude Code — 랜딩 페이지 마스터 프롬프트</div><div class="code-tag prompt">바이브코딩</div></div>
+    <div class="code-body"><span class="comment"># 랜딩 페이지 생성 마스터 프롬프트</span>
+다음 서비스의 랜딩 페이지를 만들어줘.
+
+[서비스 정보]
+서비스명: <span class="slot">[이름]</span>
+한 줄 설명: <span class="slot">[무슨 서비스인지]</span>
+타겟 고객: <span class="slot">[누구를 위한 서비스]</span>
+핵심 기능 3가지: <span class="slot">[기능 설명]</span>
+브랜드 컬러: <span class="slot">[원하는 색상 또는 분위기]</span>
+
+[포함해야 할 섹션]
+1. Hero Section: 강력한 헤드라인 + 서브 + CTA 버튼 2개
+2. 주요 기능 섹션: 아이콘 카드 3개
+3. 사용 방법 섹션: 3단계 (숫자 표시)
+4. 소셜 증거 섹션: 사용자 후기 3개 (가상)
+5. 가격 섹션: 무료/유료 플랜 비교
+6. FAQ 섹션: 아코디언 5개
+7. 최종 CTA 섹션 + Footer
+
+[기술 요구사항]
+- HTML/CSS/JS 단일 파일
+- 반응형 (모바일 우선)
+- 스크롤 애니메이션 (IntersectionObserver)
+- 부드러운 네비게이션 스크롤
+- Pretendard 폰트
+
+<span class="ai-out">→ 완성된 index.html 파일 생성</span>
+
+<span class="comment"># 수정 이터레이션 예시</span>
+<span class="string">"Hero Section 배경을 그라디언트로 바꾸고
+헤드라인을 더 임팩트 있게 수정해줘"</span>
+
+<span class="string">"모바일에서 네비게이션 메뉴가 잘 안 보여.
+햄버거 메뉴로 바꿔줘"</span>
+
+<span class="string">"FAQ 아코디언이 클릭이 안 돼. 고쳐줘"</span></div>
+  </div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#008F38">1</div><div class="les-type demo">데모</div><div class="les-title">라이브 코딩 — 실제로 랜딩 페이지 만들기 (전 과정)</div><div class="les-dur">60분</div></div>
+    <div class="les-body">
+      <p>강사와 함께 실시간으로 랜딩 페이지 1개를 처음부터 끝까지 만드는 시연입니다. 첫 프롬프트 입력 → AI 응답 → 수정 요청 → 완성까지 전 과정을 함께 따라합니다.</p>
+      <div class="build-flow">
+        <div class="bf-row"><div class="bf-step">1</div><div class="bf-body"><div class="bf-title">서비스 기획 (5분)</div><div class="bf-desc">만들 서비스 결정 → Claude에게 줄 정보 정리</div></div></div>
+        <div class="bf-row"><div class="bf-step">2</div><div class="bf-body"><div class="bf-title">마스터 프롬프트 입력 (2분)</div><div class="bf-desc">위 템플릿 적용해서 Claude Code에 입력</div><div class="bf-code">$ claude → 프롬프트 입력</div></div></div>
+        <div class="bf-row"><div class="bf-step">3</div><div class="bf-body"><div class="bf-title">결과 확인 + 수정 (20분)</div><div class="bf-desc">브라우저에서 열어보고 마음에 안 드는 것 수정 요청 (3~5회 이터레이션)</div></div></div>
+        <div class="bf-row"><div class="bf-step">4</div><div class="bf-body"><div class="bf-title">반응형 확인 (5분)</div><div class="bf-desc">모바일 뷰 확인 → 문제 있으면 수정 요청</div><div class="bf-code">브라우저 개발자 도구 → 모바일 미리보기</div></div></div>
+        <div class="bf-row"><div class="bf-step">5</div><div class="bf-body"><div class="bf-title">Vercel로 배포 (3분)</div><div class="bf-desc">vercel.com → 파일 드래그앤드롭 → 실제 URL 생성</div><div class="bf-code">https://내앱이름.vercel.app</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="mission"><div class="mis-l">🛠 DAY 9–12 미션</div><div class="mis-t">나만의 서비스 랜딩 페이지 완성 + Vercel 배포</div><div class="mis-d">7개 섹션이 모두 있는 랜딩 페이지를 만들고 Vercel에 배포하세요. 실제 URL을 제출하면 됩니다. 가상 서비스도 괜찮습니다.</div><div class="mis-rewards"><div class="mr xp">+80 XP</div><div class="mr pt">+50 P</div></div></div>
+</section>
+
+<!-- PART 2 -->
+<div class="chap" id="part2">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-code">// const app = buildWithVibe();</div>
+  <div class="chap-part">PART TWO</div>
+  <div class="chap-n" style="color:#FDBA74">04–06</div>
+  <div class="chap-h">UI를 완성하고, 백엔드를 연결하고,<br>AI 기능을 탑재한다</div>
+  <div class="chap-s">프론트엔드 컴포넌트 시스템, 데이터베이스 연결, Claude API 통합 —<br>진짜 서비스 수준으로 올라갑니다.</div>
+  <div class="chap-meta">M04 프론트엔드 · M05 백엔드 · M06 AI 탑재 · Day 13–24</div>
+</div>
+
+<!-- M04 -->
+<section class="mod" id="m04">
+  <div class="mod-ey">MODULE 04 · DAY 13–16</div>
+  <div class="mod-badge" style="background:rgba(255,107,53,.12);color:#C2410C">M04 · 프론트엔드</div>
+  <h2 class="mod-h">프론트엔드 마스터<br>— UI 컴포넌트와 인터랙션</h2>
+  <p class="mod-sub">모달 팝업, 드롭다운, 탭, 캐러셀, 토스트 알림 — 사용자가 실제로 쓰는 모든 UI 컴포넌트를 Claude Code와 v0으로 만들고 내 앱에 통합합니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 13–16</div><div class="mchip">🎨 UI 컴포넌트</div><div class="mchip">✨ 인터랙션 효과</div><div class="mchip">⏱ 약 110분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>자주 쓰는 UI 컴포넌트(Modal·Dropdown·Toast·Tab)를 AI로 즉시 생성할 수 있다</li>
+    <li>v0으로 만든 컴포넌트를 기존 프로젝트에 통합할 수 있다</li>
+    <li>CSS 애니메이션과 트랜지션 효과를 AI와 함께 구현할 수 있다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="code-block">
+    <div class="code-top"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><div class="code-label">UI 컴포넌트 생성 — v0 + Claude Code 조합</div><div class="code-tag prompt">컴포넌트 생성</div></div>
+    <div class="code-body"><span class="comment"># v0.dev 프롬프트 — Modal 팝업</span>
+<span class="string">"확인/취소 버튼이 있는 삭제 확인 Modal 컴포넌트.
+배경 오버레이 클릭 시 닫힘.
+부드러운 fade-in/scale 애니메이션.
+Tailwind CSS + React."</span>
+
+<span class="comment"># Claude Code — 기존 프로젝트에 통합</span>
+<span class="string">"방금 v0에서 만든 Modal 컴포넌트를
+내 프로젝트 index.html에 통합해줘.
+'삭제' 버튼 클릭 시 Modal이 나오게."</span>
+
+<span class="comment"># 자주 쓰는 컴포넌트 프롬프트 모음</span>
+
+<span class="keyword">Toast 알림:</span>
+<span class="string">"성공/에러/경고 3종류 Toast 알림.
+우측 상단에서 나타나고 3초 후 자동 사라짐.
+슬라이드 애니메이션."</span>
+
+<span class="keyword">Dropdown 메뉴:</span>
+<span class="string">"클릭 시 펼쳐지는 Dropdown 메뉴.
+외부 클릭 시 닫힘. 키보드 접근성 포함."</span>
+
+<span class="keyword">무한 스크롤:</span>
+<span class="string">"스크롤 하단 도달 시 다음 데이터 로드.
+로딩 스피너 표시. 더 이상 데이터 없으면 메시지."</span>
+
+<span class="keyword">이미지 캐러셀:</span>
+<span class="string">"자동 슬라이드 캐러셀. 인디케이터 도트.
+터치/스와이프 지원. 이전/다음 버튼."</span></div>
+  </div>
+  <div class="mission"><div class="mis-l">🛠 DAY 13–16 미션</div><div class="mis-t">UI 컴포넌트 5종 만들고 랜딩 페이지에 통합</div><div class="mis-d">Modal·Toast·Dropdown·Tab·캐러셀 중 5가지를 만들어 M03에서 만든 랜딩 페이지에 추가하세요. 각 컴포넌트가 실제로 동작하는 것을 확인하고 업데이트된 URL을 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+80 XP</div><div class="mr pt">+50 P</div></div></div>
+</section>
+
+<!-- M05 -->
+<section class="mod" id="m05">
+  <div class="mod-ey">MODULE 05 · DAY 17–20</div>
+  <div class="mod-badge" style="background:rgba(229,90,38,.12);color:#E65A26">M05 · 백엔드</div>
+  <h2 class="mod-h">백엔드 연결<br>— DB·API·인증을 AI로 구현</h2>
+  <p class="mod-sub">데이터를 저장하고 불러오고 사용자를 관리해야 진짜 서비스입니다. Supabase(무료 PostgreSQL) + Next.js로 백엔드를 AI와 함께 구현합니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 17–20</div><div class="mchip">🗃 Supabase DB</div><div class="mchip">🔐 인증 시스템</div><div class="mchip">⏱ 약 120분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>Supabase로 데이터베이스 테이블을 만들고 데이터를 저장·조회할 수 있다</li>
+    <li>이메일/구글 로그인 인증을 AI 도움으로 구현할 수 있다</li>
+    <li>REST API와 데이터베이스를 프론트엔드에 연결하는 전체 흐름을 이해한다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="code-block">
+    <div class="code-top"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><div class="code-label">Claude Code — Supabase + 인증 구현</div><div class="code-tag prompt">백엔드 구현</div></div>
+    <div class="code-body"><span class="comment"># Supabase 세팅 요청</span>
+<span class="string">"Supabase로 다음 기능을 구현해줘:
+
+1. 테이블 설계: posts 테이블 (id, title, content, user_id, created_at)
+2. Supabase JavaScript SDK 설치 및 연결
+3. CRUD 함수: 게시글 생성/조회/수정/삭제
+4. Row Level Security (사용자는 자신의 글만 수정/삭제)
+
+내 Supabase URL: [환경변수로 처리]
+내 Supabase anon key: [환경변수로 처리]"</span>
+
+<span class="comment"># 소셜 로그인 구현</span>
+<span class="string">"Google OAuth 로그인을 구현해줘.
+로그인 버튼 클릭 → Google 인증 → 리다이렉트 → 세션 저장.
+로그인 상태에 따라 네비게이션 버튼 변경 (로그인/로그아웃)."</span>
+
+<span class="comment"># 오류 수정 방법</span>
+<span class="string">"이 오류가 나는데 고쳐줘:
+[오류 메시지 전체 붙여넣기]
+
+현재 코드:
+[문제 코드 붙여넣기]"</span></div>
+  </div>
+  <div class="tip"><div class="tip-l">💡 바이브코딩 디버깅 원칙</div><div class="tip-t">오류가 났을 때: <strong>① 오류 메시지 전체 복사</strong> → <strong>② Claude에게 붙여넣기</strong> → <strong>③ "이 오류 고쳐줘"</strong>. 오류를 직접 해석하려 하지 않아도 됩니다. AI가 원인과 해결책을 알려줍니다.</div></div>
+  <div class="mission"><div class="mis-l">🛠 DAY 17–20 미션</div><div class="mis-t">로그인 + 데이터 CRUD가 동작하는 앱 완성</div><div class="mis-d">이메일 로그인 + 게시글 작성/조회/삭제가 되는 간단한 앱을 만드세요. Supabase 대시보드에서 실제로 데이터가 저장되는 것을 확인한 스크린샷을 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+90 XP</div><div class="mr pt">+60 P</div></div></div>
+</section>
+
+<!-- M06 -->
+<section class="mod" id="m06">
+  <div class="mod-ey">MODULE 06 · DAY 21–24</div>
+  <div class="mod-badge" style="background:rgba(0,184,212,.1);color:#0E7490">M06 · AI 탑재</div>
+  <h2 class="mod-h">AI 기능 탑재<br>— 내 앱에 Claude API 붙이기</h2>
+  <p class="mod-sub">이제 내 앱 안에서 AI가 작동하게 만들 차례입니다. 챗봇·텍스트 분석·자동 요약·이미지 설명 — Claude API로 내 서비스에 AI 기능을 추가합니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 21–24</div><div class="mchip">🤖 Claude API</div><div class="mchip">💬 AI 챗봇</div><div class="mchip">⏱ 약 110분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>Claude API를 자신의 앱에 연동해 AI 응답을 받을 수 있다</li>
+    <li>스트리밍 응답으로 실시간 타이핑 효과를 구현할 수 있다</li>
+    <li>System Prompt로 AI의 역할과 행동 방식을 커스터마이징할 수 있다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="code-block">
+    <div class="code-top"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><div class="code-label">Claude Code — Claude API 통합 요청</div><div class="code-tag prompt">AI 통합</div></div>
+    <div class="code-body"><span class="comment"># Claude API 기본 통합</span>
+<span class="string">"내 Next.js 앱에 Claude API를 연결해줘.
+
+기능:
+1. 사용자가 입력창에 텍스트 입력
+2. 버튼 클릭 시 Claude API 호출
+3. 응답을 스트리밍으로 실시간 표시 (타이핑 효과)
+4. 대화 히스토리 유지 (이전 대화 컨텍스트 포함)
+
+System Prompt: '너는 [서비스명]의 AI 도우미야.
+사용자의 [분야] 관련 질문에만 답하고,
+항상 친절하고 명확하게 답변해.'
+
+환경변수: ANTHROPIC_API_KEY"</span>
+
+<span class="comment"># 특화 AI 기능 예시</span>
+
+<span class="keyword">자동 요약:</span>
+<span class="string">"긴 글을 붙여넣으면 3줄 요약해주는 기능.
+요약 버튼 클릭 → Claude API 호출 → 결과 표시."</span>
+
+<span class="keyword">감정 분석:</span>
+<span class="string">"사용자 리뷰 텍스트를 긍정/부정/중립으로 분류하고
+이모지와 함께 색상으로 시각화해줘."</span>
+
+<span class="keyword">AI 추천 시스템:</span>
+<span class="string">"사용자가 입력한 내용을 분석해서
+관련 제품/서비스/콘텐츠를 추천하는 API 엔드포인트."</span></div>
+  </div>
+  <div class="mission"><div class="mis-l">🛠 DAY 21–24 미션</div><div class="mis-t">AI 기능이 탑재된 나만의 앱 기능 추가</div><div class="mis-d">내 앱에 Claude API를 사용하는 기능 1개를 추가하세요. 챗봇이든, 요약이든, 분석이든 실제로 AI가 동작하는 기능이면 됩니다. 동작 영상 또는 GIF를 제출합니다.</div><div class="mis-rewards"><div class="mr xp">+90 XP</div><div class="mr pt">+60 P</div></div></div>
+</section>
+
+<!-- PART 3 -->
+<div class="chap" id="part3">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-code">// await deploy({ target: 'production' });</div>
+  <div class="chap-part">PART THREE</div>
+  <div class="chap-n" style="color:#67E8F9">07–08</div>
+  <div class="chap-h">배포하고, 세상에 공개하고,<br>포트폴리오를 완성한다</div>
+  <div class="chap-meta">M07 배포 · M08 캡스톤 · Day 25–32</div>
+</div>
+
+<!-- M07 -->
+<section class="mod" id="m07">
+  <div class="mod-ey">MODULE 07 · DAY 25–28</div>
+  <div class="mod-badge" style="background:rgba(0,184,212,.1);color:#0097A7">M07 · 배포</div>
+  <h2 class="mod-h">배포 & 런칭<br>— Vercel·Railway로 서비스 공개</h2>
+  <p class="mod-sub">아무리 잘 만들어도 배포하지 않으면 존재하지 않는 것과 같습니다. 프론트엔드는 Vercel, 백엔드는 Railway — 무료로 실제 서비스를 런칭하는 방법을 마스터합니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 25–28</div><div class="mchip">🚀 Vercel 배포</div><div class="mchip">🚂 Railway 백엔드</div><div class="mchip">🌐 도메인 연결</div><div class="mchip">⏱ 약 90분</div></div>
+  <div class="obj"><div class="obj-l">이 모듈을 마치면</div><ul>
+    <li>GitHub → Vercel 자동 배포 파이프라인을 설정할 수 있다</li>
+    <li>환경변수를 안전하게 관리하며 배포할 수 있다</li>
+    <li>Railway로 백엔드 서비스를 배포하고 Vercel과 연결할 수 있다</li>
+    <li>커스텀 도메인 연결 방법을 이해한다</li>
+  </ul></div>
+  <div class="hr"></div>
+  <div class="code-block">
+    <div class="code-top"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><div class="code-label">Claude Code — 배포 설정 자동화</div><div class="code-tag prompt">배포 가이드</div></div>
+    <div class="code-body"><span class="comment"># Vercel 배포 설정 도움 요청</span>
+<span class="string">"내 Next.js 프로젝트를 Vercel에 배포하려고 해.
+다음을 도와줘:
+
+1. vercel.json 설정 파일 생성
+2. 환경변수 목록 정리 (어떤 변수를 Vercel에 등록해야 하는지)
+3. build 에러 없이 배포되도록 package.json 확인
+4. 배포 후 확인해야 할 체크리스트"</span>
+
+<span class="comment"># 배포 에러 해결</span>
+<span class="string">"Vercel 배포 중 이 에러가 나:
+[Vercel 빌드 로그 붙여넣기]
+어떻게 해결해?"</span>
+
+<span class="comment"># 배포 워크플로우</span>
+<span class="keyword">① GitHub 레포 생성</span> → git push
+<span class="keyword">② vercel.com</span> → GitHub 연결 → 자동 감지 → 배포
+<span class="keyword">③ 환경변수</span> → Project Settings → Environment Variables
+<span class="keyword">④ 커스텀 도메인</span> → Domain → DNS 설정
+<span class="keyword">⑤ 이후 push할 때마다</span> 자동 재배포</div>
+  </div>
+  <div class="mission"><div class="mis-l">🛠 DAY 25–28 미션</div><div class="mis-t">완성된 앱 Vercel 배포 + 실제 URL 공유</div><div class="mis-d">M03~M06에서 만든 앱을 Vercel에 배포하고 실제 동작하는 URL을 제출하세요. 주변 사람에게 공유하고 피드백을 받아보면 더욱 좋습니다.</div><div class="mis-rewards"><div class="mr xp">+80 XP</div><div class="mr pt">+50 P</div></div></div>
+</section>
+
+<!-- M08 캡스톤 -->
+<section class="mod" id="m08">
+  <div class="mod-ey">MODULE 08 · DAY 29–32</div>
+  <div class="mod-badge" style="background:rgba(30,27,75,.1);color:#4338CA">M08 · 캡스톤</div>
+  <h2 class="mod-h">캡스톤<br>— 나만의 서비스 완성 & 런칭 발표</h2>
+  <p class="mod-sub">32일의 여정이 완성됩니다. 아이디어에서 실제 배포된 서비스까지 — 바이브코딩으로 만든 나만의 서비스를 발표하고 런칭합니다.</p>
+  <div class="mod-chips"><div class="mchip">📅 Day 29–32</div><div class="mchip">🎯 최종 서비스</div><div class="mchip">🎤 런칭 발표</div><div class="mchip">🏆 수료</div><div class="mchip">⏱ 총 200분</div></div>
+  <div class="sec">최종 결과물 기준</div>
+  <div class="lesson">
+    <div class="les-head"><div class="les-num" style="background:#4338CA">1</div><div class="les-type th">기준</div><div class="les-title">바이브코딩 과정 — 최종 결과물 요건</div><div class="les-dur">평가 기준</div></div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>요건</th><th>내용</th><th>배점</th></tr></thead>
+        <tbody>
+          <tr><td><strong>실제 배포 URL</strong></td><td>vercel.app 또는 커스텀 도메인으로 접근 가능</td><td>25점</td></tr>
+          <tr><td><strong>핵심 기능 동작</strong></td><td>로그인, CRUD, AI 기능 중 2개 이상 동작</td><td>25점</td></tr>
+          <tr><td><strong>UI/UX 완성도</strong></td><td>모바일 반응형, 로딩 상태, 에러 처리 포함</td><td>20점</td></tr>
+          <tr><td><strong>AI 기능 통합</strong></td><td>Claude API 또는 AI 기능 1개 이상 포함</td><td>20점</td></tr>
+          <tr><td><strong>5분 발표</strong></td><td>만든 것, 어려웠던 것, 다음 기능 계획</td><td>10점</td></tr>
+        </tbody>
+      </table>
+      <div class="kp"><div class="kp-l">수료 기준</div><div class="kp-t"><strong>바이브코딩 Certificate:</strong> 총점 75점 이상 + 배포 URL 제출<br><strong>우수 수료:</strong> 총점 90점 이상 → AI OpenCollege 바이브코딩 멘토 자격 (다음 기수 보조 강사)</div></div>
+    </div>
+  </div>
+  <div class="mission"><div class="mis-l">🏆 최종 미션</div><div class="mis-t">나만의 서비스 런칭 + 5분 발표</div><div class="mis-d">32일 동안 만든 서비스를 배포하고 5분 발표를 해주세요. 발표 후 실제 URL을 SNS에 공유하면 AI OpenCollege 공식 런칭 사례로 소개됩니다.</div><div class="mis-rewards"><div class="mr xp">+200 XP</div><div class="mr pt">+150 P</div></div></div>
+
+  <div class="hr"></div>
+  <div class="sec">다음 단계</div>
+  <table class="tbl">
+    <thead><tr><th>목표</th><th>추천 경로</th></tr></thead>
+    <tbody>
+      <tr><td>더 복잡한 시스템 구축</td><td>Track B (기술·개발자) — API·MCP·AI 에이전트 심화</td></tr>
+      <tr><td>만든 서비스로 창업</td><td>Track C (창업자) — MVP → 고객 검증 → 스케일업</td></tr>
+      <tr><td>AI 서비스 기획·디렉팅</td><td>Track D (리더) — AI 전환 전략</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 부록 -->
+<section class="mod" id="appendix" style="border-top:2px solid var(--p3)">
+  <div class="mod-ey">APPENDIX</div>
+  <h2 class="mod-h" style="font-size:26px">부록 — 바이브코딩 핵심 프롬프트 모음</h2>
+  <div class="code-block">
+    <div class="code-top"><div class="code-dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div><div class="code-label">바이브코딩 상황별 프롬프트 빠른 참조</div><div class="code-tag prompt">빠른 참조</div></div>
+    <div class="code-body"><span class="comment">━━ 처음 시작할 때 ━━</span>
+"[서비스 설명]을 만들어줘.
+HTML/CSS/JS 단일 파일, 모바일 반응형, 깔끔한 디자인."
+
+<span class="comment">━━ 수정 요청 ━━</span>
+"[섹션명]의 디자인을 [원하는 방향]으로 바꿔줘."
+"[기능]이 [증상]이야. 고쳐줘."
+"[컴포넌트]에 [효과/기능]을 추가해줘."
+
+<span class="comment">━━ 에러 해결 ━━</span>
+"이 에러가 나는데 원인과 해결책 알려줘: [에러 메시지]"
+"이 코드에서 문제가 뭔지 찾아줘: [코드]"
+
+<span class="comment">━━ 기능 추가 ━━</span>
+"[기능]을 추가해줘. 기존 코드는 건드리지 말고
+새 파일로 분리하거나 끝에 추가해줘."
+
+<span class="comment">━━ 코드 이해 ━━</span>
+"이 코드가 뭘 하는 건지 초보자도 이해하게 설명해줘."
+"이 부분을 더 간단하게 리팩터링해줄 수 있어?"
+
+<span class="comment">━━ 배포 준비 ━━</span>
+"배포 전 체크리스트를 만들어줘.
+환경변수, 보안, 성능 최적화 포함해서."</div>
+  </div>
+</section>
+
+</div>
+
+<script>
+function navTo(el,id){document.querySelectorAll('.nt').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
+function jumpTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});}
+const secs=['toc','m01','m02','m03','m04','m05','m06','m07','m08'];
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){const id=x.target.id;document.querySelectorAll('.nt').forEach(t=>{t.classList.toggle('on',t.textContent.trim().toLowerCase()===id||t.textContent.trim().toUpperCase()===id.toUpperCase());});}});},{rootMargin:'-20% 0px -75% 0px'});
+secs.forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
+</script>
+</body>
+</html>

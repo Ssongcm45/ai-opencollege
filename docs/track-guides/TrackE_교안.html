@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI OpenCollege 강의 교안 — Track E · 교육자·강사 × AI 티칭 혁신</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Track E: 딥 틸·청록 + 산호 액센트 — 지식·성장 */
+  --ink:#0D1F2D;--ink2:#1B3445;--ink3:#2C4A5E;--ink4:#5A7A8E;--ink5:#8AAABB;
+  --paper:#F0FDFC;--p2:#E6F8F7;--p3:#CCEFEC;--p4:#99DDD9;--p5:#5CC8C2;
+  --t1:#0D9488;--t2:#14B8A6;--t3:#5EEAD4;--t4:rgba(13,148,136,.12);--t5:rgba(13,148,136,.06);
+  --t-border:rgba(13,148,136,.22);
+  /* 산호 액센트 */
+  --co:#E05A4A;--co2:#F97316;--co3:#FDBA74;--cos:rgba(224,90,74,.1);
+  /* 보조 */
+  --pu:#6D28D9;--pus:rgba(109,40,217,.09);
+  --bl:#1D4ED8;--bls:rgba(29,78,216,.09);
+  --gn:#065F46;--gns:rgba(6,95,70,.09);
+  --yw:#92400E;--yws:rgba(146,64,14,.09);
+  --rd:#991B1B;--rds:rgba(153,27,27,.08);
+  --fu:'Pretendard','Apple SD Gothic Neo',-apple-system,sans-serif;
+  --fs:'Noto Serif KR','Georgia',serif;
+  --fm:'JetBrains Mono','SF Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--fu);line-height:1.7;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--p2)}::-webkit-scrollbar-thumb{background:var(--p4);border-radius:3px}
+
+/* ─── COVER ─── */
+.cover{min-height:100vh;background:#071820;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 36px;position:relative;overflow:hidden}
+.cov-g1{position:absolute;left:-100px;top:-100px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(13,148,136,.32),transparent 65%);pointer-events:none}
+.cov-g2{position:absolute;right:-80px;bottom:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(224,90,74,.2),transparent 65%);pointer-events:none}
+.cov-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(13,148,136,.12) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+.cov-inner{position:relative;z-index:2;max-width:740px}
+.cov-series{font-size:11px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:.22em;font-family:var(--fm);margin-bottom:24px;text-transform:uppercase}
+.cov-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(13,148,136,.2);border:1px solid rgba(20,184,166,.45);border-radius:8px;padding:9px 22px;font-size:13px;font-weight:700;color:#5EEAD4;margin-bottom:32px;letter-spacing:.03em}
+.cov-bdot{width:7px;height:7px;border-radius:50%;background:var(--t2);box-shadow:0 0 10px rgba(20,184,166,.9)}
+.cov-title{font-family:var(--fs);font-size:clamp(32px,5.2vw,54px);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-.5px;margin-bottom:18px}
+.cov-title em{color:#FDBA74;font-style:normal}
+.cov-title span{color:#5EEAD4}
+.cov-rule{width:64px;height:2px;background:linear-gradient(90deg,transparent,rgba(13,148,136,.7),transparent);margin:0 auto 38px}
+.cov-sub{font-size:17px;color:rgba(255,255,255,.5);font-weight:400;line-height:1.65;margin-bottom:38px;font-family:var(--fs)}
+.cov-stats{display:flex;justify-content:center;gap:40px;margin-bottom:44px}
+.cs{text-align:center}
+.cs-n{font-size:36px;font-weight:900;font-family:var(--fm);color:#5EEAD4;line-height:1}
+.cs-l{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);margin-top:5px;letter-spacing:.08em}
+.cov-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.cc{padding:7px 15px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);font-size:12px;font-weight:600;color:rgba(255,255,255,.5)}
+.cov-footer{position:absolute;bottom:24px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.2);font-family:var(--fm)}
+
+/* ─── NAV ─── */
+.nav{position:sticky;top:0;z-index:80;background:rgba(240,253,252,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--p3)}
+.nav-wrap{max-width:880px;margin:0 auto;padding:0 28px;display:flex;align-items:center;gap:0;overflow-x:auto}
+.nt{padding:13px 15px;font-size:11.5px;font-weight:700;color:var(--ink4);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;transition:all .12s}
+.nt:hover{color:var(--ink2)}.nt.on{color:var(--t1);border-bottom-color:var(--t1)}
+
+/* ─── WRAPPER ─── */
+.wrap{max-width:880px;margin:0 auto;padding:0 28px 100px}
+
+/* ─── TOC ─── */
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ti{display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:12px;border:1px solid var(--p3);cursor:pointer;transition:all .12s;background:var(--paper)}
+.ti:hover{border-color:var(--t-border);background:var(--t5);transform:translateY(-1px)}
+.ti-num{width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;font-family:var(--fm);color:#fff}
+.ti-bd{flex:1;min-width:0}
+.ti-wk{font-size:9.5px;font-weight:800;color:var(--ink5);font-family:var(--fm);margin-bottom:3px}
+.ti-nm{font-size:13px;font-weight:700;color:var(--ink2);line-height:1.3}
+.ti-cnt{font-size:11px;color:var(--ink5);flex-shrink:0}
+
+/* ─── MODULE ─── */
+.mod{padding:60px 0;border-top:2px solid var(--p3)}
+.mod-ey{font-size:11px;font-weight:800;color:var(--t1);letter-spacing:.14em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.mod-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border-radius:6px;font-size:11px;font-weight:800;font-family:var(--fm);margin-bottom:16px}
+.mod-h{font-family:var(--fs);font-size:clamp(24px,3.8vw,34px);font-weight:900;color:var(--ink);line-height:1.18;letter-spacing:-.3px;margin-bottom:14px}
+.mod-sub{font-size:15px;color:var(--ink3);font-weight:400;line-height:1.7;margin-bottom:22px;font-family:var(--fs)}
+.mod-chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px}
+.mchip{display:flex;align-items:center;gap:6px;background:white;border:1px solid var(--p3);border-radius:7px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--ink3)}
+
+/* 목표 */
+.obj{background:var(--t5);border:1px solid var(--t-border);border-radius:14px;padding:20px 24px;margin-bottom:28px}
+.obj-l{font-size:10px;font-weight:800;color:var(--t1);letter-spacing:.1em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.obj ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.obj li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--ink2);line-height:1.6}
+.obj li::before{content:'✓';font-size:12px;font-weight:900;color:var(--t1);flex-shrink:0;margin-top:2px}
+
+/* 섹션 */
+.sec{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:800;color:var(--ink5);letter-spacing:.1em;font-family:var(--fm);margin-bottom:14px;text-transform:uppercase}
+.sec::before{content:'';width:20px;height:2px;background:var(--t1);border-radius:1px;flex-shrink:0}
+
+/* 강의 카드 */
+.lesson{background:white;border:1px solid var(--p3);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.les-head{padding:14px 20px;border-bottom:1px solid var(--p3);display:flex;align-items:center;gap:10px;background:var(--p2)}
+.les-num{width:28px;height:28px;border-radius:7px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:900;font-family:var(--fm);color:#fff}
+.les-type{font-size:10px;font-weight:800;padding:3px 9px;border-radius:5px;font-family:var(--fm);flex-shrink:0;text-transform:uppercase;letter-spacing:.05em}
+.les-type.th{background:rgba(13,148,136,.12);color:var(--t1)}
+.les-type.ws{background:rgba(224,90,74,.1);color:var(--co)}
+.les-type.lab{background:rgba(109,40,217,.1);color:var(--pu)}
+.les-type.case{background:rgba(29,78,216,.09);color:var(--bl)}
+.les-title{font-size:14px;font-weight:800;color:var(--ink);flex:1}
+.les-dur{font-size:11px;font-weight:700;color:var(--ink5);font-family:var(--fm);flex-shrink:0}
+.les-body{padding:20px 24px}
+.les-body p{font-size:14px;color:var(--ink2);line-height:1.8;margin-bottom:12px}
+.les-body p:last-child{margin-bottom:0}
+.les-body strong{font-weight:800;color:var(--ink)}
+.les-body ul{padding-left:18px;margin-bottom:12px}
+.les-body li{font-size:14px;color:var(--ink2);line-height:1.75;margin-bottom:4px}
+
+/* 핵심 포인트 */
+.kp{background:var(--t5);border-left:3px solid var(--t1);border-radius:0 10px 10px 0;padding:14px 18px;margin:14px 0}
+.kp-l{font-size:10px;font-weight:800;color:var(--t1);font-family:var(--fm);margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+.kp-t{font-size:13.5px;color:var(--ink2);line-height:1.65;font-weight:500}
+
+/* 교육자 인사이트 */
+.insight{background:rgba(224,90,74,.07);border:1px solid rgba(224,90,74,.2);border-radius:12px;padding:16px 20px;margin:14px 0}
+.ins-l{font-size:10px;font-weight:800;color:var(--co);font-family:var(--fm);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em}
+.ins-t{font-size:13.5px;color:var(--ink2);line-height:1.7;font-style:italic}
+.ins-from{font-size:11.5px;color:var(--ink4);margin-top:6px;font-weight:600}
+
+/* 비교 */
+.vs-box{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.vs-col{border-radius:10px;padding:14px 16px;border:1px solid}
+.vs-col.bad{background:rgba(153,27,27,.04);border-color:rgba(153,27,27,.15)}
+.vs-col.good{background:rgba(6,95,70,.04);border-color:rgba(6,95,70,.15)}
+.vs-col-l{font-size:10px;font-weight:800;font-family:var(--fm);margin-bottom:8px;letter-spacing:.08em}
+.vs-col.bad .vs-col-l{color:var(--rd)}
+.vs-col.good .vs-col-l{color:var(--gn)}
+.vs-col p{font-size:13px;color:var(--ink2);line-height:1.65}
+
+/* 수업 설계 블록 (Track E 특화) */
+.lesson-plan{background:white;border-radius:14px;border:1px solid var(--p3);overflow:hidden;margin:14px 0}
+.lp-head{background:linear-gradient(135deg,var(--t1),var(--t2));padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.lp-title{font-size:13px;font-weight:800;color:white}
+.lp-meta{font-size:11px;color:rgba(255,255,255,.7);font-family:var(--fm)}
+.lp-body{padding:16px 20px}
+.lp-row{display:flex;gap:14px;margin-bottom:10px;align-items:flex-start}
+.lp-row:last-child{margin-bottom:0}
+.lp-label{font-size:10px;font-weight:800;color:var(--t1);font-family:var(--fm);width:72px;flex-shrink:0;padding-top:2px;text-transform:uppercase;letter-spacing:.06em}
+.lp-content{font-size:13.5px;color:var(--ink2);line-height:1.65;flex:1}
+
+/* 루브릭 박스 */
+.rubric{background:var(--p2);border-radius:12px;padding:16px 20px;margin:14px 0;border:1px solid var(--p3)}
+.rub-l{font-size:10px;font-weight:800;color:var(--pu);font-family:var(--fm);margin-bottom:12px;text-transform:uppercase;letter-spacing:.1em}
+.rub-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:6px;margin-bottom:6px;font-size:12.5px}
+.rub-row.header{font-weight:800;color:var(--ink3);font-size:11px;font-family:var(--fm);text-transform:uppercase;border-bottom:2px solid var(--p3);padding-bottom:6px;margin-bottom:8px}
+.rub-cell{padding:6px 8px;background:white;border-radius:6px;color:var(--ink2);line-height:1.5;border:1px solid var(--p3)}
+.rub-cell.hi{background:var(--t5);border-color:var(--t-border);font-weight:700;color:var(--t1)}
+
+/* 프롬프트 박스 */
+.pb{background:#071820;border-radius:14px;overflow:hidden;margin:14px 0;border:1px solid rgba(20,184,166,.15)}
+.pb-top{padding:10px 18px;background:#0D2030;border-bottom:1px solid rgba(20,184,166,.12);display:flex;align-items:center;gap:8px}
+.pb-dots{display:flex;gap:5px}
+.pd{width:11px;height:11px;border-radius:50%}
+.pd.r{background:#FF5F57}.pd.y{background:#FEBC2E}.pd.g{background:#28C840}
+.pb-label{font-size:11px;font-weight:700;color:rgba(94,234,212,.5);font-family:var(--fm);margin-left:8px;flex:1}
+.pb-tag{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:4px;font-family:var(--fm)}
+.pb-tag.tpl{background:rgba(13,148,136,.25);color:#5EEAD4}
+.pb-tag.adv{background:rgba(224,90,74,.25);color:#FDBA74}
+.pb-tag.des{background:rgba(109,40,217,.2);color:#C4B5FD}
+.pb-body{padding:20px 22px;font-family:var(--fm);font-size:12.5px;color:#A8D8D4;line-height:1.9;white-space:pre-wrap}
+.slot{color:#FDBA74;font-weight:700}
+.comment{color:#2C4A5E;font-style:italic}
+.ai-r{color:#86EFAC}
+
+/* 실습 */
+.prac{background:rgba(13,148,136,.06);border:1px solid var(--t-border);border-radius:14px;padding:18px 22px;margin:14px 0}
+.prac-l{font-size:10px;font-weight:800;color:var(--t1);font-family:var(--fm);margin-bottom:12px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.1em}
+.prac-steps{display:flex;flex-direction:column;gap:9px}
+.ps{display:flex;align-items:flex-start;gap:12px;font-size:13.5px;color:var(--ink2);line-height:1.65}
+.ps-n{width:24px;height:24px;border-radius:7px;background:var(--t1);color:#fff;font-size:11px;font-weight:900;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm)}
+
+/* 퀴즈 */
+.quiz{background:white;border-radius:14px;padding:18px 22px;margin:14px 0;border:1px solid var(--p3)}
+.quiz-l{font-size:10px;font-weight:800;color:var(--co);font-family:var(--fm);margin-bottom:12px;text-transform:uppercase;letter-spacing:.1em}
+.quiz-q{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;line-height:1.55}
+.quiz-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.qo{padding:10px 14px;border-radius:9px;font-size:13.5px;background:var(--paper);border:1px solid var(--p3);color:var(--ink3);display:flex;align-items:flex-start;gap:9px}
+.qo.ok{background:rgba(6,95,70,.07);border-color:rgba(6,95,70,.25);color:var(--gn);font-weight:700}
+.qo-n{font-family:var(--fm);font-size:10px;font-weight:900;width:18px;flex-shrink:0;margin-top:2px}
+.quiz-exp{font-size:12.5px;color:var(--ink4);padding:10px 14px;background:var(--paper);border-radius:8px;border-left:3px solid var(--co);line-height:1.65}
+
+/* 미션 */
+.mission{background:var(--t5);border:1px solid var(--t-border);border-radius:14px;padding:18px 22px;margin:14px 0}
+.mis-l{font-size:10px;font-weight:800;color:var(--t1);font-family:var(--fm);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.1em}
+.mis-t{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px;font-family:var(--fs)}
+.mis-d{font-size:13.5px;color:var(--ink3);line-height:1.7;margin-bottom:12px}
+.mis-rewards{display:flex;gap:8px;flex-wrap:wrap}
+.mr{padding:4px 11px;border-radius:6px;font-size:11.5px;font-weight:800;font-family:var(--fm)}
+.mr.xp{background:rgba(224,90,74,.15);color:var(--co)}
+.mr.pt{background:rgba(13,148,136,.12);color:var(--t1)}
+
+/* 강사 노트 */
+.inote{background:#071820;border-radius:14px;padding:18px 22px;margin:14px 0;border:1px solid rgba(13,148,136,.22)}
+.inote-l{font-size:10px;font-weight:800;color:#5EEAD4;font-family:var(--fm);margin-bottom:10px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.1em}
+.inote-l::after{content:'· 수강생 비공개';font-size:9px;color:rgba(239,68,68,.7)}
+.inote-body{font-size:13px;color:rgba(168,216,212,.65);line-height:1.8}
+.inote-body strong{color:rgba(168,216,212,.9);font-weight:700}
+.inote-body ul{padding-left:16px;margin-top:6px}
+.inote-body li{margin-bottom:5px}
+
+/* 구분선 */
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--p3),transparent);margin:32px 0}
+
+/* 표 */
+.tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+.tbl th{padding:10px 14px;text-align:left;font-size:10.5px;font-weight:800;color:var(--ink3);letter-spacing:.06em;border-bottom:2px solid var(--p3);background:var(--p2)}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--p3);color:var(--ink2);line-height:1.6;vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--p2)}
+
+/* 챕터 */
+.chap{background:linear-gradient(135deg,#071820 0%,#0D2E30 55%,#09161E 100%);border-radius:18px;padding:48px 44px;margin:60px 0;position:relative;overflow:hidden}
+.chap-g{position:absolute;right:-50px;top:-50px;width:330px;height:330px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,.25),transparent 65%);pointer-events:none}
+.chap-g2{position:absolute;left:-30px;bottom:-30px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(224,90,74,.15),transparent 65%);pointer-events:none}
+.chap-part{font-size:10.5px;font-weight:800;color:rgba(255,255,255,.3);letter-spacing:.15em;font-family:var(--fm);margin-bottom:12px;text-transform:uppercase}
+.chap-n{font-size:60px;font-weight:900;font-family:var(--fm);line-height:1;margin-bottom:8px}
+.chap-h{font-family:var(--fs);font-size:24px;font-weight:900;color:#fff;line-height:1.3;margin-bottom:8px}
+.chap-s{font-size:14px;color:rgba(255,255,255,.45);line-height:1.65}
+.chap-meta{font-size:11px;color:rgba(255,255,255,.25);font-family:var(--fm);margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08)}
+
+/* 배지 */
+.bdg{display:inline-flex;align-items:center;font-size:10px;font-weight:800;padding:3px 8px;border-radius:5px;font-family:var(--fm);vertical-align:middle;margin:0 2px}
+.bdg.t{background:rgba(13,148,136,.12);color:var(--t1)}.bdg.c{background:rgba(224,90,74,.1);color:var(--co)}.bdg.p{background:rgba(109,40,217,.1);color:var(--pu)}.bdg.b{background:rgba(29,78,216,.09);color:var(--bl)}.bdg.g{background:rgba(6,95,70,.1);color:var(--gn)}.bdg.r{background:rgba(153,27,27,.08);color:var(--rd)}
+
+/* 수업 설계 타임라인 */
+.timeline{position:relative;padding-left:28px;margin:14px 0}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--t1),var(--t3))}
+.tl-item{position:relative;margin-bottom:16px}
+.tl-item:last-child{margin-bottom:0}
+.tl-dot{position:absolute;left:-24px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--t1);border:2px solid var(--paper)}
+.tl-time{font-size:10px;font-weight:800;color:var(--t1);font-family:var(--fm);margin-bottom:3px}
+.tl-title{font-size:13.5px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.tl-desc{font-size:13px;color:var(--ink3);line-height:1.6}
+
+/* 학습자 페르소나 카드 */
+.persona-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.persona{background:white;border-radius:12px;padding:14px 16px;border:1px solid var(--p3)}
+.persona.hi{background:var(--t5);border-color:var(--t-border)}
+.p-ic{font-size:22px;margin-bottom:8px}
+.p-name{font-size:13.5px;font-weight:900;color:var(--ink);margin-bottom:4px}
+.p-tag{font-size:10px;font-weight:800;padding:2px 7px;border-radius:4px;display:inline-block;margin-bottom:6px;font-family:var(--fm)}
+.p-desc{font-size:12px;color:var(--ink4);line-height:1.55}
+
+/* 반응형 */
+@media(max-width:700px){.wrap{padding:0 16px 80px}.toc-grid{grid-template-columns:1fr}.vs-box{grid-template-columns:1fr}.persona-grid{grid-template-columns:1fr 1fr}.chap{padding:32px 22px}.chap-n{font-size:44px}.rub-row{grid-template-columns:1fr 1fr}.lesson-plan .lp-row{flex-direction:column;gap:4px}}
+@media print{.nav{display:none}.cover{page-break-after:always;min-height:auto}.mod,.chap{page-break-before:auto}}
+</style>
+</head>
+<body>
+<!-- ═══ COVER ═══ -->
+<div class="cover" id="top">
+  <div class="cov-g1"></div><div class="cov-g2"></div><div class="cov-dots"></div>
+  <div class="cov-inner">
+    <div class="cov-series">AI OPENCOLLEGE LEARNING SYSTEM · TRACK E · VOLUME I</div>
+    <div class="cov-badge"><div class="cov-bdot"></div>교육자·강사 × AI 티칭 혁신</div>
+    <h1 class="cov-title">AI로 <em>가르치는 방식을</em><br><span>바꾼다</span></h1>
+    <p class="cov-sub">수업 설계·콘텐츠 제작·학습자 맞춤화·평가 자동화까지<br>12모듈 · 56일 · 교육자를 위한 AI 티칭 실전 교안</p>
+    <div class="cov-rule"></div>
+    <div class="cov-stats">
+      <div class="cs"><div class="cs-n">12</div><div class="cs-l">모듈</div></div>
+      <div class="cs"><div class="cs-n">56</div><div class="cs-l">일</div></div>
+      <div class="cs"><div class="cs-n">Track</div><div class="cs-l">E</div></div>
+      <div class="cs"><div class="cs-n">Teach</div><div class="cs-l">혁신</div></div>
+    </div>
+    <div class="cov-chips">
+      <div class="cc">📐 수업 설계 자동화</div>
+      <div class="cc">🎬 콘텐츠 제작 가속</div>
+      <div class="cc">🎯 학습자 맞춤화</div>
+      <div class="cc">📝 평가·피드백 자동화</div>
+      <div class="cc">📊 학습 효과 측정</div>
+    </div>
+  </div>
+  <div class="cov-footer">AI OpenCollege · Track E · 교육자·강사 AI 티칭 혁신 · 교안 v1.0 · 2026</div>
+</div>
+<!-- ═══ NAV ═══ -->
+<nav class="nav">
+  <div class="nav-wrap">
+    <div class="nt on" onclick="navTo(this,'toc')">목차</div>
+    <div class="nt" onclick="navTo(this,'m01')">M01</div>
+    <div class="nt" onclick="navTo(this,'m02')">M02</div>
+    <div class="nt" onclick="navTo(this,'m03')">M03</div>
+    <div class="nt" onclick="navTo(this,'m04')">M04</div>
+    <div class="nt" onclick="navTo(this,'m05')">M05</div>
+    <div class="nt" onclick="navTo(this,'m06')">M06</div>
+    <div class="nt" onclick="navTo(this,'m07')">M07</div>
+    <div class="nt" onclick="navTo(this,'m08')">M08</div>
+    <div class="nt" onclick="navTo(this,'m09')">M09</div>
+    <div class="nt" onclick="navTo(this,'m10')">M10</div>
+    <div class="nt" onclick="navTo(this,'m11')">M11</div>
+    <div class="nt" onclick="navTo(this,'m12')">M12</div>
+  </div>
+</nav>
+<div class="wrap">
+<!-- TOC -->
+<section id="toc" class="mod" style="border-top:none;padding-top:52px">
+  <div class="mod-ey">CONTENTS</div>
+  <h2 class="mod-h" style="font-size:30px">목차</h2>
+  <p style="font-size:14px;color:var(--ink4);margin-bottom:32px;line-height:1.7">12개 모듈 · 56일 과정. 교사·기업 교육 담당자·외부 강사·코치·AI OpenCollege 강사 지망생까지, AI로 교육의 품질과 속도를 동시에 높이는 교육자를 위한 트랙입니다.</p>
+  <div class="toc-grid">
+    <a class="ti" onclick="jumpTo('m01')"><div class="ti-num" style="background:#0D9488">01</div><div class="ti-bd"><div class="ti-wk">DAY 1–4</div><div class="ti-nm">AI 시대의 교육자 — 역할의 재정의</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m02')"><div class="ti-num" style="background:#0F766E">02</div><div class="ti-bd"><div class="ti-wk">DAY 5–9</div><div class="ti-nm">수업 설계 자동화 — 커리큘럼부터 지도안까지</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m03')"><div class="ti-num" style="background:#134E4A">03</div><div class="ti-bd"><div class="ti-wk">DAY 10–14</div><div class="ti-nm">학습 콘텐츠 제작 — 강의 자료·영상 스크립트·슬라이드</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m04')"><div class="ti-num" style="background:#E05A4A">04</div><div class="ti-bd"><div class="ti-wk">DAY 15–19</div><div class="ti-nm">학습자 맞춤화 — 수준별·유형별 개인화 교육</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m05')"><div class="ti-num" style="background:#C2410C">05</div><div class="ti-bd"><div class="ti-wk">DAY 20–23</div><div class="ti-nm">퀴즈·문제 은행 구축 — 5가지 유형 자동 생성</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m06')"><div class="ti-num" style="background:#6D28D9">06</div><div class="ti-bd"><div class="ti-wk">DAY 24–27</div><div class="ti-nm">피드백·채점 자동화 — AI 루브릭과 개인 코멘트</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m07')"><div class="ti-num" style="background:#5B21B6">07</div><div class="ti-bd"><div class="ti-wk">DAY 28–31</div><div class="ti-nm">질문 대응 시스템 — Q&A와 실시간 설명 보조</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m08')"><div class="ti-num" style="background:#1D4ED8">08</div><div class="ti-bd"><div class="ti-wk">DAY 32–35</div><div class="ti-nm">학습 효과 측정 — 데이터 기반 교육 개선</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m09')"><div class="ti-num" style="background:#065F46">09</div><div class="ti-bd"><div class="ti-wk">DAY 36–39</div><div class="ti-nm">코칭·멘토링 가속 — 1:1 상담과 성장 지원</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m10')"><div class="ti-num" style="background:#0369A1">10</div><div class="ti-bd"><div class="ti-wk">DAY 40–44</div><div class="ti-nm">교육 브랜드 구축 — 강사 콘텐츠와 온라인 존재감</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m11')"><div class="ti-num" style="background:#92400E">11</div><div class="ti-bd"><div class="ti-wk">DAY 45–49</div><div class="ti-nm">AI 강의 윤리 — 저작권·공정성·의존성 딜레마</div></div><div class="ti-cnt">→</div></a>
+    <a class="ti" onclick="jumpTo('m12')"><div class="ti-num" style="background:#1E1B4B">12</div><div class="ti-bd"><div class="ti-wk">DAY 50–56</div><div class="ti-nm">캡스톤 — AI 강의 교안 완성 + 시범 강의 발표</div></div><div class="ti-cnt">→</div></a>
+  </div>
+</section>
+<!-- PART 1 -->
+<div class="chap" id="part1">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART ONE</div>
+  <div class="chap-n" style="color:#5EEAD4">01–03</div>
+  <div class="chap-h">교육자로서 AI를 이해하고<br>수업을 설계하고 콘텐츠를 만든다</div>
+  <div class="chap-s">AI 시대 교육자의 역할을 재정의하고, 커리큘럼과 지도안을 자동화하고,<br>강의 자료·스크립트·슬라이드를 빠르게 제작합니다.</div>
+  <div class="chap-meta">M01 역할 재정의 · M02 수업 설계 자동화 · M03 콘텐츠 제작 · Day 1–14</div>
+</div>
+
+<!-- ═══ M01 ═══ -->
+<section class="mod" id="m01">
+  <div class="mod-ey">MODULE 01 · DAY 1–4</div>
+  <div class="mod-badge" style="background:rgba(13,148,136,.12);color:var(--t1)">M01 · 역할 재정의</div>
+  <h2 class="mod-h">AI 시대의 교육자<br>— 역할의 재정의</h2>
+  <p class="mod-sub">AI가 설명하고, 채점하고, 피드백을 줄 수 있다면 교육자의 역할은 무엇인가요? 이 질문에서 모든 것이 시작됩니다. 두려움이 아닌 기회로 AI를 만나는 교육자의 관점을 정립합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 1–4</div>
+    <div class="mchip">🎬 이론 강의 2편</div>
+    <div class="mchip">🔧 워크샵 1회</div>
+    <div class="mchip">❓ 퀴즈 3문항</div>
+    <div class="mchip">⏱ 총 학습 약 80분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>AI가 대체할 수 있는 교육 행위와 대체할 수 없는 교육 행위를 명확히 구분할 수 있다</li>
+      <li>교육자로서 자신의 "AI 파트너십 선언"을 한 문단으로 작성할 수 있다</li>
+      <li>학습자 유형 3가지를 분석하고 각각에게 AI 보조 교육이 어떻게 달라야 하는지 설명할 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">이론 강의</div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--t1)">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">AI가 가르칠 수 없는 것 — 교육자의 진짜 가치</div>
+      <div class="les-dur">18분</div>
+    </div>
+    <div class="les-body">
+      <p>Claude는 복잡한 개념을 쉽게 설명하고, 1,000가지 예시를 즉시 만들고, 틀린 답에 즉각 피드백을 줍니다. 이런 AI 앞에서 교육자의 가치는 무엇일까요?</p>
+      <p>정답은 AI가 할 수 없는 것에 있습니다. <strong>관계의 맥락을 아는 것, 학습자의 감정 상태를 읽는 것, 틀린 이유의 배경을 파악하는 것, 적절한 타이밍에 적절한 방식으로 개입하는 것.</strong> 이것이 교육자의 고유 영역입니다.</p>
+      <div class="vs-box">
+        <div class="vs-col bad">
+          <div class="vs-col-l">❌ AI가 대체 가능한 영역</div>
+          <p>표준화된 개념 설명 · 반복 연습 문제 제공 · 정오답 즉시 채점 · 기계적 피드백 · 일정한 패턴의 퀴즈 생성</p>
+        </div>
+        <div class="vs-col good">
+          <div class="vs-col-l">✓ 교육자 고유 영역</div>
+          <p>학습자와의 신뢰 관계 · 감정적 지지와 동기 부여 · 개인 맥락을 아는 개입 · 가치관·태도 형성 · 창의적 도전과 영감 제공</p>
+        </div>
+      </div>
+      <div class="kp">
+        <div class="kp-l">새로운 교육자의 역할</div>
+        <div class="kp-t"><strong>AI Director:</strong> AI가 만든 콘텐츠를 기획·검토·승인<br><strong>Human Bridge:</strong> AI가 줄 수 없는 감정적 연결 담당<br><strong>Learning Designer:</strong> AI를 활용해 더 풍부한 학습 경험 설계</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--t1)">2</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">학습자 유형 3가지 — 누구에게 어떻게 가르칠 것인가</div>
+      <div class="les-dur">15분</div>
+    </div>
+    <div class="les-body">
+      <p>AI 보조 교육은 모든 학습자에게 같은 방식으로 작동하지 않습니다. 학습자의 자기 조절 능력, AI 리터러시, 동기 수준에 따라 접근법이 달라져야 합니다.</p>
+      <div class="persona-grid">
+        <div class="persona hi">
+          <div class="p-ic">🚀</div>
+          <div class="p-name">자기주도형</div>
+          <div class="p-tag" style="background:var(--t5);color:var(--t1)">High Agency</div>
+          <div class="p-desc">AI를 적극 활용해 스스로 학습 속도를 높임. 교육자 역할: 심화 과제 제공 + 방향 점검</div>
+        </div>
+        <div class="persona">
+          <div class="p-ic">🧩</div>
+          <div class="p-name">가이드 필요형</div>
+          <div class="p-tag" style="background:rgba(29,78,216,.09);color:var(--bl)">Mid Agency</div>
+          <div class="p-desc">AI로 개념은 이해하지만 적용에서 막힘. 교육자 역할: 구조화된 과제 + 중간 피드백</div>
+        </div>
+        <div class="persona">
+          <div class="p-ic">🤝</div>
+          <div class="p-name">밀착 지원형</div>
+          <div class="p-tag" style="background:rgba(224,90,74,.1);color:var(--co)">Low Agency</div>
+          <div class="p-desc">AI 사용 자체를 어려워하거나 의존도 과다. 교육자 역할: 1:1 밀착 + AI 사용 방법 함께 지도</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">교육자 AI 파트너십 선언 + 수업 철학 정립</div><div class="pb-tag tpl">정체성 템플릿</div></div>
+    <div class="pb-body"><span class="comment"># 나의 AI 파트너십 선언 작성</span>
+내가 교육자로서 AI를 어떻게 활용할지
+"AI 파트너십 선언"을 작성하는 것을 도와줘.
+
+[내 교육 배경]
+교육 대상: <span class="slot">[학생 / 직장인 / 특정 집단]</span>
+가르치는 과목/분야: <span class="slot">[내용]</span>
+교육 방식: <span class="slot">[오프라인 / 온라인 / 혼합]</span>
+
+[나의 교육 철학]
+<span class="slot">[교육에서 가장 중요하게 생각하는 것]</span>
+
+다음을 작성해줘:
+1. AI가 내 수업에서 담당할 역할 (3가지)
+2. 내가 직접 담당할 역할 (3가지, AI에게 위임 안 할 것)
+3. AI 사용에서 나의 원칙 3가지
+4. 한 단락의 "AI 파트너십 선언문"
+
+<span class="comment"># 학습자 유형 분석</span>
+내 수강생들의 AI 리터러시 수준을 파악하는
+진단 질문지를 만들어줘.
+
+대상: <span class="slot">[교육 대상 설명]</span>
+목적: 자기주도형 / 가이드 필요형 / 밀착 지원형 분류
+
+5문항 이내, 각 문항의 채점 기준 포함.
+결과에 따른 맞춤 교육 접근법도 포함해줘.</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">퀴즈</div>
+  <div class="quiz">
+    <div class="quiz-l">Q1 · 객관식</div>
+    <div class="quiz-q">AI 시대에 교육자가 가장 중요하게 키워야 할 역량은?</div>
+    <div class="quiz-opts">
+      <div class="qo"><div class="qo-n">①</div>AI 도구를 더 많이 사용하는 기술</div>
+      <div class="qo"><div class="qo-n">②</div>AI보다 더 많은 지식을 암기하는 능력</div>
+      <div class="qo ok"><div class="qo-n">③</div>✓ AI가 제공할 수 없는 관계·감정·맥락 기반의 인간적 교육 역량</div>
+      <div class="qo"><div class="qo-n">④</div>AI 없이도 모든 교육을 처리하는 자립 능력</div>
+    </div>
+    <div class="quiz-exp">💡 AI는 표준화된 설명과 채점을 대신할 수 있지만, 학습자와의 신뢰 관계 형성, 적절한 타이밍의 개입, 감정적 지지는 교육자만이 제공할 수 있습니다.</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 1–4 미션</div>
+    <div class="mis-t">나의 AI 파트너십 선언문 완성 + 학습자 진단 설문 배포</div>
+    <div class="mis-d">Claude와 함께 AI 파트너십 선언문을 작성하고, 학습자 유형 진단 설문을 만들어 실제 수강생에게 배포하세요. 결과를 분석해 유형별 분포를 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+55 XP</div><div class="mr pt">+25 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>수강생의 두려움:</strong> "AI가 강사를 대체할 것"이라는 불안을 가진 수강생이 많습니다. "AI는 강의를 자동화하는 것이 아니라, 교육자가 사람에게 집중할 수 있도록 반복 작업을 대신하는 것"이라는 프레이밍이 핵심입니다.<br><br>
+      <strong>학교 교사 수강생 주의:</strong> 교육부·학교 정책에 따라 AI 사용 제한이 있을 수 있습니다. 개인 역량 개발 용도와 실제 수업 적용을 분리해서 안내하세요.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M02 ═══ -->
+<section class="mod" id="m02">
+  <div class="mod-ey">MODULE 02 · DAY 5–9</div>
+  <div class="mod-badge" style="background:rgba(15,118,110,.12);color:#0F766E">M02 · 수업 설계</div>
+  <h2 class="mod-h">수업 설계 자동화<br>— 커리큘럼부터 지도안까지</h2>
+  <p class="mod-sub">커리큘럼 짜는 데 일주일, 지도안 쓰는 데 반나절이 걸리셨나요? Claude로 이 시간을 90% 단축하고, 절약된 시간에 학습자와 더 많이 대화할 수 있습니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 5–9</div>
+    <div class="mchip">📐 커리큘럼 설계</div>
+    <div class="mchip">📋 지도안 자동화</div>
+    <div class="mchip">⏱ 총 학습 약 90분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>목표 역량·학습 대상·기간을 입력해 전체 커리큘럼 초안을 5분 안에 생성할 수 있다</li>
+      <li>Bloom's Taxonomy를 자동 적용한 학습 목표를 작성할 수 있다</li>
+      <li>수업 지도안(타임라인·활동·평가)을 Claude로 1시간 안에 초안 완성할 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">이론 강의</div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#0F766E">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">Bloom's Taxonomy × Claude — 학습 목표의 과학</div>
+      <div class="les-dur">18분</div>
+    </div>
+    <div class="les-body">
+      <p>좋은 수업은 명확한 학습 목표에서 시작합니다. Bloom's Taxonomy는 학습을 6단계로 구분하는 교육학의 핵심 프레임워크입니다. Claude에게 이 구조를 이해시키면 단계별 맞춤 학습 목표를 자동으로 만들어줍니다.</p>
+      <table class="tbl">
+        <thead><tr><th>단계</th><th>인지 수준</th><th>동사 예시</th><th>수업 활동 예시</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1. 기억</strong></td><td>사실 회상</td><td>나열하다, 정의하다, 말하다</td><td>플래시카드, 요약 퀴즈</td></tr>
+          <tr><td><strong>2. 이해</strong></td><td>의미 파악</td><td>설명하다, 해석하다, 분류하다</td><td>자기 말로 요약, 비유 만들기</td></tr>
+          <tr><td><strong>3. 적용</strong></td><td>새 상황 적용</td><td>사용하다, 실행하다, 풀다</td><td>케이스 스터디, 실습 과제</td></tr>
+          <tr><td><strong>4. 분석</strong></td><td>구조 분해</td><td>비교하다, 분석하다, 구분하다</td><td>A/B 비교, 구조 다이어그램</td></tr>
+          <tr><td><strong>5. 평가</strong></td><td>판단·비평</td><td>평가하다, 비판하다, 선택하다</td><td>디베이트, 사례 비평</td></tr>
+          <tr><td><strong>6. 창조</strong></td><td>새것 생성</td><td>설계하다, 만들다, 제안하다</td><td>프로젝트, 포트폴리오</td></tr>
+        </tbody>
+      </table>
+      <div class="kp">
+        <div class="kp-l">Claude 활용 팁</div>
+        <div class="kp-t">"Bloom's Taxonomy의 각 단계에 맞게 학습 목표 6개를 만들어줘"라고 하면 Claude가 자동으로 단계별 목표를 만들어줍니다. 단계별 동사 목록을 함께 제공하면 더 정교한 결과가 나옵니다.</div>
+      </div>
+    </div>
+  </div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#0F766E">2</div>
+      <div class="les-type ws">워크샵</div>
+      <div class="les-title">수업 지도안 자동화 — 60분 수업을 10분 만에 설계</div>
+      <div class="les-dur">20분</div>
+    </div>
+    <div class="les-body">
+      <p>지도안은 수업의 청사진입니다. 주제·시간·대상·목표를 Claude에게 주면 타임라인·활동·준비물·평가 방법이 포함된 지도안 초안이 즉시 만들어집니다.</p>
+      <div class="lesson-plan">
+        <div class="lp-head">
+          <div class="lp-title">📋 Claude 생성 지도안 예시 — "RCRF 프롬프트 작성법" 60분</div>
+          <div class="lp-meta">대상: 직장인 초급 · 1회차</div>
+        </div>
+        <div class="lp-body">
+          <div class="lp-row"><div class="lp-label">학습목표</div><div class="lp-content">RCRF 구조를 이해하고, 자신의 업무에 맞는 프롬프트를 작성할 수 있다 (적용 단계)</div></div>
+          <div class="lp-row"><div class="lp-label">준비물</div><div class="lp-content">Claude.ai 접속 기기, 실습 워크시트, 슬라이드 12장</div></div>
+        </div>
+      </div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-time">0–10분</div>
+          <div class="tl-title">도입 — 훅 질문</div>
+          <div class="tl-desc">"지난 주 가장 오래 걸린 문서 작업은?" 짝 대화 → 전체 공유</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-time">10–25분</div>
+          <div class="tl-title">직접 교수 — RCRF 개념 설명</div>
+          <div class="tl-desc">역할·맥락·요청·형식 4요소 설명. 좋은 예 vs 나쁜 예 비교 시연.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-time">25–45분</div>
+          <div class="tl-title">안내된 실습</div>
+          <div class="tl-desc">각자 실제 업무 이메일을 RCRF로 작성 → 옆 사람과 교환 피드백</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-time">45–55분</div>
+          <div class="tl-title">그룹 발표</div>
+          <div class="tl-desc">2~3팀 결과 공유 → 강사 피드백 + 추가 개선 포인트</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-time">55–60분</div>
+          <div class="tl-title">정리 + 다음 수업 예고</div>
+          <div class="tl-desc">핵심 3가지 복습 → Exit Ticket 작성 (오늘 배운 것 한 줄)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">커리큘럼 설계 + 수업 지도안 자동 생성</div><div class="pb-tag tpl">설계 템플릿</div></div>
+    <div class="pb-body"><span class="comment"># 전체 커리큘럼 자동 설계</span>
+다음 교육 과정의 커리큘럼을 설계해줘.
+
+[교육 기본 정보]
+과정명: <span class="slot">[이름]</span>
+교육 대상: <span class="slot">[누구, 배경 지식 수준]</span>
+총 시간: <span class="slot">[N시간 / N주 × N회]</span>
+최종 목표: <span class="slot">[수료 후 할 수 있어야 하는 것]</span>
+
+설계해줄 것:
+1. 모듈 구성 (N개, 각 제목·목표·시간)
+2. 각 모듈의 Bloom's Taxonomy 단계
+3. 모듈 간 선수 관계 (어떤 순서로?)
+4. 평가 계획 (형성평가 / 총괄평가 시점)
+5. 사전·사후 역량 기준 (Before/After)
+
+<span class="comment"># 단일 수업 지도안 자동 생성</span>
+다음 수업의 지도안을 만들어줘.
+
+수업 주제: <span class="slot">[주제]</span>
+대상: <span class="slot">[학습자 설명]</span>
+시간: <span class="slot">[N분]</div>
+학습 목표: <span class="slot">[이 수업 후 할 수 있어야 할 것]</span>
+
+포함해줄 것:
+- 분 단위 타임라인 (도입 / 전개 / 정리)
+- 각 단계별 교사 활동 + 학습자 활동
+- 핵심 질문 3개 (고차원 사고 유발)
+- 필요 준비물
+- 형성평가 방법
+- 강사 노트 (주의사항·팁)</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 5–9 미션</div>
+    <div class="mis-t">실제 수업 지도안 1개 Claude로 완성하기</div>
+    <div class="mis-d">다음에 진행할 실제 수업 1개의 지도안을 Claude로 초안 작성하고, 직접 수정해 완성하세요. "Claude가 만든 것 vs 내가 수정한 것"의 차이를 기록해 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+65 XP</div><div class="mr pt">+35 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>커리큘럼 품질:</strong> Claude의 커리큘럼 초안은 방향이 좋지만 특정 맥락(기관 규정, 이전 수강생 특성)이 빠집니다. "이것은 초안이고 내가 수정하는 것"이라는 개념 정립이 중요합니다.<br><br>
+      <strong>Bloom's Taxonomy 활용:</strong> 단계를 올려갈수록(기억→창조) 수업 설계가 어려워집니다. Claude에게 "5단계(평가)와 6단계(창조)에 해당하는 활동을 3개씩 만들어줘"처럼 구체적으로 요청하면 효과적입니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M03 ═══ -->
+<section class="mod" id="m03">
+  <div class="mod-ey">MODULE 03 · DAY 10–14</div>
+  <div class="mod-badge" style="background:rgba(19,78,74,.12);color:#134E4A">M03 · 콘텐츠 제작</div>
+  <h2 class="mod-h">학습 콘텐츠 제작<br>— 강의 자료·영상 스크립트·슬라이드</h2>
+  <p class="mod-sub">콘텐츠 제작이 교육자의 시간을 가장 많이 잡아먹습니다. 강의 노트, 영상 스크립트, 슬라이드 텍스트, 보충 자료 — Claude로 제작 시간을 70% 단축합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 10–14</div>
+    <div class="mchip">🎬 스크립트 제작</div>
+    <div class="mchip">📊 슬라이드 설계</div>
+    <div class="mchip">⏱ 총 학습 약 90분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>강의 영상 스크립트를 자연스러운 구어체로 Claude와 함께 작성할 수 있다</li>
+      <li>슬라이드 구조와 각 슬라이드의 핵심 메시지를 Claude로 설계할 수 있다</li>
+      <li>보충 자료(요약본·읽기 자료·참고 링크 목록)를 빠르게 생성할 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">이론 강의</div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#134E4A">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">강의 영상 스크립트 — 읽히지 않고 들리는 글쓰기</div>
+      <div class="les-dur">16분</div>
+    </div>
+    <div class="les-body">
+      <p>강의 영상 스크립트는 논문이 아닙니다. 듣는 사람이 자연스럽게 따라올 수 있어야 합니다. "읽는 텍스트"와 "들리는 텍스트"는 완전히 다른 언어입니다.</p>
+      <div class="vs-box">
+        <div class="vs-col bad">
+          <div class="vs-col-l">❌ 읽는 텍스트 (스크립트 NG)</div>
+          <p>"본 강의에서는 프롬프트 엔지니어링의 핵심 구성 요소인 역할, 맥락, 요청, 형식의 4가지 요소를 학습하겠습니다."</p>
+        </div>
+        <div class="vs-col good">
+          <div class="vs-col-l">✓ 들리는 텍스트 (스크립트 OK)</div>
+          <p>"자, 이제부터 제가 알려드릴 공식 딱 4가지만 기억하시면 됩니다. 역할, 맥락, 요청, 형식. 이 4개예요. 하나씩 같이 볼게요."</p>
+        </div>
+      </div>
+      <div class="kp">
+        <div class="kp-l">강의 스크립트 5원칙</div>
+        <div class="kp-t">
+          <strong>①</strong> 짧은 문장 (15단어 이내 권장)<br>
+          <strong>②</strong> 구어 표현 사용 ("보여드릴게요" O / "제시하겠습니다" △)<br>
+          <strong>③</strong> 예시로 시작 ("예를 들어" 빈번하게)<br>
+          <strong>④</strong> 청중에게 말 걸기 ("여러분은 ~하신 적 있으신가요?")<br>
+          <strong>⑤</strong> 핵심 반복 (중요한 것은 3번 이상)
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">영상 스크립트 + 슬라이드 구조 + 보충 자료 생성</div><div class="pb-tag tpl">콘텐츠 템플릿</div></div>
+    <div class="pb-body"><span class="comment"># 강의 영상 스크립트 생성</span>
+다음 강의 영상 스크립트를 써줘.
+자연스러운 구어체로, 실제 강의를 녹화할 때 그대로 읽을 수 있게.
+
+주제: <span class="slot">[강의 주제]</span>
+대상: <span class="slot">[학습자 수준·배경]</span>
+길이: <span class="slot">[N분 분량 (대략 분당 150~180단어)]</span>
+스타일: <span class="slot">[친근한 / 전문적 / 유머 포함]</span>
+
+구성:
+- 오프닝 훅 (30초): 청중의 관심을 끄는 질문 또는 사례
+- 핵심 내용 (N-2분): 단계별 설명 + 예시
+- 실습 안내 (30초): "지금 직접 해보시면 ~"
+- 클로징 (30초): 핵심 요약 + 다음 강의 예고
+
+<span class="comment"># 슬라이드 구조 설계</span>
+다음 주제의 슬라이드 구조를 만들어줘.
+
+주제: <span class="slot">[주제]</span> / 슬라이드 수: <span class="slot">[N장]</span>
+
+각 슬라이드에 대해:
+- 슬라이드 번호 + 제목
+- 핵심 메시지 1줄 (이 슬라이드에서 청중이 기억할 것)
+- 들어갈 콘텐츠 유형 (텍스트 / 이미지 / 다이어그램 / 예시)
+- 발표자 노트 (구어체로, 실제 말할 내용)
+
+<span class="comment"># 보충 자료 패키지 생성</span>
+수업 주제: <span class="slot">[주제]</span>에 대한 보충 자료를 만들어줘:
+
+1. 핵심 개념 요약본 (A4 1장, 학습자 보관용)
+2. 실습 워크시트 (직접 써볼 수 있는 빈칸 형식)
+3. 심화 학습을 위한 질문 5개
+4. 추가 학습 방향 (어떤 주제를 더 공부하면 좋은지)</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 10–14 미션</div>
+    <div class="mis-t">5분 강의 영상 스크립트 + 슬라이드 구조 완성</div>
+    <div class="mis-d">실제 강의할 주제로 5분 분량 영상 스크립트와 슬라이드 구조를 Claude로 만들고, 직접 편집해 완성하세요. 가능하면 실제로 녹화해서 제출하면 보너스 XP!</div>
+    <div class="mis-rewards"><div class="mr xp">+70 XP</div><div class="mr pt">+40 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>강사의 목소리 유지:</strong> Claude가 쓴 스크립트는 "AI 냄새"가 납니다. 수강생 각자의 어투와 표현 방식으로 편집하는 것이 필수입니다. "내가 평소에 쓰는 표현으로 다시 써줘"라는 이터레이션을 반드시 거치도록 안내하세요.<br><br>
+      <strong>저작권 주의:</strong> 슬라이드에 넣을 이미지나 예시는 저작권을 확인해야 합니다. Claude가 이미지 자체를 만들어주지는 않으므로, Canva/Unsplash 등 별도 도구와 병행하도록 안내하세요.
+    </div>
+  </div>
+</section>
+
+<!-- PART 2 챕터 -->
+<div class="chap" id="part2">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART TWO</div>
+  <div class="chap-n" style="color:#FDBA74">04–07</div>
+  <div class="chap-h">개인화하고, 평가하고,<br>질문에 답하고, 데이터로 개선한다</div>
+  <div class="chap-s">수준별 맞춤 교육을 구현하고, AI 루브릭으로 채점하고,<br>학습자 질문에 즉각 대응하며, 데이터로 수업을 계속 발전시킵니다.</div>
+  <div class="chap-meta">M04 맞춤화 · M05 문제 은행 · M06 피드백 자동화 · M07 Q&A 시스템 · Day 15–31</div>
+</div>
+
+<!-- ═══ M04 ═══ -->
+<section class="mod" id="m04">
+  <div class="mod-ey">MODULE 04 · DAY 15–19</div>
+  <div class="mod-badge" style="background:rgba(224,90,74,.1);color:var(--co)">M04 · 맞춤화</div>
+  <h2 class="mod-h">학습자 맞춤화<br>— 수준별·유형별 개인화 교육</h2>
+  <p class="mod-sub">30명의 학습자가 있으면 30가지 다른 수준과 필요가 있습니다. 한 가지 설명으로 모두를 만족시키는 것은 불가능합니다. Claude로 같은 개념을 다른 방식으로 설명하는 교육 콘텐츠를 만듭니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 15–19</div>
+    <div class="mchip">🎯 수준별 자료</div>
+    <div class="mchip">🔄 다중 설명 방식</div>
+    <div class="mchip">⏱ 총 학습 약 85분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>같은 개념을 초급·중급·고급으로 분리해 설명하는 콘텐츠 세트를 만들 수 있다</li>
+      <li>학습자가 막혔을 때 자동으로 다른 방식의 설명(비유·예시·스캐폴딩)을 제공할 수 있다</li>
+      <li>개인별 약점 보완 자료를 Claude로 즉시 생성할 수 있다</li>
+    </ul>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">수준별 맞춤 설명 + 개인화 보충 자료</div><div class="pb-tag tpl">맞춤화 템플릿</div></div>
+    <div class="pb-body"><span class="comment"># 같은 개념을 3가지 수준으로 설명</span>
+다음 개념을 3가지 수준으로 설명해줘.
+
+개념: <span class="slot">[설명할 개념]</span>
+교육 맥락: <span class="slot">[어떤 수업에서, 무슨 목적으로]</span>
+
+레벨별 조건:
+- 초급 (입문자): 비유와 일상 예시 중심, 전문 용어 최소화
+  전문 용어가 나오면 바로 괄호로 쉬운 설명 추가
+- 중급 (기초 있는 학습자): 개념 정의 + 실제 사례 2개
+- 고급 (심화 학습자): 엣지 케이스·예외·실무 적용 포함
+
+각 레벨은 독립적으로 읽을 수 있게.
+
+<span class="comment"># 막힌 학습자를 위한 재설명</span>
+학습자가 다음 개념을 이해 못 하고 있어:
+개념: <span class="slot">[개념]</span>
+학습자의 혼란 포인트: <span class="slot">[뭘 모르는지]</span>
+
+5가지 다른 방식으로 재설명해줘:
+1. 물리적 비유 (손으로 만질 수 있는 것으로)
+2. 일상생활 예시 (누구나 아는 상황으로)
+3. 단계별 분해 (가장 작은 단위로 쪼개서)
+4. 시각적 서술 (머릿속에 그림이 그려지게)
+5. 틀린 이유 진단 ("혹시 이렇게 생각하고 있나요?")
+
+<span class="comment"># 개인별 약점 보완 자료</span>
+학습자 [이름/번호]가 다음 항목에서 어려움을 겪고 있어:
+약점 영역: <span class="slot">[어떤 부분]</span>
+오답 패턴: <span class="slot">[어떤 실수를 반복하는지]</span>
+
+이 학습자만을 위한 맞춤 보충 자료를 만들어줘:
+- 핵심 개념 재정리 (약점 중심)
+- 연습 문제 3개 (점진적 난이도)
+- 자주 하는 실수 → 올바른 방법 대조표</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 15–19 미션</div>
+    <div class="mis-t">핵심 개념 3수준 설명 자료 세트 완성</div>
+    <div class="mis-d">수업에서 학습자들이 가장 어려워하는 개념 1개를 골라 초급·중급·고급 3수준 설명 자료를 Claude로 만드세요. 실제 학습자에게 적용해보고 반응을 기록해서 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+70 XP</div><div class="mr pt">+40 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>맞춤화의 현실:</strong> 30명에게 30가지 자료를 만드는 것은 현실적으로 어렵습니다. "3수준 × 5핵심 개념 = 15개 자료 세트"를 사전에 준비해두는 것이 현실적인 접근입니다. 한 번 만들면 재사용 가능하므로 초기 투자 가치가 높습니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M05 ═══ -->
+<section class="mod" id="m05">
+  <div class="mod-ey">MODULE 05 · DAY 20–23</div>
+  <div class="mod-badge" style="background:rgba(194,65,12,.1);color:#C2410C">M05 · 문제 은행</div>
+  <h2 class="mod-h">퀴즈·문제 은행 구축<br>— 5가지 유형 자동 생성</h2>
+  <p class="mod-sub">퀴즈 1세트를 만드는 데 2시간이 걸리셨나요? Claude로 5가지 유형의 문항을 주제·난이도·수량 지정해서 5분 안에 만들고, 문제 은행을 체계적으로 구축합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 20–23</div>
+    <div class="mchip">❓ 5가지 문항 유형</div>
+    <div class="mchip">🗄️ 문제 은행</div>
+    <div class="mchip">⏱ 총 학습 약 80분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>객관식·O/X·주관식·에세이·케이스 스터디 5가지 유형을 상황에 맞게 선택할 수 있다</li>
+      <li>난이도별·학습 목표별로 분류된 문제 은행을 Claude로 구축할 수 있다</li>
+      <li>AI OpenCollege LMS 퀴즈 빌더에 최적화된 형식으로 문항을 생성할 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">이론 강의</div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#C2410C">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">5가지 문항 유형 — 언제 무엇을 쓸 것인가</div>
+      <div class="les-dur">16분</div>
+    </div>
+    <div class="les-body">
+      <p>모든 평가 목적에 맞는 단 하나의 문항 유형은 없습니다. Bloom's Taxonomy 단계와 평가 목적에 따라 유형을 선택해야 합니다.</p>
+      <table class="tbl">
+        <thead><tr><th>유형</th><th>적합한 학습 목표</th><th>장점</th><th>주의사항</th></tr></thead>
+        <tbody>
+          <tr><td><strong>객관식 (4~5지)</strong></td><td>기억·이해 단계</td><td>채점 자동화, 많은 범위 커버</td><td>찍기 가능, 이해 깊이 측정 한계</td></tr>
+          <tr><td><strong>O/X</strong></td><td>개념 확인, 오개념 진단</td><td>빠른 확인, 심리적 부담 낮음</td><td>50% 확률 찍기 가능</td></tr>
+          <tr><td><strong>단답형·주관식</strong></td><td>이해·적용 단계</td><td>실제 표현력 측정</td><td>채점 기준 명확히 필요</td></tr>
+          <tr><td><strong>에세이형</strong></td><td>분석·평가·창조 단계</td><td>심층 이해 측정</td><td>채점 시간 길고 주관성 있음</td></tr>
+          <tr><td><strong>케이스 스터디</strong></td><td>적용·분석 단계</td><td>실무 적용력 측정</td><td>문항 개발 난이도 높음</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">5가지 문항 유형 생성 마스터 템플릿</div><div class="pb-tag tpl">문항 생성 도구</div></div>
+    <div class="pb-body"><span class="comment"># 객관식 문항 대량 생성</span>
+다음 주제에 대한 객관식 문항 <span class="slot">[N]</span>개를 만들어줘.
+
+주제: <span class="slot">[주제]</span>
+대상: <span class="slot">[학습자 수준]</span>
+난이도 배분: 쉬움 <span class="slot">[X]</span>개 / 보통 <span class="slot">[Y]</span>개 / 어려움 <span class="slot">[Z]</span>개
+학습 목표: <span class="slot">[Bloom's 단계]</span>
+
+각 문항 형식:
+- 질문 (명확하게, 두 개의 해석이 나오지 않게)
+- 선택지 4개 (오답도 그럴듯하게)
+- 정답 + 정답 근거 (교사용)
+- 오답 해설 (각 오답이 왜 틀렸는지)
+
+<span class="comment"># 에세이형 + 루브릭 세트</span>
+다음 에세이 문항과 채점 루브릭을 같이 만들어줘.
+
+주제: <span class="slot">[주제]</span>
+학습 목표: <span class="slot">[이 문항으로 측정하려는 것]</span>
+분량 기준: <span class="slot">[N자 이상]</span>
+
+루브릭:
+- 평가 항목 4개 (각 25점 = 총 100점)
+- 각 항목별 4단계 기준 (우수/양호/보통/미흡)
+- 각 단계의 구체적 서술 기준
+- 교사용 채점 팁
+
+<span class="comment"># 케이스 스터디 문항</span>
+다음 상황을 기반으로 케이스 스터디 문항을 만들어줘.
+
+케이스 배경: <span class="slot">[시나리오 설명]</span>
+측정 역량: <span class="slot">[분석력 / 판단력 / 문제해결력]</span>
+
+포함할 것:
+- 케이스 본문 (300자 이내)
+- 딥 씽킹 질문 3개 (각각 Bloom's 다른 단계)
+- 모범 답안의 핵심 포인트
+- 토론 확장 질문 2개</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 20–23 미션</div>
+    <div class="mis-t">수업 단원 문제 은행 30문항 구축</div>
+    <div class="mis-d">가르치는 과목의 한 단원에 대해 5가지 유형 × 6문항 = 30문항 문제 은행을 Claude로 구축하세요. 난이도별·유형별로 분류된 표로 정리해 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+45 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>문항 품질 검증:</strong> Claude가 만든 문항은 반드시 교육자가 검토해야 합니다. 특히 ①정답이 실제로 정답인지 ②오답이 충분히 그럴듯한지 ③문항이 학습 목표를 실제로 측정하는지를 확인하세요.<br><br>
+      <strong>AI OpenCollege LMS 연동:</strong> 문항을 AI OpenCollege LMS 퀴즈 빌더에 입력할 때는 유형별 형식이 다릅니다. 수업 중 실제 입력해보는 실습을 포함하면 좋습니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M06 ═══ -->
+<section class="mod" id="m06">
+  <div class="mod-ey">MODULE 06 · DAY 24–27</div>
+  <div class="mod-badge" style="background:rgba(109,40,217,.1);color:var(--pu)">M06 · 피드백 자동화</div>
+  <h2 class="mod-h">피드백·채점 자동화<br>— AI 루브릭과 개인 코멘트</h2>
+  <p class="mod-sub">30명의 에세이에 의미 있는 피드백을 주는 것이 가장 힘든 일 중 하나입니다. AI 루브릭 채점 + 개인화 코멘트 생성으로 교육자의 피드백 시간을 70% 단축하면서 품질은 유지합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 24–27</div>
+    <div class="mchip">📝 AI 루브릭 채점</div>
+    <div class="mchip">💬 개인화 코멘트</div>
+    <div class="mchip">⏱ 총 학습 약 80분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>Claude를 AI 채점 보조로 활용해 에세이·주관식 1차 채점을 자동화할 수 있다</li>
+      <li>각 학습자에게 맞춤화된 피드백 코멘트를 Claude로 대량 생성할 수 있다</li>
+      <li>Human-in-the-loop 원칙에 따라 AI 채점을 최종 검토하는 워크플로우를 설계할 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">이론 강의</div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--pu)">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">AI 채점의 한계와 활용법 — 보조는 OK, 최종 판사는 NO</div>
+      <div class="les-dur">16분</div>
+    </div>
+    <div class="les-body">
+      <p>AI 채점의 가장 중요한 원칙: <strong>AI는 1차 채점 보조이고, 최종 판단은 교육자가 합니다.</strong> AI는 루브릭 기준을 빠르게 적용하고 패턴을 찾는 데 탁월하지만, 학습자의 맥락과 성장 가능성을 판단하는 것은 교육자의 영역입니다.</p>
+      <div class="kp">
+        <div class="kp-l">AI 채점 신뢰도가 높은 경우</div>
+        <div class="kp-t">명확한 루브릭이 있을 때 · 키워드 기반 채점 · 구조·형식 평가 · 기계적 오류 탐지 (문법, 분량, 형식)</div>
+      </div>
+      <div class="kp">
+        <div class="kp-l">교육자 직접 판단이 필요한 경우</div>
+        <div class="kp-t">창의성·독창성 평가 · 학습자 특수 상황 고려 · 성장 가능성 판단 · 관계적 맥락을 아는 개입</div>
+      </div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">AI 루브릭 채점 + 개인화 피드백 생성</div><div class="pb-tag tpl">피드백 템플릿</div></div>
+    <div class="pb-body"><span class="comment"># 에세이 1차 AI 채점</span>
+다음 학습자 에세이를 루브릭에 따라 채점해줘.
+(최종 확정은 교육자가 검토 후 결정)
+
+[루브릭]
+평가 항목 1 (<span class="slot">[항목명]</span>) / 배점: <span class="slot">[N]</span>점
+  - 우수(<span class="slot">[N]</span>점): <span class="slot">[기준]</span>
+  - 양호(<span class="slot">[N]</span>점): <span class="slot">[기준]</span>
+  - 보통(<span class="slot">[N]</span>점): <span class="slot">[기준]</span>
+  - 미흡(<span class="slot">[N]</span>점): <span class="slot">[기준]</span>
+<span class="comment"># (나머지 항목 반복)</span>
+
+[학습자 답안]
+<span class="slot">[학습자가 제출한 내용]</span>
+
+채점 결과:
+- 항목별 점수 + 근거 (1~2줄)
+- 총점
+- 가장 잘 된 점 1가지
+- 가장 개선이 필요한 점 1가지
+
+<span class="comment"># 대량 개인화 피드백 생성</span>
+다음 과제 결과에 대해 학습자별 개인화 피드백을 생성해줘.
+
+[과제 기준]
+<span class="slot">[과제 내용과 평가 기준]</span>
+
+[학습자 목록 및 결과 요약]
+학습자 1: <span class="slot">[이름/번호, 주요 특징, 점수]</span>
+학습자 2: <span class="slot">[이름/번호, 주요 특징, 점수]</span>
+<span class="comment"># (반복)</span>
+
+각 학습자에게:
+- 칭찬 포인트 (구체적)
+- 개선 방향 (구체적이고 실행 가능한)
+- 다음 과제를 위한 팁 1개
+- 톤: 격려적, 구체적, 200자 이내</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">실습 — AI 채점 루브릭 설계</div>
+  <div class="rubric">
+    <div class="rub-l">📊 루브릭 예시 — "RCRF 프롬프트 작성" 100점</div>
+    <div class="rub-row header">
+      <div>평가 항목</div><div>우수 (25)</div><div>양호 (18)</div><div>미흡 (10)</div>
+    </div>
+    <div class="rub-row">
+      <div class="rub-cell hi">역할(R) 설정</div>
+      <div class="rub-cell">역할이 구체적이고 과제에 최적화됨</div>
+      <div class="rub-cell">역할이 있으나 일반적</div>
+      <div class="rub-cell">역할 미설정 또는 부적합</div>
+    </div>
+    <div class="rub-row">
+      <div class="rub-cell hi">맥락(C) 제공</div>
+      <div class="rub-cell">배경·제약·목적이 모두 포함됨</div>
+      <div class="rub-cell">일부 맥락만 포함</div>
+      <div class="rub-cell">맥락 없거나 과제와 무관</div>
+    </div>
+    <div class="rub-row">
+      <div class="rub-cell hi">요청(R) 명확성</div>
+      <div class="rub-cell">구체적이고 모호성 없음</div>
+      <div class="rub-cell">어느 정도 명확하나 해석 여지 있음</div>
+      <div class="rub-cell">요청이 불명확하거나 너무 광범위</div>
+    </div>
+    <div class="rub-row">
+      <div class="rub-cell hi">형식(F) 지정</div>
+      <div class="rub-cell">형식·분량·스타일 모두 명시</div>
+      <div class="rub-cell">형식 일부만 명시</div>
+      <div class="rub-cell">형식 미지정</div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 24–27 미션</div>
+    <div class="mis-t">실제 학습자 과제 AI 채점 + 피드백 생성 테스트</div>
+    <div class="mis-d">루브릭을 만들고, 실제 학습자 과제 5건을 Claude로 1차 채점한 뒤 직접 최종 검토해보세요. "AI 채점과 내 채점의 차이"를 기록해 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+45 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>채점 윤리:</strong> AI 채점 결과를 학습자에게 공개할 때는 "AI가 1차 평가하고 교육자가 최종 확인했습니다"라고 투명하게 알리는 것이 바람직합니다. 학습자가 교육자가 직접 채점했다고 믿게 해서는 안 됩니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M07 ═══ -->
+<section class="mod" id="m07">
+  <div class="mod-ey">MODULE 07 · DAY 28–31</div>
+  <div class="mod-badge" style="background:rgba(91,33,182,.1);color:#5B21B6">M07 · Q&A 시스템</div>
+  <h2 class="mod-h">질문 대응 시스템<br>— Q&A와 실시간 설명 보조</h2>
+  <p class="mod-sub">수업 전후로 쏟아지는 학습자 질문에 혼자 답하는 것은 한계가 있습니다. Claude를 Q&A 보조 시스템으로 활용해 질문 대응 속도와 품질을 동시에 높입니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 28–31</div>
+    <div class="mchip">💬 Q&A 자동화</div>
+    <div class="mchip">🔄 실시간 보조</div>
+    <div class="mchip">⏱ 총 학습 약 75분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>반복되는 학습자 질문 유형을 분류하고 표준 답변 라이브러리를 구축할 수 있다</li>
+      <li>수업 중 즉흥적인 심화 질문에 Claude를 활용해 실시간으로 더 풍부한 설명을 제공할 수 있다</li>
+      <li>AI OpenCollege LMS Q&A 게시판에 올라온 질문들을 Claude로 일괄 분석해 FAQ를 만들 수 있다</li>
+    </ul>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">Q&A 분류·답변·FAQ 구축 템플릿</div><div class="pb-tag tpl">Q&A 도구</div></div>
+    <div class="pb-body"><span class="comment"># 학습자 질문 분류 + 표준 답변</span>
+다음은 수강생들이 자주 묻는 질문들이야.
+이것을 분류하고 표준 답변을 만들어줘.
+
+[질문 목록]
+<span class="slot">[질문들 붙여넣기]</span>
+
+분류 기준:
+- 개념 이해 질문 / 실습 방법 질문 / 기술 문제 / 평가 관련
+각 유형별 그룹화 + 그룹당 모범 답변 1개
+
+<span class="comment"># 수업 중 심화 질문 즉석 대응</span>
+수업 중 다음 심화 질문이 나왔어.
+학습자 수준에 맞게 즉석에서 보충 설명해줘.
+
+[질문]
+<span class="slot">[학습자 질문]</span>
+
+[현재 수업 맥락]
+<span class="slot">[어떤 내용을 가르치던 중]</span>
+
+[학습자 수준]
+<span class="slot">[초급/중급]</span>
+
+설명 방식:
+1. 핵심 답변 (30초 버전) — 수업 흐름을 끊지 않을 때
+2. 완전한 설명 (3분 버전) — 시간이 있을 때
+3. 심화 탐구 방향 — 더 알고 싶은 학습자를 위해
+
+<span class="comment"># Q&A 게시판 일괄 처리 + FAQ 생성</span>
+다음은 이번 달 Q&A 게시판에 올라온 질문들이야.
+이것을 분석해서 FAQ를 만들어줘.
+
+[질문 목록]
+<span class="slot">[전체 질문 붙여넣기]</span>
+
+1. 질문 유형별 빈도 분석
+2. 가장 많이 물어본 질문 TOP 10 FAQ
+3. 수업 내용에서 보완이 필요한 부분 (질문이 많다는 것은 설명이 부족하다는 신호)
+4. 다음 강의에 추가할 내용 추천</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 28–31 미션</div>
+    <div class="mis-t">내 수업 FAQ 20개 + 표준 답변 라이브러리 구축</div>
+    <div class="mis-d">학습자들이 가장 자주 묻는 질문 20개를 모아 유형별로 분류하고, 각각의 표준 답변을 Claude로 만들어보세요. 완성된 FAQ 문서를 AI OpenCollege LMS Q&A 게시판이나 팀 채널에 업로드하면 완료입니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+70 XP</div><div class="mr pt">+40 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>수업 중 Claude 사용:</strong> 수업 중에 Claude를 열어 즉석 설명 보조로 쓰는 것을 학습자들 앞에서 보여주면 "이렇게 쓰는 거구나"라는 모델링 효과가 있습니다. 강사가 직접 사용하는 모습을 보여주는 것 자체가 학습입니다.
+    </div>
+  </div>
+</section>
+
+<!-- PART 3 챕터 -->
+<div class="chap" id="part3">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART THREE</div>
+  <div class="chap-n" style="color:#C4B5FD">08–11</div>
+  <div class="chap-h">측정하고, 코칭하고,<br>브랜드를 만들고, 윤리를 지킨다</div>
+  <div class="chap-s">학습 효과를 데이터로 측정하고, 코칭을 가속화하고,<br>강사 브랜드를 구축하며, AI 교육 윤리의 경계를 설정합니다.</div>
+  <div class="chap-meta">M08 효과 측정 · M09 코칭 가속 · M10 교육 브랜드 · M11 AI 윤리 · Day 32–49</div>
+</div>
+
+<!-- ═══ M08 ═══ -->
+<section class="mod" id="m08">
+  <div class="mod-ey">MODULE 08 · DAY 32–35</div>
+  <div class="mod-badge" style="background:rgba(29,78,216,.09);color:var(--bl)">M08 · 학습 효과 측정</div>
+  <h2 class="mod-h">학습 효과 측정<br>— 데이터 기반 교육 개선</h2>
+  <p class="mod-sub">좋은 교육은 "열심히 가르쳤다"가 아닌 "학습자가 실제로 성장했다"로 증명됩니다. AI OpenCollege LMS 데이터를 Claude로 분석해 수업을 지속적으로 개선하는 사이클을 만듭니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 32–35</div>
+    <div class="mchip">📊 학습 데이터 분석</div>
+    <div class="mchip">🔄 개선 사이클</div>
+    <div class="mchip">⏱ 총 학습 약 80분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>Kirkpatrick 4단계 모델로 학습 효과를 체계적으로 측정할 수 있다</li>
+      <li>AI OpenCollege LMS 데이터(완주율·퀴즈 정답률·제출률)를 Claude로 분석할 수 있다</li>
+      <li>데이터 기반으로 수업 내용을 개선하는 월간 리뷰 루틴을 만들 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">이론 강의</div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--bl)">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">Kirkpatrick 4단계 — 진짜 교육 효과를 측정하는 법</div>
+      <div class="les-dur">16분</div>
+    </div>
+    <div class="les-body">
+      <p>교육 효과는 "만족도 설문"만으로 측정되지 않습니다. Kirkpatrick 4단계 모델은 교육 효과를 층위별로 측정하는 가장 검증된 프레임워크입니다.</p>
+      <table class="tbl">
+        <thead><tr><th>단계</th><th>측정 질문</th><th>측정 방법</th><th>Claude 활용</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1. 반응</strong></td><td>학습자가 만족했나?</td><td>수업 후 만족도 설문</td><td>설문 설계 + 결과 분석</td></tr>
+          <tr><td><strong>2. 학습</strong></td><td>실제로 배웠나?</td><td>Pre/Post 테스트</td><td>테스트 설계 + 점수 비교</td></tr>
+          <tr><td><strong>3. 행동</strong></td><td>업무/생활에 적용했나?</td><td>수료 후 3개월 추적</td><td>추적 설문 + 사례 분석</td></tr>
+          <tr><td><strong>4. 결과</strong></td><td>조직/개인 성과가 났나?</td><td>KPI 측정 + 인터뷰</td><td>데이터 해석 + 인사이트</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">학습 데이터 분석 + 수업 개선 사이클</div><div class="pb-tag tpl">분석 도구</div></div>
+    <div class="pb-body"><span class="comment"># AI OpenCollege LMS 데이터 분석</span>
+다음은 이번 기수 학습 데이터야.
+수업 개선에 필요한 인사이트를 찾아줘.
+
+[학습 데이터]
+모듈별 완주율: <span class="slot">[모듈1: N%, 모듈2: N% ...]</span>
+퀴즈 문항별 정답률: <span class="slot">[문항1: N%, 문항2: N% ...]</span>
+과제 제출률: <span class="slot">[모듈별 %]</span>
+평균 학습 시간: <span class="slot">[모듈별 분]</span>
+수강생 이탈 시점: <span class="slot">[어느 모듈에서 많이 떠났는지]</span>
+
+분석해줄 것:
+1. 학습자들이 가장 많이 막히는 구간 (데이터 근거)
+2. 예상보다 어려웠을 콘텐츠 (정답률 낮은 문항 분석)
+3. 개선 우선순위 TOP 3 (즉시 개선 vs 다음 기수 개선)
+4. 우수 수강생과 이탈 수강생의 패턴 차이
+
+<span class="comment"># Kirkpatrick 4단계 측정 도구 세트</span>
+다음 교육 과정의 효과 측정 도구를 만들어줘.
+
+과정명: <span class="slot">[과정]</span>
+교육 목표: <span class="slot">[수료 후 할 수 있어야 할 것]</span>
+
+각 단계별 측정 도구:
+1단계(반응): 5문항 만족도 설문
+2단계(학습): Pre-test 5문항 + Post-test 5문항 (동일 난이도, 다른 내용)
+3단계(행동): 수료 4주 후 행동 변화 추적 설문 5문항
+4단계(결과): 3개월 후 성과 인터뷰 질문 5개</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 32–35 미션</div>
+    <div class="mis-t">내 수업 학습 효과 측정 도구 세트 완성</div>
+    <div class="mis-d">Kirkpatrick 4단계에 따른 측정 도구(만족도 설문 + Pre/Post 테스트 + 행동 추적 설문)를 Claude로 완성하고, 실제 수업에 적용해 1단계·2단계 데이터를 수집해 분석 결과를 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+45 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>데이터 해석의 함정:</strong> 완주율이 낮다고 콘텐츠가 나쁜 것이 아닙니다. 시간이 너무 길거나, 삶의 사건으로 이탈하거나, 이미 아는 내용이라 건너뛰었을 수도 있습니다. 데이터는 가설의 출발점이지 결론이 아닙니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M09 ═══ -->
+<section class="mod" id="m09">
+  <div class="mod-ey">MODULE 09 · DAY 36–39</div>
+  <div class="mod-badge" style="background:rgba(6,95,70,.1);color:var(--gn)">M09 · 코칭 가속</div>
+  <h2 class="mod-h">코칭·멘토링 가속<br>— 1:1 상담과 성장 지원</h2>
+  <p class="mod-sub">1:1 코칭은 교육에서 가장 효과적이지만 가장 시간이 많이 드는 방식입니다. Claude로 코칭 준비·기록·사후 지원을 자동화해 같은 시간에 더 많은 학습자를 깊이 지원합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 36–39</div>
+    <div class="mchip">🤝 1:1 코칭 지원</div>
+    <div class="mchip">📈 성장 추적</div>
+    <div class="mchip">⏱ 총 학습 약 75분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>학습자별 성장 데이터를 요약해 코칭 세션을 준비하는 시간을 10분으로 단축할 수 있다</li>
+      <li>코칭 대화 메모를 Claude로 구조화하고 다음 세션 계획을 자동 생성할 수 있다</li>
+      <li>학습자에게 개인화된 성장 리포트를 정기적으로 발송하는 시스템을 만들 수 있다</li>
+    </ul>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">코칭 준비 + 세션 메모 + 성장 리포트</div><div class="pb-tag tpl">코칭 도구</div></div>
+    <div class="pb-body"><span class="comment"># 코칭 세션 사전 준비</span>
+다음 학습자와의 코칭 세션을 준비해줘.
+
+[학습자 현황]
+이름/번호: <span class="slot">[ID]</span>
+학습 진행 상황: <span class="slot">[어디까지 완료했는지]</span>
+지난 세션 이후 변화: <span class="slot">[관찰된 것]</span>
+현재 막힌 부분: <span class="slot">[알고 있는 것]</span>
+성격/학습 스타일: <span class="slot">[파악한 것]</span>
+
+준비해줄 것:
+1. 오늘 세션의 목표 제안 (2~3가지)
+2. 열린 질문 5개 (학습자가 스스로 통찰하게 만드는)
+3. 다루어야 할 핵심 주제 + 왜 지금 이 주제가 중요한지
+4. 학습자의 강점 기반 접근법 (약점 보완보다 강점 활용)
+
+<span class="comment"># 코칭 세션 메모 → 구조화</span>
+다음 코칭 세션 메모를 구조화해줘.
+
+[세션 메모 (자유롭게 적은 것)]
+<span class="slot">[메모 붙여넣기]</span>
+
+구조화 결과:
+1. 이번 세션 핵심 인사이트 (학습자가 깨달은 것)
+2. 합의된 행동 계획 (구체적 + 기한)
+3. 다음 세션 주제/질문
+4. 교육자로서 나의 관찰 노트 (다음 세션 전 기억할 것)
+
+<span class="comment"># 개인화 성장 리포트</span>
+학습자에게 보낼 월간 성장 리포트를 써줘.
+
+학습자 이름: <span class="slot">[이름]</span>
+이번 달 학습 데이터: <span class="slot">[완료 모듈·점수·활동 데이터]</span>
+관찰된 성장: <span class="slot">[교육자가 본 것]</span>
+아직 개선 중인 부분: <span class="slot">[약점 영역]</span>
+
+리포트 조건:
+- 격려적 톤, 구체적 근거 포함
+- 숫자(데이터) 반드시 포함
+- 다음 달 집중 목표 1개 제안
+- 200~300자, 이메일로 바로 보낼 수 있게</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 36–39 미션</div>
+    <div class="mis-t">수강생 3명에게 개인화 성장 리포트 발송</div>
+    <div class="mis-d">담당 수강생 3명의 학습 데이터를 바탕으로 Claude로 개인화 성장 리포트를 작성해 실제로 발송하세요. 받은 반응(감사 메시지, 후속 질문 등)을 기록해 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+45 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>개인화 리포트의 효과:</strong> 학습자 이름을 부르며 구체적인 수치와 관찰을 담은 리포트는 교육자-학습자 관계를 크게 강화합니다. "내가 주목받고 있다"는 느낌이 학습 동기에 직접 영향을 줍니다.<br><br>
+      <strong>코칭 vs 티칭 구분:</strong> 코칭은 답을 주는 것이 아니라 학습자가 스스로 답을 찾도록 돕는 것입니다. Claude로 준비한 질문도 "열린 질문" 중심이어야 합니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M10 ═══ -->
+<section class="mod" id="m10">
+  <div class="mod-ey">MODULE 10 · DAY 40–44</div>
+  <div class="mod-badge" style="background:rgba(3,105,161,.12);color:#0369A1">M10 · 교육 브랜드</div>
+  <h2 class="mod-h">교육 브랜드 구축<br>— 강사 콘텐츠와 온라인 존재감</h2>
+  <p class="mod-sub">좋은 강사도 알려지지 않으면 학습자가 모이지 않습니다. 강사로서의 전문성을 온라인에서 드러내고, 강의 콘텐츠로 지속적인 학습자를 끌어들이는 브랜드를 Claude와 함께 만듭니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 40–44</div>
+    <div class="mchip">✍️ 강사 콘텐츠</div>
+    <div class="mchip">🌐 온라인 존재감</div>
+    <div class="mchip">⏱ 총 학습 약 75분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>강사로서의 전문 영역과 차별화 포인트를 명확히 정의할 수 있다</li>
+      <li>교육 관련 LinkedIn/블로그 콘텐츠를 Claude로 주 2회 이상 생성할 수 있다</li>
+      <li>강의 소개 페이지와 강사 프로필을 설득력 있게 작성할 수 있다</li>
+    </ul>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">강사 브랜드 정의 + 콘텐츠 생성 시스템</div><div class="pb-tag tpl">브랜드 템플릿</div></div>
+    <div class="pb-body"><span class="comment"># 강사 전문성 브랜드 정의</span>
+나의 강사 브랜드를 정의해줘.
+
+[내 배경]
+전문 분야: <span class="slot">[교육 영역]</span>
+교육 경력: <span class="slot">[N년, 주요 이력]</span>
+수강생 유형: <span class="slot">[누구를 주로 가르치는지]</span>
+나만의 교육 철학: <span class="slot">[핵심 신념]</span>
+
+정의해줄 것:
+1. 나의 전문 포지셔닝 (다른 강사와 차별화되는 것)
+2. 타겟 학습자 페르소나 (구체적인 한 명)
+3. 내 강의의 핵심 가치 제안 (수강 후 달라지는 것)
+4. 강사 슬로건 3가지 후보
+5. 온라인 소개 문구 (50자 / 200자 / 500자 버전)
+
+<span class="comment"># 교육 콘텐츠 캘린더</span>
+내 강사 브랜드에 맞는 4주 콘텐츠 캘린더를 짜줘.
+
+전문 분야: <span class="slot">[분야]</span>
+주요 채널: <span class="slot">[LinkedIn / 블로그 / YouTube / 뉴스레터]</span>
+게시 빈도: 주 <span class="slot">[N]</span>회
+
+각 콘텐츠:
+- 날짜·채널·형식
+- 주제 + 핵심 메시지
+- 타겟 학습자 (어떤 사람이 보면 좋은지)
+- 훅 문장
+
+콘텐츠 유형 배분: 인사이트 40% / 교육 팁 40% / 뒷이야기 20%
+
+<span class="comment"># 강의 소개 페이지 카피</span>
+내 강의 소개 페이지 카피를 써줘.
+
+강의명: <span class="slot">[강의 이름]</span>
+대상: <span class="slot">[누구를 위한 강의]</span>
+핵심 성과: <span class="slot">[수료 후 할 수 있는 것 3가지]</span>
+수강 후기 키워드: <span class="slot">[학습자들이 주로 하는 말]</span>
+
+포함할 것:
+- 헤드라인 (관심을 끄는 한 줄)
+- 서브 헤드라인 (구체적 가치 제안)
+- "이런 분께 추천" 목록
+- 커리큘럼 요약
+- 강사 소개 (신뢰 구축)
+- CTA (행동 유도 문구)</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 40–44 미션</div>
+    <div class="mis-t">강사 브랜드 선언 + 첫 교육 콘텐츠 게시</div>
+    <div class="mis-d">강사 브랜드 포지셔닝을 정의하고, 전문성을 보여주는 콘텐츠를 Claude로 작성해 LinkedIn이나 블로그에 실제 게시하세요. "강사로서 처음 공개적으로 쓴 것"의 반응을 기록해 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+80 XP</div><div class="mr pt">+50 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>공개 글쓰기 두려움:</strong> "제가 쓴 걸 공개하는 게 두렵다"는 수강생이 많습니다. "처음 10개는 아무도 보지 않습니다. 100개를 쓸 때 목소리가 생깁니다"라는 말로 용기를 주세요. AI OpenCollege 강사 지망생은 AI OpenCollege 블로그에 기고하는 기회가 있음을 알려주면 동기 부여에 효과적입니다.
+    </div>
+  </div>
+</section>
+
+<!-- ═══ M11 ═══ -->
+<section class="mod" id="m11">
+  <div class="mod-ey">MODULE 11 · DAY 45–49</div>
+  <div class="mod-badge" style="background:rgba(146,64,14,.1);color:var(--yw)">M11 · AI 교육 윤리</div>
+  <h2 class="mod-h">AI 강의 윤리<br>— 저작권·공정성·의존성 딜레마</h2>
+  <p class="mod-sub">AI로 수업을 만드는 것이 편해질수록, 윤리적 질문들이 따라옵니다. 학습자에게 AI 사용을 얼마나 허용할 것인가? AI 콘텐츠의 저작권은 누구에게? 이 질문들에 답을 가진 교육자가 되어야 합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 45–49</div>
+    <div class="mchip">⚖️ 교육 윤리</div>
+    <div class="mchip">🛡 정책 설계</div>
+    <div class="mchip">⏱ 총 학습 약 80분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>학습자의 AI 사용을 어느 범위까지 허용할지 교육 정책을 만들 수 있다</li>
+      <li>AI 생성 콘텐츠의 저작권 문제를 이해하고 실무적으로 대응할 수 있다</li>
+      <li>학습자의 AI 과의존을 예방하면서 건강한 AI 활용을 유도하는 수업을 설계할 수 있다</li>
+    </ul>
+  </div>
+  <div class="sec">이론 강의</div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:var(--yw)">1</div>
+      <div class="les-type th">이론</div>
+      <div class="les-title">학습자 AI 사용 딜레마 — 허용과 제한의 기준</div>
+      <div class="les-dur">20분</div>
+    </div>
+    <div class="les-body">
+      <p>"학습자가 AI로 과제를 작성하면 어떻게 하나요?" — 이것이 현재 모든 교육자가 직면한 가장 어려운 질문입니다. 정답은 없지만, 교육 목표를 기준으로 생각하면 방향이 잡힙니다.</p>
+      <table class="tbl">
+        <thead><tr><th>AI 사용 유형</th><th>교육 목표 달성에 미치는 영향</th><th>권장 정책</th></tr></thead>
+        <tbody>
+          <tr><td>아이디어 발산·브레인스토밍</td><td>창의성 확장에 기여</td><td>✅ 적극 허용 + 권장</td></tr>
+          <tr><td>초안 작성 보조</td><td>작문 과정 단축 (편집 역량은 유지)</td><td>⚠️ 조건부 허용 (출처 명기)</td></tr>
+          <tr><td>번역·문법 교정</td><td>언어 역량 학습 방해 가능</td><td>⚠️ 목적별 판단</td></tr>
+          <tr><td>문제 풀이·정답 생성</td><td>사고 과정 자체를 생략</td><td>❌ 평가 상황에서 금지</td></tr>
+          <tr><td>AI 결과물 그대로 제출</td><td>학습 과정 완전 대체</td><td>❌ 학문 부정직으로 간주</td></tr>
+        </tbody>
+      </table>
+      <div class="kp">
+        <div class="kp-l">핵심 원칙: 과정 학습 vs 결과 생산</div>
+        <div class="kp-t">AI 사용이 <strong>"학습 과정"을 지원하면 허용, "학습 자체를 대체"하면 제한</strong>이 합리적인 기준입니다. "AI를 어떻게 사용했는지"를 설명하는 반성 메모(Reflection)를 과제에 포함시키면 학습 과정을 지키면서 AI 활용을 허용할 수 있습니다.</div>
+      </div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">핵심 프롬프트 예시</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">AI 사용 정책 설계 + 윤리 교육 자료</div><div class="pb-tag tpl">윤리 도구</div></div>
+    <div class="pb-body"><span class="comment"># 학습자 AI 사용 정책 설계</span>
+내 수업의 학습자 AI 사용 정책을 만들어줘.
+
+[수업 정보]
+과목/과정: <span class="slot">[내용]</span>
+교육 목표: <span class="slot">[핵심 목표]</span>
+학습자 수준: <span class="slot">[초급/중급/성인/학생]</span>
+
+정책에 포함할 것:
+1. AI 사용 허용 영역 (구체적)
+2. AI 사용 제한/금지 영역 (이유 포함)
+3. AI 사용 시 필수 명기 방법
+4. 위반 시 처리 방침
+5. 학습자에게 전달할 "왜 이 정책이 있는지" 설명
+
+학습자 친화적 언어로, 한 페이지 이내.
+
+<span class="comment"># 건강한 AI 사용 수업 설계</span>
+학습자가 AI를 지나치게 의존하지 않으면서
+효과적으로 활용하는 것을 배우는 수업을 설계해줘.
+
+주제: <span class="slot">[수업 주제]</span>
+학습자: <span class="slot">[대상]</span>
+
+포함할 것:
+- AI 없이 먼저 해보기 활동 (사전 단계)
+- AI 활용 활동 (핵심 단계)
+- AI 결과물 비판적 평가 활동 (검증 단계)
+- Reflection 과제 (AI를 어떻게, 왜 사용했는지 성찰)
+
+목표: AI를 쓸 때와 안 쓸 때를 스스로 판단할 수 있는 학습자</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">데일리 미션</div>
+  <div class="mission">
+    <div class="mis-l">🎯 DAY 45–49 미션</div>
+    <div class="mis-t">내 수업 AI 사용 정책 완성 + 학습자 공유</div>
+    <div class="mis-d">내 수업에 맞는 AI 사용 정책을 Claude로 만들고, 실제 학습자들에게 공유하세요. "학습자들의 반응과 제안된 수정사항"을 기록해 제출합니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+75 XP</div><div class="mr pt">+45 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>저작권 이슈:</strong> Claude가 생성한 콘텐츠를 상업적으로 사용할 때의 저작권은 현재 국가·플랫폼별로 정책이 다릅니다. "AI가 생성했음을 명기하라"는 가이드라인을 공개 자료에 포함시키는 것을 권장합니다.<br><br>
+      <strong>AI 탐지 도구:</strong> "AI가 썼는지 탐지하면 된다"는 생각은 위험합니다. 현재 AI 탐지 도구의 정확도는 완벽하지 않습니다. 정책의 핵심은 탐지가 아니라 학습 과정 자체를 평가하는 구조를 만드는 것입니다.
+    </div>
+  </div>
+</section>
+
+<!-- PART 4 챕터 -->
+<div class="chap" id="part4">
+  <div class="chap-g"></div><div class="chap-g2"></div>
+  <div class="chap-part">PART FOUR</div>
+  <div class="chap-n" style="color:#FDE68A">12</div>
+  <div class="chap-h">AI 강의 교안을 완성하고<br>시범 강의로 증명한다</div>
+  <div class="chap-s">56일간 배운 모든 것을 하나로 통합합니다.<br>완성된 AI 강의 교안과 실제 시범 강의로 Track E 수료 자격을 획득합니다.</div>
+  <div class="chap-meta">M12 캡스톤 프로젝트 · Day 50–56</div>
+</div>
+
+<!-- ═══ M12 ═══ -->
+<section class="mod" id="m12">
+  <div class="mod-ey">MODULE 12 · DAY 50–56</div>
+  <div class="mod-badge" style="background:rgba(30,27,75,.1);color:#4338CA">M12 · 캡스톤</div>
+  <h2 class="mod-h">캡스톤 프로젝트<br>— AI 강의 교안 완성 + 시범 강의 발표</h2>
+  <p class="mod-sub">56일간 배운 모든 것이 하나의 완성된 강의로 통합됩니다. 설계부터 콘텐츠·평가·피드백까지 갖춘 AI 지원 강의 교안을 완성하고, 실제 시범 강의로 실력을 증명합니다.</p>
+  <div class="mod-chips">
+    <div class="mchip">📅 Day 50–56</div>
+    <div class="mchip">📋 강의 교안 완성</div>
+    <div class="mchip">🎤 시범 강의 15분</div>
+    <div class="mchip">🏆 Track E 수료</div>
+    <div class="mchip">⏱ 총 200분</div>
+  </div>
+  <div class="obj">
+    <div class="obj-l">이 모듈을 마치면</div>
+    <ul>
+      <li>M01~M11 결과물이 통합된 완성된 AI 강의 교안을 갖는다</li>
+      <li>15분 시범 강의를 진행하고 동료 피드백을 받는다</li>
+      <li>Track E 수료 자격을 획득하고 AI OpenCollege 강사 지망생은 등록 심사를 받는다</li>
+    </ul>
+  </div>
+  <div class="sec">캡스톤 결과물 — 7개 섹션</div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#4338CA">1</div>
+      <div class="les-type lab">통합</div>
+      <div class="les-title">AI 강의 교안 완성 체크리스트</div>
+      <div class="les-dur">필수 제출</div>
+    </div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>섹션</th><th>내용</th><th>출처 모듈</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1. 강의 개요</strong></td><td>과정명·대상·목표·커리큘럼 구조</td><td>M02</td></tr>
+          <tr><td><strong>2. 학습자 분석</strong></td><td>페르소나 3유형 + 맞춤 접근법</td><td>M01, M04</td></tr>
+          <tr><td><strong>3. 단일 수업 지도안</strong></td><td>60분 지도안 (타임라인·활동·평가)</td><td>M02</td></tr>
+          <tr><td><strong>4. 강의 자료 샘플</strong></td><td>슬라이드 구조 + 스크립트 1강 분량</td><td>M03</td></tr>
+          <tr><td><strong>5. 문제 은행</strong></td><td>5가지 유형 × 5문항 = 25문항 + 루브릭</td><td>M05, M06</td></tr>
+          <tr><td><strong>6. AI 사용 정책</strong></td><td>학습자용 1페이지 가이드</td><td>M11</td></tr>
+          <tr><td><strong>7. 효과 측정 계획</strong></td><td>Kirkpatrick 4단계 측정 도구</td><td>M08</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#4338CA">2</div>
+      <div class="les-type ws">시범 강의</div>
+      <div class="les-title">15분 시범 강의 — 구조와 평가 기준</div>
+      <div class="les-dur">발표당 15분 + 피드백 5분</div>
+    </div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>구간</th><th>내용</th><th>시간</th></tr></thead>
+        <tbody>
+          <tr><td><strong>도입 (훅)</strong></td><td>청중의 관심을 끄는 질문 또는 사례</td><td>2분</td></tr>
+          <tr><td><strong>핵심 개념 전달</strong></td><td>Bloom's Taxonomy 2~3단계 포함 설명</td><td>6분</td></tr>
+          <tr><td><strong>안내된 실습</strong></td><td>청중이 직접 참여하는 짧은 활동</td><td>4분</td></tr>
+          <tr><td><strong>정리 + 다음 단계</strong></td><td>핵심 요약 + 이어서 배울 것 예고</td><td>2분</td></tr>
+          <tr><td><strong>동료 피드백</strong></td><td>Keep·Better·New 3가지 피드백</td><td>5분</td></tr>
+        </tbody>
+      </table>
+      <div class="kp">
+        <div class="kp-l">평가 기준 — 좋은 시범 강의</div>
+        <div class="kp-t">
+          <strong>명확성:</strong> 핵심 메시지가 1분 안에 전달되는가?<br>
+          <strong>참여 유도:</strong> 청중이 수동적 청취자가 아닌 참여자인가?<br>
+          <strong>AI 활용:</strong> AI 도구 사용이 자연스럽고 투명한가?<br>
+          <strong>맞춤화:</strong> 이 청중(학습자)에 맞게 설계되었는가?
+        </td>
+      </div>
+    </div>
+  </div>
+  <div class="lesson">
+    <div class="les-head">
+      <div class="les-num" style="background:#4338CA">3</div>
+      <div class="les-type th">평가</div>
+      <div class="les-title">Track E 수료 자격 평가</div>
+      <div class="les-dur">평가 기준</div>
+    </div>
+    <div class="les-body">
+      <table class="tbl">
+        <thead><tr><th>평가 항목</th><th>배점</th><th>기준</th></tr></thead>
+        <tbody>
+          <tr><td>AI 강의 교안 완성도</td><td>40점</td><td>7개 섹션 완성, 실제 활용 가능 수준</td></tr>
+          <tr><td>시범 강의 품질</td><td>30점</td><td>15분 강의, 참여 유도, AI 활용 자연스럽게</td></tr>
+          <tr><td>모듈 미션 완료율</td><td>20점</td><td>11개 미션 중 9개 이상 완료</td></tr>
+          <tr><td>동료 피드백 품질</td><td>10점</td><td>다른 수강생 시범 강의에 구체적 피드백 제공</td></tr>
+        </tbody>
+      </table>
+      <div class="kp">
+        <div class="kp-l">수료 기준 및 다음 단계</div>
+        <div class="kp-t">
+          <strong>Track E Certificate:</strong> 총점 75점 이상 + 미션 완료율 80% 이상<br>
+          <strong>우수 수료 (Teaching Excellence):</strong> 총점 90점 이상<br>
+          <strong>AI OpenCollege 강사 등록 심사 자격:</strong> 우수 수료자 → AI OpenCollege 강사 지원 우선 심사 자격
+        </td>
+      </div>
+    </div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">최종 프롬프트 — 캡스톤 통합 지원</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">AI 강의 교안 통합 + 시범 강의 준비</div><div class="pb-tag tpl">캡스톤 도구</div></div>
+    <div class="pb-body"><span class="comment"># AI 강의 교안 Executive Summary</span>
+내 AI 강의 교안의 한 페이지 요약을 만들어줘.
+
+[강의 개요]
+과정명: <span class="slot">[이름]</span>
+대상: <span class="slot">[학습자]</span>
+총 시간: <span class="slot">[N시간]</span>
+핵심 학습 목표: <span class="slot">[3가지]</span>
+나의 교육 철학: <span class="slot">[한 문장]</span>
+
+요약 포함 내용:
+- 이 강의가 필요한 이유 (Pain Point)
+- 이 강의의 핵심 차별점
+- AI를 활용하는 방식 3가지
+- 예상 학습 효과 (수료 후 변화)
+- 강사 소개 한 문단
+
+<span class="comment"># 시범 강의 15분 스크립트</span>
+내 시범 강의 스크립트를 써줘.
+
+주제: <span class="slot">[15분 강의 주제]</span>
+청중: <span class="slot">[Track E 동기 수강생 + 강사]</span>
+
+포함할 것:
+- 오프닝 훅 (2분, 청중 참여 유도)
+- 핵심 개념 설명 (6분, Bloom's 2~3단계)
+- 참여 활동 (4분, 청중이 직접 하는 것)
+- 클로징 (2분, 핵심 요약 + AI 활용 어떻게 했는지 투명하게 공유)
+
+구어체, 실제 말할 수 있는 자연스러운 언어로.
+
+<span class="comment"># 동료 시범 강의 피드백 템플릿</span>
+다른 수강생의 시범 강의를 보고 피드백을 쓸 때 사용할
+Keep·Better·New 구조 템플릿을 만들어줘.
+
+각 항목당 2~3개, 구체적이고 실행 가능한 피드백으로.</div>
+  </div>
+  <div class="hr"></div>
+  <div class="sec">다음 단계</div>
+  <table class="tbl">
+    <thead><tr><th>경로</th><th>대상</th><th>내용</th></tr></thead>
+    <tbody>
+      <tr><td><strong>AI OpenCollege 강사 등록</strong></td><td>우수 수료자</td><td>AI OpenCollege 플랫폼 Track A/B/C/D 강사로 활동 — 수익 재분배 시스템 참여</td></tr>
+      <tr><td><strong>Track E 2차</strong></td><td>Track E 수료자</td><td>온라인 강의 촬영 기술 · LMS 운영 · 기업 교육 세일즈</td></tr>
+      <tr><td><strong>기업 교육 연계</strong></td><td>기업 교육 담당자</td><td>IMLAB × AI OpenCollege 기업 교육 파트너십 — 사내 AI 교육 프로그램 운영</td></tr>
+    </tbody>
+  </table>
+  <div class="mission">
+    <div class="mis-l">🏆 최종 미션 (M12)</div>
+    <div class="mis-t">AI 강의 교안 + 15분 시범 강의 발표</div>
+    <div class="mis-d">7개 섹션 AI 강의 교안 PDF + 15분 시범 강의를 완성하고 발표하세요. AI OpenCollege 강사 지망생은 캡스톤 이후 별도 등록 심사 신청서를 제출합니다. 우수 수료자는 AI OpenCollege 공식 강사 심사 우선 자격이 주어집니다.</div>
+    <div class="mis-rewards"><div class="mr xp">+200 XP</div><div class="mr pt">+150 P</div></div>
+  </div>
+  <div class="inote">
+    <div class="inote-l">§8 강사 노트</div>
+    <div class="inote-body">
+      <strong>시범 강의 분위기:</strong> "평가받는다"는 압박이 아닌 "함께 배우는" 분위기를 만드세요. Keep·Better·New 피드백 구조를 미리 공유해두면 피드백도 학습이 됩니다.<br><br>
+      <strong>AI OpenCollege 강사 연계:</strong> Track E 우수 수료자를 AI OpenCollege 강사로 연결하는 것이 이 트랙의 가장 강력한 가치입니다. 실제 강의 기회는 Track E 수강 동기를 크게 높입니다.<br><br>
+      <strong>수료식 메시지:</strong> "여러분은 이제 AI를 두려워하는 교육자가 아닙니다. AI를 도구로 쓰면서도 사람 중심 교육을 실천하는 교육자입니다. 오늘 발표한 교안은 내일 실제 수업에서 써보세요."
+    </div>
+  </div>
+</section>
+
+<!-- 부록 -->
+<section class="mod" id="appendix" style="border-top:2px solid var(--p3)">
+  <div class="mod-ey">APPENDIX</div>
+  <h2 class="mod-h" style="font-size:26px">부록 — Track E 교육자 필수 참조</h2>
+  <div class="sec">56일 핵심 프롬프트 라이브러리</div>
+  <div class="pb">
+    <div class="pb-top"><div class="pb-dots"><div class="pd r"></div><div class="pd y"></div><div class="pd g"></div></div><div class="pb-label">Track E 교육자 마스터 프롬프트 요약</div><div class="pb-tag tpl">빠른 참조</div></div>
+    <div class="pb-body"><span class="comment">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="comment">◆ 수업 설계</span>
+<span class="comment">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+커리큘럼 설계    → 목표·대상·기간 → Bloom's 기반 모듈 구성
+수업 지도안      → 주제·대상·시간 → 타임라인·활동·평가
+학습 목표 설정   → Bloom's 6단계 동사 기반 자동 생성
+
+<span class="comment">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="comment">◆ 콘텐츠 제작</span>
+<span class="comment">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+강의 스크립트    → 구어체 · 훅·설명·실습·클로징 구조
+슬라이드 설계    → 핵심 메시지 + 발표자 노트 + 콘텐츠 유형
+보충 자료       → 요약본·워크시트·심화 질문·추가 학습 방향
+3수준 설명       → 초급·중급·고급 맞춤 설명 세트
+
+<span class="comment">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="comment">◆ 평가·피드백</span>
+<span class="comment">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+문제 은행 구축   → 5가지 유형 + 난이도별 분류
+루브릭 채점      → AI 1차 채점 + 교육자 최종 확정
+개인화 피드백    → 학습자별 칭찬·개선·팁 대량 생성
+Q&A 분류·답변   → 질문 패턴 분석 + FAQ 자동 생성
+
+<span class="comment">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="comment">◆ 코칭·브랜드·윤리</span>
+<span class="comment">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+코칭 준비        → 학습자 현황 → 세션 목표·질문·접근법
+성장 리포트      → 데이터 기반 개인화 월간 리포트
+강사 브랜드      → 포지셔닝·슬로건·콘텐츠 캘린더·소개 카피
+AI 정책         → 허용·제한·의무 명기 + 학습자 설명문</div>
+  </div>
+  <div class="sec" style="margin-top:24px">AI OpenCollege 전체 트랙 — 나에게 맞는 과정</div>
+  <table class="tbl">
+    <thead><tr><th>트랙</th><th>대상</th><th>핵심 결과물</th><th>테마</th></tr></thead>
+    <tbody>
+      <tr><td><strong>A 🟣</strong></td><td>사무직 일반</td><td>프롬프트 라이브러리</td><td>인디고 다크</td></tr>
+      <tr><td><strong>B 🟢</strong></td><td>기술·개발자</td><td>배포된 AI 시스템</td><td>에메랄드 그리드</td></tr>
+      <tr><td><strong>C 🟡</strong></td><td>창업자·사업개발</td><td>IR 덱 + 사업 계획서</td><td>골드 크림</td></tr>
+      <tr><td><strong>D 🔵</strong></td><td>리더·관리자</td><td>AI 전환 계획서</td><td>남색 컨설팅</td></tr>
+      <tr><td><strong>E 🩵</strong></td><td>교육자·강사</td><td>AI 강의 교안 + 시범 강의</td><td>틸 청록</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</div><!-- /wrap -->
+
+<script>
+function navTo(el,id){
+  document.querySelectorAll('.nt').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+}
+function jumpTo(id){
+  document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+}
+const secs=['toc','m01','m02','m03','m04','m05','m06','m07','m08','m09','m10','m11','m12'];
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id=e.target.id;
+      document.querySelectorAll('.nt').forEach(t=>{
+        t.classList.toggle('on',t.textContent.trim().toLowerCase()===id||t.textContent.trim().toUpperCase()===id.toUpperCase());
+      });
+    }
+  });
+},{rootMargin:'-20% 0px -75% 0px'});
+secs.forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
+</script>
+</body>
+</html>
