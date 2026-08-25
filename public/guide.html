@@ -2251,7 +2251,7 @@ let twI=0,twC=0,twD=false;
 function twStep(){const el=document.getElementById('twTxt');const p=phrases[twI];if(!twD&&twC<=p.length){el.textContent=p.slice(0,twC++);setTimeout(twStep,twC<=p.length?80:1200);}else if(twD&&twC>0){el.textContent=p.slice(0,--twC);setTimeout(twStep,40);}else{twD=!twD;if(!twD)twI=(twI+1)%phrases.length;setTimeout(twStep,300);}}
 twStep();
 // Intersection Observer for cards
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:.08});
+var obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});},{threshold:.08});
 document.querySelectorAll('.tc').forEach((c,i)=>{c.style.transitionDelay=`${(i%6)*.05}s`;obs.observe(c);});
 </script>
     </div>
@@ -2850,7 +2850,7 @@ function typeGen(){const p=prompts[pi];const el=document.getElementById('genText
 typeGen();
 
 // INTERSECTION OBSERVER
-const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){const id=x.target.id.replace('sec-','');document.querySelectorAll('.nf').forEach(n=>{const txt=n.textContent.toLowerCase();if(id==='intro'&&txt.includes('개요')||id==='formula'&&txt.includes('공식')||id==='style'&&txt.includes('스타일')||id==='keyword'&&txt.includes('키워드')||id==='builder'&&txt.includes('빌더')||id==='tool'&&txt.includes('툴')||id==='negative'&&txt.includes('부정')||id==='ref'&&txt.includes('참조')){document.querySelectorAll('.nf').forEach(nf=>nf.classList.remove('on'));n.classList.add('on');}});}});},{rootMargin:'-20% 0px -75% 0px'});
+var obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){const id=x.target.id.replace('sec-','');document.querySelectorAll('.nf').forEach(n=>{const txt=n.textContent.toLowerCase();if(id==='intro'&&txt.includes('개요')||id==='formula'&&txt.includes('공식')||id==='style'&&txt.includes('스타일')||id==='keyword'&&txt.includes('키워드')||id==='builder'&&txt.includes('빌더')||id==='tool'&&txt.includes('툴')||id==='negative'&&txt.includes('부정')||id==='ref'&&txt.includes('참조')){document.querySelectorAll('.nf').forEach(nf=>nf.classList.remove('on'));n.classList.add('on');}});}});},{rootMargin:'-20% 0px -75% 0px'});
 ['sec-intro','sec-formula','sec-style','sec-keyword','sec-builder','sec-tool','sec-negative','sec-ref'].forEach(id=>{const el=document.getElementById(id);if(el)obs.observe(el);});
 </script>
     </div>
@@ -3442,7 +3442,7 @@ function showStep(idx){
 // scroll nav highlight
 const secIds=['sec-hero','sec-what','sec-flow','sec-prompt','sec-iterate','sec-export','sec-tips','sec-limits'];
 const labelMap={'sec-hero':'소개','sec-what':'Claude Design이란','sec-flow':'사용 흐름','sec-prompt':'프롬프트 작성','sec-iterate':'수정하기','sec-export':'내보내기','sec-tips':'꿀팁','sec-limits':'주의사항'};
-const obs=new IntersectionObserver(entries=>{
+var obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){
       const lbl=labelMap[e.target.id];
