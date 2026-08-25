@@ -32,10 +32,7 @@ export function GuideModal() {
               <div className="guide-modal-panel" onClick={(event) => event.stopPropagation()}>
                 <div className="guide-modal-bar">
                   <span className="guide-modal-title">AI OpenCollege 시각 가이드북</span>
-                  <div className="guide-modal-bar-actions">
-                    <a className="guide-modal-open" href="/guide" target="_blank" rel="noreferrer">새 창에서 열기 ↗</a>
-                    <button type="button" className="guide-modal-close" onClick={() => setOpen(false)} aria-label="닫기">×</button>
-                  </div>
+                  <button type="button" className="guide-modal-close" onClick={() => setOpen(false)} aria-label="닫기">×</button>
                 </div>
                 <iframe className="guide-modal-frame" src="/guide" title="AI OpenCollege 시각 가이드북" />
               </div>
