@@ -20,6 +20,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${baseUrl}/check`,
       priority: 0.8
+    },
+    {
+      url: `${baseUrl}/guide`,
+      priority: 0.7
     }
   ];
 

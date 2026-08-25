@@ -21,6 +21,7 @@ export async function GET() {
     "",
     `- 홈페이지: ${siteUrl}`,
     `- 블로그: ${siteUrl}/blog`,
+    `- 시각 가이드북(웹 용어·AI 이미지·Claude Design): ${siteUrl}/guide`,
     `- 출강 사례: ${siteUrl}/cases`,
     `- AI 역량 진단: ${siteUrl}/check`,
     "",

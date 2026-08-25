@@ -17,6 +17,7 @@ export function Header() {
               <a href="/#clients">출강사례</a>
               <a href="/#blog">블로그</a>
               <a href="/#portfolio">수강생작품</a>
+              <a href="/guide">가이드북</a>
               <a href="/#faq">FAQ</a>
             </nav>
             <div className="hcta">
