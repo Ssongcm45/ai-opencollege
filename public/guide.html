@@ -3555,5 +3555,15 @@ window.addEventListener('resize', function() {
 });
 </script>
 
+<script>
+// iframe(가이드북 모달) 임베드 환경에서는 IntersectionObserver 기반 카드 등장
+// 애니메이션이 발화하지 않아 .tc가 opacity 0으로 남는다 — 프레임에서는 즉시 표시.
+if (window.self !== window.top) {
+  document.querySelectorAll('.tc').forEach(function (c) {
+    c.style.transitionDelay = '0s';
+    c.classList.add('vis');
+  });
+}
+</script>
 </body>
 </html>
