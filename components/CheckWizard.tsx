@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { emailMyResult, recordCheckCompletion, submitCheckInquiry, submitOrgCheckResponse } from "@/lib/check-actions";
+import { emailMyResult, submitCheckInquiry, submitIndividualCheckResponse, submitOrgCheckResponse } from "@/lib/check-actions";
 import {
   AREAS,
   BACKGROUND_QUESTIONS,
@@ -292,7 +292,9 @@ function ResultView({ answers, background, containerRef, identity, isOrgMode, on
   // 조직 모드: 결과 화면 진입 시 한 번만 저장.
   const [orgStatus, setOrgStatus] = useState<{ ok: boolean; message: string } | null>(null);
   const submittedRef = useRef(false);
-  const completionRecordedRef = useRef(false);
+
+  // 개인 모드: 결과를 보기 전 인적사항을 입력받아 저장한 뒤에만 결과를 공개한다.
+  const [revealed, setRevealed] = useState(isOrgMode);
 
   useEffect(() => {
     if (!isOrgMode || !orgCode || submittedRef.current) return;
@@ -310,11 +312,16 @@ function ResultView({ answers, background, containerRef, identity, isOrgMode, on
     ).then(setOrgStatus);
   }, [isOrgMode, orgCode, identity, background, answers]);
 
-  useEffect(() => {
-    if (isOrgMode || completionRecordedRef.current) return;
-    completionRecordedRef.current = true;
-    void recordCheckCompletion();
-  }, [isOrgMode]);
+  if (!isOrgMode && !revealed) {
+    return (
+      <IndividualGate
+        answers={answers}
+        background={background}
+        containerRef={containerRef}
+        onDone={() => setRevealed(true)}
+      />
+    );
+  }
 
   return (
     <div className="check-wizard" ref={containerRef}>
@@ -454,8 +461,81 @@ function ResultView({ answers, background, containerRef, identity, isOrgMode, on
       <p className="check-note">
         {isOrgMode
           ? "입력하신 참여자 정보와 응답은 조직 진단 결과 확인 및 교육 설계 목적으로 저장됩니다."
-          : "응답 내용은 저장되지 않으며, 완료 횟수만 익명으로 집계됩니다."}
+          : "입력하신 정보와 응답은 진단 결과 안내 및 맞춤 교육 제안 목적으로 저장됩니다."}
       </p>
+    </div>
+  );
+}
+
+interface IndividualGateProps {
+  answers: Answers;
+  background: Record<string, string>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+  onDone: () => void;
+}
+
+// 개인 진단: 결과 공개 전 인적사항 게이트.
+function IndividualGate({ answers, background, containerRef, onDone }: IndividualGateProps) {
+  const [form, setForm] = useState({ name: "", organization: "", phone: "", email: "", note: "" });
+  const [privacyOk, setPrivacyOk] = useState(false);
+  const [status, setStatus] = useState<{ ok: boolean; message: string } | null>(null);
+  const [pending, startTransition] = useTransition();
+
+  const complete = form.name.trim() && form.phone.trim() && form.email.trim() && privacyOk;
+
+  const submit = () => {
+    setStatus(null);
+    startTransition(async () => {
+      const res = await submitIndividualCheckResponse(
+        form,
+        {
+          role: background.role ?? "",
+          frequency: background.frequency ?? "",
+          environment: background.environment ?? "",
+          purpose: background.purpose ?? "",
+        },
+        answers,
+      );
+      if (res.ok) onDone();
+      else setStatus(res);
+    });
+  };
+
+  return (
+    <div className="check-wizard" ref={containerRef}>
+      <div className="check-progress" aria-hidden="true">
+        <div className="check-progress-bar" style={{ width: "100%" }} />
+      </div>
+      <div className="check-card">
+        <h2 className="check-step-title">결과 확인 전, 정보를 입력해 주세요 <em>*</em></h2>
+        <p className="check-step-sub">
+          진단 결과를 안내하고 수준에 맞는 학습을 제안드릴 수 있도록 아래 정보를 남겨 주세요.
+        </p>
+        <div className="check-identity-grid">
+          <input className="input" onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} placeholder="이름 *" value={form.name} />
+          <input className="input" onChange={(e) => setForm((p) => ({ ...p, organization: e.target.value }))} placeholder="소속 (회사·기관, 선택)" value={form.organization} />
+          <input className="input" onChange={(e) => setForm((p) => ({ ...p, phone: e.target.value }))} placeholder="연락처 *" type="tel" value={form.phone} />
+          <input className="input" onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))} placeholder="이메일 *" type="email" value={form.email} />
+          <textarea className="textarea check-identity-full" onChange={(e) => setForm((p) => ({ ...p, note: e.target.value }))} placeholder="관심 분야, 현재 어려움 등 남기고 싶은 말 (선택)" value={form.note} />
+          <div className="privacy-box check-identity-full">
+            <label className="privacy-check">
+              <input checked={privacyOk} onChange={(e) => setPrivacyOk(e.target.checked)} type="checkbox" />
+              <span>개인정보 수집 및 이용에 동의합니다. <em>(필수)</em></span>
+            </label>
+            <details className="privacy-detail">
+              <summary>자세히 보기</summary>
+              <p>수집 항목: 이름, 소속, 연락처, 이메일, 응답 내용 · 목적: 진단 결과 안내 및 맞춤 교육 제안 · 보유 기간: 목적 달성 후 1년 이내 파기</p>
+            </details>
+          </div>
+        </div>
+      </div>
+      <div className="check-nav">
+        <span />
+        <button className="btn bp btn-pill" disabled={!complete || pending} onClick={submit} type="button">
+          {pending ? "저장 중..." : "결과 보기 →"}
+        </button>
+      </div>
+      {status && !status.ok ? <p className="check-inline-msg err">{status.message}</p> : null}
     </div>
   );
 }

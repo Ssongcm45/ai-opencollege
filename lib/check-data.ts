@@ -5,9 +5,24 @@ import type { AreaKey } from "@/lib/diagnostic";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+// 개인(자가) 진단 응답을 담는 예약 그룹의 코드. 조직 목록에는 노출하지 않는다.
+export const INDIVIDUAL_GROUP_CODE = "__individual__";
+export const INDIVIDUAL_GROUP_NAME = "개인 진단 (자가 신청)";
+
 // 참여 링크(공개)로 접근하는 활성 조직 진단 그룹.
 export function isGroupOpen(group: { active: boolean; expiresAt: Date | null }): boolean {
   return group.active && (!group.expiresAt || group.expiresAt.getTime() > Date.now());
+}
+
+// 개인 진단 예약 그룹 (없으면 null). 응답이 한 번이라도 저장되면 존재한다.
+export async function getIndividualGroup(): Promise<CheckGroup | null> {
+  if (!hasDatabase) return null;
+  const [group] = await getDb()
+    .select()
+    .from(checkGroups)
+    .where(eq(checkGroups.code, INDIVIDUAL_GROUP_CODE))
+    .limit(1);
+  return group ?? null;
 }
 
 export async function getCheckGroupByCode(code: string): Promise<CheckGroup | null> {
@@ -36,20 +51,29 @@ export async function getCheckTotals(): Promise<{
 
   const db = getDb();
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  const [individualTotal, orgTotal, recentIndividualTotal, recentOrgTotal] = await Promise.all([
-    db.select({ value: count() }).from(checkCompletions),
+  const individualGroup = await getIndividualGroup();
+  const individualId = individualGroup?.id ?? null;
+
+  const [allTotal, individualTotal, recentTotal, legacyCompletions] = await Promise.all([
     db.select({ value: count() }).from(checkResponses),
-    db.select({ value: count() }).from(checkCompletions).where(gte(checkCompletions.createdAt, thirtyDaysAgo)),
-    db.select({ value: count() }).from(checkResponses).where(gte(checkResponses.createdAt, thirtyDaysAgo))
+    individualId
+      ? db.select({ value: count() }).from(checkResponses).where(eq(checkResponses.groupId, individualId))
+      : Promise.resolve([{ value: 0 }]),
+    db.select({ value: count() }).from(checkResponses).where(gte(checkResponses.createdAt, thirtyDaysAgo)),
+    db.select({ value: count() }).from(checkCompletions)
   ]);
-  const individualCount = individualTotal[0]?.value ?? 0;
-  const orgResponseCount = orgTotal[0]?.value ?? 0;
+
+  const allResponses = allTotal[0]?.value ?? 0;
+  const individualResponses = individualTotal[0]?.value ?? 0;
+  // 실명 개인 응답 + 과거 익명 완료(레거시)를 합산해 개인 진단 총계를 보인다.
+  const individualCount = individualResponses + (legacyCompletions[0]?.value ?? 0);
+  const orgResponseCount = allResponses - individualResponses;
 
   return {
     individualCount,
     orgResponseCount,
-    total: individualCount + orgResponseCount,
-    last30Days: (recentIndividualTotal[0]?.value ?? 0) + (recentOrgTotal[0]?.value ?? 0)
+    total: allResponses + (legacyCompletions[0]?.value ?? 0),
+    last30Days: recentTotal[0]?.value ?? 0
   };
 }
 
@@ -65,7 +89,9 @@ export async function getCheckGroupsWithCounts(): Promise<CheckGroupWithCount[]>
   for (const row of responses) {
     counts.set(row.groupId, (counts.get(row.groupId) ?? 0) + 1);
   }
-  return groups.map((group) => ({ ...group, responseCount: counts.get(group.id) ?? 0 }));
+  return groups
+    .filter((group) => group.code !== INDIVIDUAL_GROUP_CODE)
+    .map((group) => ({ ...group, responseCount: counts.get(group.id) ?? 0 }));
 }
 
 export async function getCheckGroupById(id: string): Promise<CheckGroup | null> {

@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { createCheckGroup, deleteCheckGroup, toggleCheckGroup, updateCheckGroupExpiry } from "@/lib/check-actions";
-import { getCheckGroupsWithCounts, getCheckTotals } from "@/lib/check-data";
+import { getCheckGroupsWithCounts, getCheckTotals, getIndividualGroup } from "@/lib/check-data";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { CheckLinkField } from "@/components/admin/CheckLinkField";
 
 export default async function ChecksAdminPage() {
-  const [groups, totals] = await Promise.all([getCheckGroupsWithCounts(), getCheckTotals()]);
+  const [groups, totals, individualGroup] = await Promise.all([
+    getCheckGroupsWithCounts(),
+    getCheckTotals(),
+    getIndividualGroup()
+  ]);
 
   return (
     <>
@@ -33,6 +37,28 @@ export default async function ChecksAdminPage() {
           <div className="stat-fig">
             <div className="stat-fig-label">최근 30일</div>
             <div className="stat-fig-num">{totals.last30Days}</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="cms-card">
+        <div className="cms-card-head">
+          <div>
+            <span className="cms-card-title">개인 진단 응답</span>
+            <p className="cms-hint">개인이 스스로 진행한 AI학습체크 신청자 목록입니다. 이름·연락처·이메일과 결과가 함께 저장됩니다.</p>
+          </div>
+          {individualGroup ? (
+            <Link href={`/admin/checks/${individualGroup.id}`} className="cms-btn cms-btn-primary" style={{ fontSize: 13, padding: "8px 16px" }}>
+              응답 보기 →
+            </Link>
+          ) : (
+            <span style={{ fontSize: 13, color: "#9ca3af" }}>아직 없음</span>
+          )}
+        </div>
+        <div className="stat-figs">
+          <div className="stat-fig">
+            <div className="stat-fig-label">개인 진단 신청</div>
+            <div className="stat-fig-num">{totals.individualCount}</div>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ReportModal } from "@/components/admin/ReportModal";
-import { getCheckGroupById, getGroupResponses, getGroupStats } from "@/lib/check-data";
+import { getCheckGroupById, getGroupResponses, getGroupStats, INDIVIDUAL_GROUP_CODE } from "@/lib/check-data";
 import { AREAS, MATURITY_LEVELS, type AreaKey } from "@/lib/diagnostic";
 
 const AREA_KEYS: AreaKey[] = ["A", "B", "C", "D", "E"];
@@ -43,7 +43,7 @@ export default async function CheckStatsPage({
           participants={participants}
           initialAiSummary={group.aiSummary ?? null}
         />
-        <h1 className="cms-page-title">{group.name} · 조직 역량 통계</h1>
+        <h1 className="cms-page-title">{group.name} · {group.code === INDIVIDUAL_GROUP_CODE ? "개인 진단 통계" : "조직 역량 통계"}</h1>
         <Link href="/admin/checks" className="cms-link">← 목록으로</Link>
       </div>
 

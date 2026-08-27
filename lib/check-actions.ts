@@ -8,7 +8,7 @@ import { Resend } from "resend";
 import { z } from "zod";
 import { audit } from "@/lib/audit";
 import { requireAdminSession } from "@/lib/auth";
-import { getGroupStats, isGroupOpen } from "@/lib/check-data";
+import { getGroupStats, isGroupOpen, INDIVIDUAL_GROUP_CODE, INDIVIDUAL_GROUP_NAME } from "@/lib/check-data";
 import { isAllowedAiModel } from "@/lib/ai-models";
 import { buildAiSummaryMessages } from "@/lib/ai-summary-prompt";
 import { getDb, hasDatabase } from "@/lib/db";
@@ -199,6 +199,64 @@ export async function recordCheckCompletion(): Promise<{ ok: boolean }> {
   } catch {
     return { ok: false };
   }
+}
+
+// 개인 진단 응답을 담는 예약 그룹을 보장하고 id를 반환한다.
+async function ensureIndividualGroupId(): Promise<string> {
+  const db = getDb();
+  await db
+    .insert(checkGroups)
+    .values({ name: INDIVIDUAL_GROUP_NAME, code: INDIVIDUAL_GROUP_CODE, active: false })
+    .onConflictDoNothing({ target: checkGroups.code });
+  const [group] = await db
+    .select({ id: checkGroups.id })
+    .from(checkGroups)
+    .where(eq(checkGroups.code, INDIVIDUAL_GROUP_CODE))
+    .limit(1);
+  return group.id;
+}
+
+// ── (b-2) 개인 진단 응답 저장 (결과 확인 전 인적사항 수집) ──
+export async function submitIndividualCheckResponse(
+  identity: { name: string; organization: string; phone: string; email: string; note: string },
+  background: { role: string; frequency: string; environment: string; purpose: string },
+  answers: Record<string, number>
+): Promise<{ ok: boolean; message: string }> {
+  const name = identity.name.trim();
+  const phone = identity.phone.trim();
+  const emailValid = z.string().email().safeParse(identity.email.trim()).success;
+  if (!name || !phone || !emailValid) {
+    return { ok: false, message: "이름, 연락처, 이메일을 정확히 입력해 주세요." };
+  }
+
+  if (!hasDatabase) {
+    return { ok: false, message: "저장소가 설정되지 않아 응답을 기록하지 못했습니다." };
+  }
+
+  const validated = validateAnswers(answers);
+  if (!validated) {
+    return { ok: false, message: "응답값이 올바르지 않습니다." };
+  }
+
+  const result = computeResult(validated);
+
+  try {
+    const groupId = await ensureIndividualGroupId();
+    await getDb().insert(checkResponses).values(
+      toResponseRow(
+        groupId,
+        { name, department: identity.organization, position: "", phone, email: identity.email, note: identity.note },
+        background,
+        validated,
+        result
+      )
+    );
+  } catch (e) {
+    console.error("[check] 개인 응답 저장 실패:", e);
+    return { ok: false, message: "응답 저장 중 오류가 발생했습니다." };
+  }
+
+  return { ok: true, message: "응답이 저장되었습니다." };
 }
 
 const emailSchema = z.string().email();
