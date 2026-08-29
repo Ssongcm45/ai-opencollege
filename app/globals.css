@@ -679,18 +679,22 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 .report-modal-actions { display: flex; gap: 10px; margin-top: 4px; }
 .report-in-modal { padding: 32px; }
 
-/* Print scoping — when a report modal is open, print only the report content.
-   visibility (not display) hides the whole page while keeping the fixed overlay
-   subtree paintable regardless of nesting depth; the overlay is then reset to
-   flow layout so it prints from the top of the page. */
+/* Print scoping — when the report modal is open, print only the report.
+   The overlay is portaled to <body>, so hiding every other direct child with
+   display:none removes them from layout entirely (no reserved space), and the
+   overlay/panel are reset to normal block flow so the report starts at the top
+   of page 1 and paginates cleanly. */
 @media print {
-  body.printing-report * { visibility: hidden; }
-  body.printing-report .report-modal-overlay,
-  body.printing-report .report-modal-overlay * { visibility: visible; }
+  body.printing-report > *:not(.report-modal-overlay) { display: none !important; }
   body.printing-report .report-modal-controls { display: none !important; }
-  body.printing-report .report-modal-overlay { background: #fff; display: block; inset: auto; overflow: visible; padding: 0; position: static; }
-  body.printing-report .report-modal-panel { border-radius: 0; box-shadow: none; max-height: none; max-width: none; overflow: visible; }
+  body.printing-report .report-modal-overlay {
+    background: #fff; display: block; inset: auto; margin: 0; overflow: visible; padding: 0; position: static;
+  }
+  body.printing-report .report-modal-panel {
+    border-radius: 0; box-shadow: none; display: block; max-height: none; max-width: none; overflow: visible; width: auto;
+  }
   body.printing-report .report-in-modal { padding: 0; }
+  body.printing-report .report { max-width: none; padding: 0; }
 }
 
 .report-modal-model { margin-bottom: 8px; }

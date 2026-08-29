@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { createPortal } from "react-dom";
 import { AI_MODEL_OPTIONS } from "@/lib/ai-models";
 import { generateAiSummary } from "@/lib/check-actions";
 import type { GroupStats } from "@/lib/check-data";
@@ -71,7 +72,9 @@ export function ReportModal({
         PDF 리포트
       </button>
 
-      {open ? (
+      {open
+        ? createPortal(
+        // 관리자 그리드(사이드바) 밖으로 빼내 인쇄 시 리포트만 최상단부터 온전히 출력.
         <div
           className="report-modal-overlay"
           onClick={(event) => {
@@ -219,8 +222,10 @@ export function ReportModal({
               />
             </div>
           </div>
-        </div>
-      ) : null}
+        </div>,
+        document.body
+        )
+        : null}
     </>
   );
 }
