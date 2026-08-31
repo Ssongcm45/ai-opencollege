@@ -5,7 +5,8 @@ import { createPortal } from "react-dom";
 import { AI_MODEL_OPTIONS } from "@/lib/ai-models";
 import { generateAiSummary } from "@/lib/check-actions";
 import type { GroupStats } from "@/lib/check-data";
-import { curriculumToText, dominantLevelFromDistribution } from "@/lib/curriculum";
+import { LECTURE_STYLES, curriculumToText, dominantLevelFromDistribution, type LectureStyleId } from "@/lib/curriculum";
+import { MATURITY_LEVELS } from "@/lib/diagnostic";
 import { SENDER_PROFILES, type SenderProfileId } from "@/lib/sender-profiles";
 import { ReportView, type ReportParticipant } from "@/components/admin/ReportView";
 
@@ -31,8 +32,16 @@ export function ReportModal({
   const [recipientOrg, setRecipientOrg] = useState("");
   const [recipientName, setRecipientName] = useState("");
   const [comment, setComment] = useState("");
-  // 조직 우세 Level 커리큘럼을 기본값으로 채워, 관리자가 그대로 보내거나 수정할 수 있게 한다.
-  const [curriculum, setCurriculum] = useState(() => curriculumToText(dominantLevel));
+  // 커리큘럼: 레벨(기본=조직 우세) × 강의 스타일을 선택하면 텍스트가 갱신된다.
+  const [curriculumLevel, setCurriculumLevel] = useState<1 | 2 | 3 | 4 | 5>(dominantLevel);
+  const [curriculumStyle, setCurriculumStyle] = useState<LectureStyleId>("balanced");
+  const [curriculum, setCurriculum] = useState(() => curriculumToText(dominantLevel, "balanced"));
+
+  function applyCurriculum(level: 1 | 2 | 3 | 4 | 5, style: LectureStyleId) {
+    setCurriculumLevel(level);
+    setCurriculumStyle(style);
+    setCurriculum(curriculumToText(level, style));
+  }
   const [anonymizeParticipants, setAnonymizeParticipants] = useState(false);
   const [aiSummary, setAiSummary] = useState<string | null>(initialAiSummary);
   const [error, setError] = useState<string | null>(null);
@@ -155,24 +164,38 @@ export function ReportModal({
               </div>
 
               <div className="report-modal-field">
-                <label className="report-modal-label">
-                  추천 교육 커리큘럼
-                  <button
-                    type="button"
-                    className="cms-btn cms-btn-cancel report-modal-small-btn"
-                    style={{ marginLeft: 8 }}
-                    onClick={() => setCurriculum(curriculumToText(dominantLevel))}
+                <label className="report-modal-label">추천 교육 커리큘럼</label>
+                <div className="report-modal-row">
+                  <select
+                    className="cms-input"
+                    value={curriculumLevel}
+                    onChange={(event) => applyCurriculum(Number(event.target.value) as 1 | 2 | 3 | 4 | 5, curriculumStyle)}
                   >
-                    Level {dominantLevel} 추천안 다시 넣기
-                  </button>
-                </label>
+                    {([1, 2, 3, 4, 5] as const).map((l) => (
+                      <option key={l} value={l}>
+                        Level {l} · {MATURITY_LEVELS[l].name}
+                        {l === dominantLevel ? " (조직 우세)" : ""}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className="cms-input"
+                    value={curriculumStyle}
+                    onChange={(event) => applyCurriculum(curriculumLevel, event.target.value as LectureStyleId)}
+                  >
+                    {LECTURE_STYLES.map((s) => (
+                      <option key={s.id} value={s.id}>{s.label}</option>
+                    ))}
+                  </select>
+                </div>
                 <textarea
                   className="cms-input"
-                  rows={9}
+                  rows={10}
                   value={curriculum}
                   onChange={(event) => setCurriculum(event.target.value)}
                   placeholder="추천 교육 커리큘럼을 입력하세요."
                 />
+                <p className="report-modal-hint">레벨·강의 스타일을 바꾸면 아래 내용이 다시 채워집니다. 직접 수정도 가능합니다.</p>
               </div>
 
               <div className="report-modal-field">

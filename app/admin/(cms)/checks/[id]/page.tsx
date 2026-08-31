@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { ReportModal } from "@/components/admin/ReportModal";
 import { getCheckGroupById, getGroupResponses, getGroupStats, INDIVIDUAL_GROUP_CODE } from "@/lib/check-data";
 import { AREAS, MATURITY_LEVELS, type AreaKey } from "@/lib/diagnostic";
-import { LEVEL_CURRICULA, dominantLevelFromDistribution } from "@/lib/curriculum";
+import { dominantLevelFromDistribution } from "@/lib/curriculum";
+import { CurriculumPicker } from "@/components/admin/CurriculumPicker";
 
 const AREA_KEYS: AreaKey[] = ["A", "B", "C", "D", "E"];
 
@@ -177,59 +178,14 @@ export default async function CheckStatsPage({
             </div>
           </div>
 
-          {/* ⑤ 추천 교육 커리큘럼 (조직 우세 Level 기준) */}
-          {(() => {
-            const dominant = dominantLevelFromDistribution(stats.levelDistribution);
-            const c = LEVEL_CURRICULA[dominant];
-            return (
-              <div className="cms-card">
-                <div className="cms-card-head">
-                  <span className="cms-card-title">추천 교육 커리큘럼</span>
-                  <span className="cms-hint">조직 우세 성숙도 Level {dominant} 기준 제안</span>
-                </div>
-                <div className="curri-primary">
-                  <div className="curri-head">
-                    <span className="curri-badge">Level {c.level}</span>
-                    <div>
-                      <div className="curri-title">{MATURITY_LEVELS[dominant].name}</div>
-                      <div className="curri-headline">{c.headline}</div>
-                    </div>
-                  </div>
-                  <div className="curri-meta">권장 {c.duration} · {c.format}</div>
-                  <ol className="curri-modules">
-                    {c.modules.map((m, i) => (
-                      <li key={i}><b>{m.title}</b> — {m.detail}</li>
-                    ))}
-                  </ol>
-                  <div className="curri-outcome">완료 후 — {c.outcome}</div>
-                </div>
-                <details className="curri-all">
-                  <summary>전체 Level별 커리큘럼 개요 보기</summary>
-                  <table className="cms-table">
-                    <thead>
-                      <tr>
-                        <th>Level</th>
-                        <th>목표</th>
-                        <th>권장</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {([1, 2, 3, 4, 5] as const).map((l) => {
-                        const x = LEVEL_CURRICULA[l];
-                        return (
-                          <tr key={l} className={l === dominant ? "curri-row-on" : ""}>
-                            <td style={{ whiteSpace: "nowrap" }}>L{l} · {MATURITY_LEVELS[l].name}</td>
-                            <td style={{ fontSize: 13 }}>{x.headline}</td>
-                            <td style={{ fontSize: 13, color: "#6b7280", whiteSpace: "nowrap" }}>{x.duration}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </details>
-              </div>
-            );
-          })()}
+          {/* ⑤ 추천 교육 커리큘럼 (레벨 × 강의 스타일 선택) */}
+          <div className="cms-card">
+            <div className="cms-card-head">
+              <span className="cms-card-title">추천 교육 커리큘럼</span>
+              <span className="cms-hint">레벨 × 강의 스타일을 선택해 형태를 맞춥니다 (조직 우세 Level {dominantLevelFromDistribution(stats.levelDistribution)} 기본)</span>
+            </div>
+            <CurriculumPicker dominantLevel={dominantLevelFromDistribution(stats.levelDistribution)} />
+          </div>
 
           {/* ⑥ 역할 분포 */}
           <div className="cms-card">
