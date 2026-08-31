@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { AI_MODEL_OPTIONS } from "@/lib/ai-models";
 import { generateAiSummary } from "@/lib/check-actions";
 import type { GroupStats } from "@/lib/check-data";
+import { curriculumToText, dominantLevelFromDistribution } from "@/lib/curriculum";
 import { SENDER_PROFILES, type SenderProfileId } from "@/lib/sender-profiles";
 import { ReportView, type ReportParticipant } from "@/components/admin/ReportView";
 
@@ -23,12 +24,15 @@ export function ReportModal({
   participants,
   initialAiSummary
 }: ReportModalProps) {
+  const dominantLevel = dominantLevelFromDistribution(stats.levelDistribution);
+
   const [open, setOpen] = useState(false);
   const [senderId, setSenderId] = useState<SenderProfileId>("uag-oc");
   const [recipientOrg, setRecipientOrg] = useState("");
   const [recipientName, setRecipientName] = useState("");
   const [comment, setComment] = useState("");
-  const [curriculum, setCurriculum] = useState("");
+  // 조직 우세 Level 커리큘럼을 기본값으로 채워, 관리자가 그대로 보내거나 수정할 수 있게 한다.
+  const [curriculum, setCurriculum] = useState(() => curriculumToText(dominantLevel));
   const [anonymizeParticipants, setAnonymizeParticipants] = useState(false);
   const [aiSummary, setAiSummary] = useState<string | null>(initialAiSummary);
   const [error, setError] = useState<string | null>(null);
@@ -151,10 +155,20 @@ export function ReportModal({
               </div>
 
               <div className="report-modal-field">
-                <label className="report-modal-label">추천 교육 커리큘럼</label>
+                <label className="report-modal-label">
+                  추천 교육 커리큘럼
+                  <button
+                    type="button"
+                    className="cms-btn cms-btn-cancel report-modal-small-btn"
+                    style={{ marginLeft: 8 }}
+                    onClick={() => setCurriculum(curriculumToText(dominantLevel))}
+                  >
+                    Level {dominantLevel} 추천안 다시 넣기
+                  </button>
+                </label>
                 <textarea
                   className="cms-input"
-                  rows={4}
+                  rows={9}
                   value={curriculum}
                   onChange={(event) => setCurriculum(event.target.value)}
                   placeholder="추천 교육 커리큘럼을 입력하세요."

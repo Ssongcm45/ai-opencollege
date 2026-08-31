@@ -699,6 +699,22 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 
 .report-modal-model { margin-bottom: 8px; }
 
+/* 조직 통계 — Level별 추천 커리큘럼 카드 */
+.curri-primary { background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 12px; padding: 18px 20px; }
+.curri-head { align-items: flex-start; display: flex; gap: 14px; margin-bottom: 10px; }
+.curri-badge { background: var(--verm); border-radius: 8px; color: #fff; font-size: 13px; font-weight: 800; padding: 6px 12px; white-space: nowrap; }
+.curri-title { color: #0f1623; font-weight: 800; }
+.curri-headline { color: #374151; font-size: 13px; margin-top: 3px; }
+.curri-meta { color: #6b7280; font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+.curri-modules { display: flex; flex-direction: column; gap: 8px; margin: 0 0 12px; padding-left: 20px; }
+.curri-modules li { color: #374151; font-size: 13px; line-height: 1.6; }
+.curri-modules li b { color: #0f1623; }
+.curri-outcome { border-top: 1px dashed #d1d5db; color: #0f1623; font-size: 13px; font-weight: 700; padding-top: 10px; }
+.curri-all { margin-top: 14px; }
+.curri-all summary { color: var(--verm); cursor: pointer; font-size: 13px; font-weight: 700; }
+.curri-all .cms-table { margin-top: 12px; }
+.curri-row-on td { background: #fff7ed; font-weight: 700; }
+
 .inq-status-select { padding: 6px 10px; font-size: 13px; width: auto; min-width: 96px; }
 .inq-detail-row td { background: #f8fafc; }
 .inq-detail-actions { display: flex; gap: 8px; margin-top: 12px; align-items: center; }
