@@ -12,7 +12,8 @@ import { getGroupStats, isGroupOpen, INDIVIDUAL_GROUP_CODE, INDIVIDUAL_GROUP_NAM
 import { isAllowedAiModel } from "@/lib/ai-models";
 import { buildAiSummaryMessages } from "@/lib/ai-summary-prompt";
 import { getDb, hasDatabase } from "@/lib/db";
-import { checkCompletions, checkGroups, checkResponses, inquiries } from "@/lib/db/schema";
+import { checkCompletions, checkGroups, checkResponses } from "@/lib/db/schema";
+import { receiveInquiry } from "@/lib/inquiry-service";
 import {
   AREAS,
   MATURITY_LEVELS,
@@ -348,106 +349,29 @@ export async function emailMyResult(
 }
 
 // ── (c) 학습체크 결과 기반 교육 문의 ─────────────────────
-const checkInquirySchema = z.object({
-  name: z.string().min(1),
-  organization: z.string().optional(),
-  email: z.string().email().min(1),
-  phone: z.string().min(1),
-  message: z.string().optional(),
-  privacy: z.literal("on")
-});
-
 export async function submitCheckInquiry(
   _: unknown,
   formData: FormData
 ): Promise<{ ok: boolean; message: string }> {
-  const parsed = checkInquirySchema.safeParse(Object.fromEntries(formData));
-  if (!parsed.success) {
-    return { ok: false, message: "필수 입력 항목과 개인정보 수집 및 이용 동의 여부를 확인해주세요." };
+  if (formData.get("privacy") !== "on" || String(formData.get("website") ?? "").trim()) {
+    return { ok: false, message: "입력 내용과 개인정보 동의를 확인해 주세요." };
   }
-  const data = parsed.data;
-
   let answers: unknown;
-  try {
-    answers = JSON.parse(String(formData.get("answersJson") ?? ""));
-  } catch {
-    return { ok: false, message: "진단 결과 정보를 확인할 수 없습니다. 다시 시도해주세요." };
-  }
+  try { answers = JSON.parse(String(formData.get("answersJson") ?? "")); }
+  catch { return { ok: false, message: "진단 결과를 확인할 수 없습니다. 다시 시도해 주세요." }; }
   const validated = validateAnswers(answers);
-  if (!validated) {
-    return { ok: false, message: "진단 결과 정보를 확인할 수 없습니다. 다시 시도해주세요." };
-  }
-
+  if (!validated) return { ok: false, message: "진단 결과를 확인할 수 없습니다. 다시 시도해 주세요." };
   const result = computeResult(validated);
-  const maturity = MATURITY_LEVELS[result.finalLevel];
   const resultSummary = resultSummaryLine(result);
-  const userMessage = (data.message ?? "").trim();
-  const combinedMessage = (userMessage ? `${userMessage}\n\n` : "") + resultSummary;
-
-  if (hasDatabase) {
-    try {
-      await getDb().insert(inquiries).values({
-        name: data.name,
-        organization: data.organization,
-        email: data.email,
-        phone: data.phone,
-        audience: "AI학습체크 문의",
-        message: combinedMessage
-      });
-    } catch (e) {
-      console.error("[check] 문의 저장 실패:", e);
-      return { ok: false, message: "문의 접수 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요." };
-    }
-  }
-
-  if (process.env.RESEND_API_KEY) {
-    try {
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
-        from: RESEND_FROM,
-        to: ADMIN_EMAIL,
-        replyTo: data.email,
-        subject: `[AI OpenCollege] 학습체크 교육 문의: ${safeSubject(data.name)} (Level ${result.finalLevel})`,
-        html: `
-          <h2>AI학습체크 결과와 함께 교육 문의가 접수되었습니다</h2>
-          <table cellpadding="8" style="border-collapse:collapse;margin-bottom:20px">
-            <tr><td><strong>이름</strong></td><td>${escapeHtml(data.name)}</td></tr>
-            <tr><td><strong>소속</strong></td><td>${escapeHtml(data.organization)}</td></tr>
-            <tr><td><strong>이메일</strong></td><td>${escapeHtml(data.email)}</td></tr>
-            <tr><td><strong>전화</strong></td><td>${escapeHtml(data.phone)}</td></tr>
-            <tr><td><strong>문의 내용</strong></td><td style="white-space:pre-wrap">${escapeHtml(userMessage || "-")}</td></tr>
-          </table>
-          <div style="background:#f2efe8;border-left:4px solid #e85a3e;padding:14px 16px;border-radius:8px">
-            <p style="margin:0 0 10px;font-weight:800;color:#0e1b3c">진단 결과 · 종합 Level ${result.finalLevel} (${escapeHtml(maturity.name)}) · 유효 평균 ${result.validAverage.toFixed(1)}</p>
-            <table style="border-collapse:collapse;width:100%;font-size:13px">
-              <thead>
-                <tr>
-                  <th style="padding:6px 10px;border:1px solid #e0ddd6;text-align:left;background:#fff">영역</th>
-                  <th style="padding:6px 10px;border:1px solid #e0ddd6;text-align:center;background:#fff">점수</th>
-                  <th style="padding:6px 10px;border:1px solid #e0ddd6;text-align:center;background:#fff">수준</th>
-                </tr>
-              </thead>
-              <tbody>${areaTableRows(result)}</tbody>
-            </table>
-            ${
-              result.gates.length
-                ? `<p style="margin:12px 0 4px;font-weight:700;color:#0e1b3c">안전 게이트 (${result.gates.length}건)</p><ul style="margin:0;padding-left:18px;line-height:1.6;color:#38405a">${result.gates
-                    .map((g) => `<li>${escapeHtml(g)}</li>`)
-                    .join("")}</ul>`
-                : `<p style="margin:12px 0 0;color:#38405a">안전 게이트 경보 없음</p>`
-            }
-          </div>
-        `
-      });
-    } catch (e) {
-      console.error("[check] 문의 이메일 발송 실패:", e);
-    }
-  }
-
-  return {
-    ok: true,
-    message: "문의가 접수되었습니다. 진단 결과와 함께 전달되었으며 24시간 내 회신드리겠습니다."
-  };
+  const userMessage = String(formData.get("message") ?? "").trim();
+  if (userMessage.length > 3500) return { ok: false, message: "문의 내용을 줄여 주세요." };
+  return receiveInquiry({
+    name: formData.get("name"), organization: String(formData.get("organization") ?? ""),
+    email: formData.get("email"), phone: formData.get("phone"),
+    audience: "AI학습체크 문의", educationGoal: String(formData.get("educationGoal") ?? ""),
+    message: (userMessage ? userMessage + "\n\n" : "") + resultSummary,
+    source: "learning_check", rateIdentity: String(formData.get("email") ?? "")
+  });
 }
 
 // ── (d) 관리자: 조직 그룹 CRUD ───────────────────────────

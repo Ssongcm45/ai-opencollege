@@ -15,12 +15,13 @@ export default async function AdminLoginPage({
   searchParams: Promise<{ error?: string; setup?: string }>;
 }) {
   const params = await searchParams;
-  const isSetup = !await getPasswordSet() || params.setup === "1";
+  const isSetup = !(await getPasswordSet());
 
   const errorMsg =
     params.error === "mismatch" ? "비밀번호가 일치하지 않습니다." :
     params.error === "short" ? "비밀번호는 8자 이상이어야 합니다." :
     params.error === "email" ? "등록된 이메일이 아닙니다." :
+    params.error === "setup" ? "초기 설정 토큰이 올바르지 않거나 설정되지 않았습니다." :
     params.error === "nodb" ? "데이터베이스 연결이 필요합니다." :
     params.error === "locked" ? "로그인 시도가 너무 많습니다. 10분 후 다시 시도해 주세요." :
     params.error === "1" ? "이메일 또는 비밀번호가 올바르지 않습니다." :
@@ -35,6 +36,7 @@ export default async function AdminLoginPage({
           {isSetup ? (
             <form action={setupAdminPassword} className="form-grid">
               <input className="input" type="email" name="email" placeholder="관리자 이메일" required />
+              <input className="input" type="password" name="setupToken" placeholder="초기 설정 토큰" autoComplete="off" required />
               <input className="input" type="password" name="password" placeholder="새 비밀번호 (8자 이상)" required minLength={8} />
               <input className="input" type="password" name="confirm" placeholder="비밀번호 확인" required />
               <button className="btn bn btn-lg btn-pill">비밀번호 설정 후 로그인</button>

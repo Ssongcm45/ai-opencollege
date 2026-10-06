@@ -1,4 +1,7 @@
 .next
+.next.incoming-*
+.next.backup-*
+.next.build-lock
 node_modules
 .env
 .env.local

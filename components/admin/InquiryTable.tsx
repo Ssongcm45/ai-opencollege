@@ -1,9 +1,12 @@
 "use client";
 
-import { Fragment, useState, useTransition } from "react";
+import { Fragment, useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { DeleteButton } from "@/components/admin/DeleteButton";
+import { InquiryAnalysisPanel } from "@/components/admin/InquiryAnalysisPanel";
 import { addInquiryNote, deleteInquiry, deleteInquiryNote, setInquiryStatusInline } from "@/lib/actions";
+import { retryInquiryProcessing } from "@/lib/inquiry-admin-actions";
+import type { InquiryAnalysis } from "@/lib/inquiry-analysis";
 
 export type InquiryNote = { id: string; body: string; createdAt: string };
 
@@ -14,10 +17,29 @@ export type InquiryRow = {
   email: string | null;
   phone: string | null;
   audience: string | null;
+  educationGoal: string | null;
   message: string;
   status: string;
   createdAt: string;
+  analysis: InquiryAnalysis | null;
+  analysisStatus: string;
+  analysisError: string | null;
+  analysisAt: string | null;
+  notificationStatus: string;
+  notificationError: string | null;
+  notificationSentAt: string | null;
+  notificationAttemptedAt: string | null;
+  processingLeaseUntil: string | null;
   notes: InquiryNote[];
+};
+
+type CourseCatalog = Record<"genai_intro" | "ai_basics" | "practical", { name: string; duration: string; description: string }>;
+
+const analysisLabels: Record<string, string> = {
+  not_requested: "분석 전", pending: "분석 대기", processing: "분석 중", complete: "분석 완료", failed: "분석 실패"
+};
+const notificationLabels: Record<string, string> = {
+  not_requested: "알림 전", pending: "알림 대기", sending: "알림 전송 중", sent: "담당자 알림 완료", failed: "담당자 알림 실패", uncertain: "전송 확인 필요"
 };
 
 type Status = "all" | "new" | "read" | "replied" | "archived";
@@ -34,7 +56,7 @@ const tabs: Array<{ value: Status; label: string }> = [
   ...statusOptions
 ];
 
-export function InquiryTable({ inquiries }: { inquiries: InquiryRow[] }) {
+export function InquiryTable({ inquiries, catalog }: { inquiries: InquiryRow[]; catalog: CourseCatalog }) {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const [statusFilter, setStatusFilter] = useState<Status>("all");
@@ -45,13 +67,21 @@ export function InquiryTable({ inquiries }: { inquiries: InquiryRow[] }) {
   const [notesById, setNotesById] = useState<Record<string, InquiryNote[]>>({});
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
   const [notePending, setNotePending] = useState<Record<string, boolean>>({});
+  const [retryPending, setRetryPending] = useState<Record<string, boolean>>({});
+  const [retryMessages, setRetryMessages] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (!inquiries.some((row) => ["pending", "processing"].includes(row.analysisStatus) || ["pending", "sending"].includes(row.notificationStatus))) return;
+    const timer = window.setInterval(() => router.refresh(), 12000);
+    return () => window.clearInterval(timer);
+  }, [inquiries, router]);
 
   const getStatus = (row: InquiryRow) => statuses[row.id] ?? row.status;
   const normalizedQuery = query.trim().toLocaleLowerCase("ko-KR");
   const filteredInquiries = inquiries.filter((row) => {
     const status = getStatus(row);
     const matchesStatus = statusFilter === "all" || status === statusFilter;
-    const matchesQuery = !normalizedQuery || [row.name, row.organization, row.email, row.phone]
+    const matchesQuery = !normalizedQuery || [row.name, row.organization, row.email, row.phone, row.message, row.educationGoal, row.analysis?.summary]
       .filter(Boolean)
       .some((value) => value!.toLocaleLowerCase("ko-KR").includes(normalizedQuery));
     return matchesStatus && matchesQuery;
@@ -122,6 +152,23 @@ export function InquiryTable({ inquiries }: { inquiries: InquiryRow[] }) {
     });
   }
 
+  function retry(row: InquiryRow) {
+    if (retryPending[row.id]) return;
+    setRetryPending((current) => ({ ...current, [row.id]: true }));
+    setRetryMessages((current) => ({ ...current, [row.id]: "" }));
+    startTransition(async () => {
+      try {
+        const result = await retryInquiryProcessing(row.id);
+        setRetryMessages((current) => ({ ...current, [row.id]: result.message }));
+      } catch {
+        setRetryMessages((current) => ({ ...current, [row.id]: "요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요." }));
+      } finally {
+        setRetryPending((current) => ({ ...current, [row.id]: false }));
+        router.refresh();
+      }
+    });
+  }
+
   return (
     <>
       <div className="cms-tabs">
@@ -137,7 +184,8 @@ export function InquiryTable({ inquiries }: { inquiries: InquiryRow[] }) {
         })}
       </div>
       <div className="cms-search">
-        <input className="cms-input" style={{ width: 260 }} value={query} onChange={(event) => setQuery(event.target.value)} placeholder="이름·기관·이메일 검색" />
+        <input aria-label="문의 검색" className="cms-input" style={{ width: 300 }} value={query} onChange={(event) => setQuery(event.target.value)} placeholder="이름·기관·내용·교육 목표 검색" />
+        <button className="cms-btn cms-btn-cancel" type="button" onClick={() => router.refresh()}>새로고침</button>
       </div>
 
       <table className="cms-table">
@@ -152,6 +200,9 @@ export function InquiryTable({ inquiries }: { inquiries: InquiryRow[] }) {
             const notes = notesById[row.id] ?? row.notes;
             const level = row.message.match(/\[AI학습체크\] Level (\d)/)?.[1];
             const isExpanded = expandedId === row.id;
+            const active = ["processing"].includes(row.analysisStatus) || ["sending"].includes(row.notificationStatus);
+            const leaseActive = Boolean(row.processingLeaseUntil && new Date(row.processingLeaseUntil).getTime() > Date.now());
+            const canRetry = !leaseActive && row.notificationStatus !== "uncertain" && !(row.analysisStatus === "complete" && row.notificationStatus === "sent");
             const deleteAction = deleteInquiry.bind(null, row.id);
             return (
               <Fragment key={row.id}>
@@ -170,8 +221,21 @@ export function InquiryTable({ inquiries }: { inquiries: InquiryRow[] }) {
                 {isExpanded && (
                   <tr className="inq-detail-row" key={`${row.id}-detail`}>
                     <td colSpan={7}>
-                      <div className="inq-msg" style={{ whiteSpace: "pre-wrap" }}>{row.message}</div>
+                      <div className="inq-analysis-block"><h3>문의 원문</h3><div className="inq-msg">{row.message}</div></div>
+                      <div className="inq-analysis-block"><h3>작성한 교육 목표</h3><div className="inq-msg">{row.educationGoal?.trim() || "입력되지 않았습니다."}</div></div>
                       <div className="inq-meta">대상: {row.audience ?? "-"}</div>
+                      <div className="inq-processing-status" aria-label="처리 상태">
+                        <div><strong>AI 분석</strong><span className={`inq-state inq-state-${row.analysisStatus}`}>{analysisLabels[row.analysisStatus] ?? row.analysisStatus}</span>{row.analysisAt && <small> {new Date(row.analysisAt).toLocaleString("ko-KR")}</small>}{row.analysisError && <p className="inq-state-error" role="alert">{row.analysisError}</p>}</div>
+                        <div><strong>담당자 메일</strong><span className={`inq-state inq-state-${row.notificationStatus}`}>{notificationLabels[row.notificationStatus] ?? row.notificationStatus}</span>{row.notificationSentAt && <small> {new Date(row.notificationSentAt).toLocaleString("ko-KR")}</small>}{row.notificationError && <p className="inq-state-error" role="alert">{row.notificationError}</p>}</div>
+                      </div>
+                      {row.analysisStatus === "complete" && row.analysis ? <InquiryAnalysisPanel key={`${row.id}-${row.analysisAt ?? "saved"}`} analysis={row.analysis} catalog={catalog} email={row.email} name={row.name} /> : (
+                        <p className="inq-analysis-hint">{row.analysisStatus === "failed" ? "분석에 실패했습니다. 원문을 확인하고 다시 시도할 수 있습니다." : "저장된 분석 결과가 아직 없습니다."}</p>
+                      )}
+                      <div className="inq-detail-actions">
+                        <button className="cms-btn cms-btn-cancel" type="button" disabled={!canRetry || retryPending[row.id]} onClick={() => retry(row)}>{retryPending[row.id] ? "요청 중..." : row.analysisStatus === "not_requested" ? "분석 및 관리자 알림" : "처리 다시 시도"}</button>
+                        {leaseActive && <span className="inq-analysis-hint">처리 중에는 다시 요청할 수 없습니다.</span>}
+                      </div>
+                      {retryMessages[row.id] && <p role="status" className="inq-analysis-hint">{retryMessages[row.id]}</p>}
                       <div className="inq-notes-title">팔로업 메모</div>
                       {notes.map((note) => (
                         <div className="inq-note" key={note.id}>

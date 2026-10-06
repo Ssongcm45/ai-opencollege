@@ -608,6 +608,8 @@ function CheckInquiryCard({ answers }: { answers: Answers }) {
           ) : (
             <form action={action} className="check-inquiry-form">
               <input name="answersJson" type="hidden" value={answersJson} />
+              <label htmlFor="check-inquiry-education-goal">이 교육을 통해 이루고 싶은 목표 (선택)</label>
+              <textarea className="textarea" id="check-inquiry-education-goal" name="educationGoal" maxLength={1000} placeholder="예: 팀원이 AI 도구를 업무에 적용하거나, 기초부터 공통 역량을 쌓고 싶어요." />
               <input className="input" name="name" placeholder="이름 *" required />
               <input className="input" name="organization" placeholder="기관/회사명" />
               <input className="input" name="email" placeholder="이메일 *" required type="email" />

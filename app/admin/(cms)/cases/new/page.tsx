@@ -52,6 +52,7 @@ export default async function NewCasePage() {
         <div className="cms-field">
           <label className="cms-label">영상 링크 <span style={{ color: "#9ca3af", fontWeight: 400 }}>(YouTube 또는 Vimeo URL, 선택)</span></label>
           <input className="cms-input" name="videoUrl" placeholder="예: https://www.youtube.com/watch?v=... 또는 https://vimeo.com/..." />
+          <p>일반 영상 공유 URL을 붙여넣으면 자동으로 재생 화면으로 표시됩니다. Vimeo에서 외부 사이트 재생을 허용해 주세요.</p>
         </div>
 
         <div className="cms-field">

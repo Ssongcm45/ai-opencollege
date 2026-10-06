@@ -1,7 +1,7 @@
 "use server";
 
 import crypto from "crypto";
-import { eq } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -12,6 +12,7 @@ import { audit } from "@/lib/audit";
 import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } from "@/lib/auth";
 import { getDb, hasDatabase } from "@/lib/db";
 import { adminConfig, categories, blogPosts, fieldCases, inquiries, inquiryNotes, portfolioItems, siteSettings } from "@/lib/db/schema";
+import { receiveInquiry } from "@/lib/inquiry-service";
 
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com").trim();
 
@@ -63,87 +64,49 @@ function revalidatePublic() {
 }
 
 // ── Public: Inquiry ──────────────────────────────────────
-const inquirySchema = z.object({
-  name: z.string().min(1),
-  organization: z.string().optional(),
-  email: z.string().email().min(1),
-  phone: z.string().min(1),
-  audience: z.string().optional(),
-  message: z.string().min(1),
-  privacy: z.literal("on")
-});
-
 export async function createInquiry(_: unknown, formData: FormData) {
-  const result = inquirySchema.safeParse(Object.fromEntries(formData));
-  if (!result.success) {
-    return { ok: false, message: "필수 입력 항목과 개인정보 수집 및 이용 동의 여부를 확인해주세요." };
-  }
-  const data = result.data;
-
-  if (hasDatabase) {
-    await getDb().insert(inquiries).values({
-      name: data.name,
-      organization: data.organization,
-      email: data.email,
-      phone: data.phone,
-      audience: data.audience,
-      message: data.message
-    });
-  }
-
-  if (process.env.RESEND_API_KEY) {
-    try {
-      const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
-        from: process.env.RESEND_FROM ?? "AI OpenCollege <edu@opencollege.co.kr>",
-        to: ADMIN_EMAIL,
-        replyTo: data.email,
-        subject: `[AI OpenCollege] 교육 문의: ${safeSubject(data.name)}`,
-        html: `
-          <h2>새 교육 문의가 접수되었습니다</h2>
-          <table cellpadding="8" style="border-collapse:collapse">
-            <tr><td><strong>이름</strong></td><td>${escapeHtml(data.name)}</td></tr>
-            <tr><td><strong>소속</strong></td><td>${escapeHtml(data.organization)}</td></tr>
-            <tr><td><strong>이메일</strong></td><td>${escapeHtml(data.email)}</td></tr>
-            <tr><td><strong>전화</strong></td><td>${escapeHtml(data.phone)}</td></tr>
-            <tr><td><strong>교육 대상</strong></td><td>${escapeHtml(data.audience)}</td></tr>
-            <tr><td><strong>문의 내용</strong></td><td style="white-space:pre-wrap">${escapeHtml(data.message)}</td></tr>
-          </table>
-        `
-      });
-    } catch (e) {
-      console.error("[Resend] 이메일 발송 실패:", e);
-    }
-  }
-
-  return { ok: true, message: "문의가 접수되었습니다. 24시간 내 회신드리겠습니다." };
+  if (formData.get("privacy") !== "on") return { ok: false, message: "개인정보 수집 및 이용에 동의해 주세요." };
+  if (String(formData.get("website") ?? "").trim()) return { ok: false, message: "입력 내용을 확인해 주세요." };
+  const input = Object.fromEntries(formData);
+  return receiveInquiry({
+    name: input.name, organization: input.organization, email: input.email,
+    phone: input.phone, audience: input.audience, message: input.message,
+    educationGoal: input.educationGoal, source: "contact",
+    rateIdentity: String(input.email ?? "")
+  });
 }
 
 // ── Admin: Auth ──────────────────────────────────────────
 export async function setupAdminPassword(formData: FormData) {
   if (!hasDatabase) redirect("/admin/login?error=nodb");
   const email = String(formData.get("email") ?? "");
+  const setupToken = String(formData.get("setupToken") ?? "");
   const password = String(formData.get("password") ?? "");
   const confirm = String(formData.get("confirm") ?? "");
 
   if (email.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()) redirect("/admin/login?error=email");
+  const expectedToken = process.env.ADMIN_SETUP_TOKEN;
+  if (!expectedToken || expectedToken.length < 32 ||
+    !crypto.timingSafeEqual(
+      crypto.createHash("sha256").update(setupToken).digest(),
+      crypto.createHash("sha256").update(expectedToken).digest()
+    )) redirect("/admin/login?error=setup");
   if (password.length < 8) redirect("/admin/login?setup=1&error=short");
   if (password !== confirm) redirect("/admin/login?setup=1&error=mismatch");
 
   const db = getDb();
-  const existing = await db.select().from(adminConfig).where(eq(adminConfig.id, 1));
-  if (existing.length > 0 && existing[0].passwordHash) redirect("/admin/login?error=1");
-
   const passwordHash = hashPassword(password);
-  let sessionVersion = 1;
-  if (existing.length === 0) {
-    await db.insert(adminConfig).values({ id: 1, passwordHash });
-  } else {
-    sessionVersion = existing[0].sessionVersion ?? 1;
-    await db.update(adminConfig).set({ passwordHash }).where(eq(adminConfig.id, 1));
-  }
+  const [created] = await db.insert(adminConfig)
+    .values({ id: 1, passwordHash })
+    .onConflictDoUpdate({
+      target: adminConfig.id,
+      set: { passwordHash },
+      setWhere: isNull(adminConfig.passwordHash)
+    })
+    .returning({ sessionVersion: adminConfig.sessionVersion });
+  if (!created) redirect("/admin/login?error=1");
   await audit("password.setup");
-  await setAdminSessionCookie(sessionVersion);
+  await setAdminSessionCookie(created.sessionVersion);
   redirect("/admin");
 }
 
@@ -179,6 +142,9 @@ export async function loginAdmin(formData: FormData) {
   if (!hasDatabase) redirect("/admin/login?error=nodb");
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
+  if (email.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+    redirect("/admin/login?error=1");
+  }
 
   const db = getDb();
   const rows = await db.select().from(adminConfig).where(eq(adminConfig.id, 1));
@@ -190,11 +156,10 @@ export async function loginAdmin(formData: FormData) {
     redirect("/admin/login?error=locked");
   }
 
-  const emailOk = email.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
   const stored = config?.passwordHash;
   const passwordOk = !!stored && verifyPassword(password, stored);
 
-  if (!emailOk || !passwordOk) {
+  if (!passwordOk) {
     // 설정 행이 존재할 때만 실패 카운터를 증가시킨다.
     if (config) {
       const nextAttempts = (config.failedAttempts ?? 0) + 1;
@@ -248,14 +213,15 @@ export async function changeAdminPassword(formData: FormData) {
   if (newPassword !== confirm) redirect("/admin/settings?pwerror=mismatch");
 
   // 새 해시 저장 + 세션 버전 증가(현재 브라우저 외 모든 세션 폐기).
-  const nextVersion = (config?.sessionVersion ?? 1) + 1;
-  await db
+  const [updated] = await db
     .update(adminConfig)
-    .set({ passwordHash: hashPassword(newPassword), sessionVersion: nextVersion })
-    .where(eq(adminConfig.id, 1));
+    .set({ passwordHash: hashPassword(newPassword), sessionVersion: sql`${adminConfig.sessionVersion} + 1` })
+    .where(and(eq(adminConfig.id, 1), eq(adminConfig.passwordHash, stored)))
+    .returning({ sessionVersion: adminConfig.sessionVersion });
+  if (!updated) redirect("/admin/settings?pwerror=current");
   await audit("password.change");
   // 현재 브라우저는 새 버전으로 재발급해 로그인 유지.
-  await setAdminSessionCookie(nextVersion);
+  await setAdminSessionCookie(updated.sessionVersion);
   redirect("/admin/settings?pwsaved=1");
 }
 

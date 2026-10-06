@@ -4,6 +4,8 @@ import { getSiteSettings } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
+export const maxDuration = 120;
+
 const defaultTitle = "AI OpenCollege · AI 실무교육 전문기관";
 const defaultDescription =
   "기업·공공기관·대학을 위한 AI 실무교육 전문기관. AIRO 플랫폼 기반 맞춤 교육, 출강, 온라인, 실습형 AI 교육.";

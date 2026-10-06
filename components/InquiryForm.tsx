@@ -19,18 +19,22 @@ export function InquiryForm() {
     <>
       <form ref={formRef} action={action} className="form-card form-grid">
       <div className="field-wrap">
-        <input className="input" name="name" placeholder="이름 *" required />
+        <input className="input" name="name" placeholder="이름 *" maxLength={80} required />
       </div>
-      <input className="input" name="organization" placeholder="기관/회사명" />
+      <input className="input" name="organization" placeholder="기관/회사명" maxLength={140} />
       <div className="field-wrap">
-        <input className="input" name="email" placeholder="이메일 *" type="email" required />
+        <input className="input" name="email" placeholder="이메일 *" type="email" maxLength={160} required />
       </div>
       <div className="field-wrap">
-        <input className="input" name="phone" placeholder="연락처 *" required />
+        <input className="input" name="phone" placeholder="연락처 *" maxLength={60} required />
       </div>
-      <input className="input" name="audience" placeholder="교육 대상/인원" />
+      <input className="input" name="audience" placeholder="교육 대상/인원" maxLength={120} />
       <div className="field-wrap">
-        <textarea className="textarea" name="message" placeholder="교육 목적, 희망 일정, 필요한 과정 *" required />
+        <label htmlFor="inquiry-education-goal">이 교육을 통해 이루고 싶은 목표 <span style={{ color: "var(--t3)" }}>(선택)</span></label>
+        <textarea className="textarea" id="inquiry-education-goal" name="educationGoal" maxLength={1000} placeholder="예: 팀이 생성형 AI로 반복 업무를 줄이거나, 실무자가 AI 도구를 안전하게 활용하도록 하고 싶어요." />
+      </div>
+      <div className="field-wrap">
+        <textarea className="textarea" name="message" maxLength={4000} placeholder="희망 일정, 대상 규모, 궁금한 점 등 *" required />
       </div>
       <div className="privacy-box">
         <label className="privacy-check">
@@ -40,7 +44,7 @@ export function InquiryForm() {
         <details className="privacy-detail">
           <summary>자세히 보기</summary>
           <p>
-            수집 항목: 이름, 기관/회사명, 이메일, 연락처, 문의 내용 · 수집 목적: 교육 문의 상담 및 회신 ·
+            수집 항목: 이름, 기관/회사명, 이메일, 연락처, 교육 목표, 문의 내용 · 수집 목적: 교육 문의 상담 및 회신 ·
             보유 기간: 문의 처리 완료 후 1년, 이후 지체 없이 파기 · 동의를 거부할 수 있으나 거부 시 문의 접수가 제한됩니다.
           </p>
         </details>

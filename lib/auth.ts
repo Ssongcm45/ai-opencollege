@@ -84,42 +84,25 @@ export async function clearAdminSessionCookie() {
   jar.delete(ADMIN_SESSION_COOKIE);
 }
 
-// 저렴한 무상태 검증(구조·서명·만료). DB 조회 없음 — 업로드 라우트 등에서 사용.
+// 서명·만료와 DB에 저장된 현재 세션 버전을 함께 검증한다.
 export async function isAdminSessionValid(): Promise<boolean> {
-  const jar = await cookies();
   try {
-    return verifyToken(jar.get(ADMIN_SESSION_COOKIE)?.value) !== null;
+    const jar = await cookies();
+    const payload = verifyToken(jar.get(ADMIN_SESSION_COOKIE)?.value);
+    if (!payload || !hasDatabase) return false;
+
+    const [row] = await getDb()
+      .select({ passwordHash: adminConfig.passwordHash, sessionVersion: adminConfig.sessionVersion })
+      .from(adminConfig)
+      .where(eq(adminConfig.id, 1))
+      .limit(1);
+    return !!row?.passwordHash && payload.ver === row.sessionVersion;
   } catch {
     return false;
   }
 }
 
-// 무상태 검증 + 세션 버전(폐기) 검증. 버전 불일치 시 로그인으로 리다이렉트.
+// 관리자 페이지와 서버 액션에도 같은 검증을 적용한다.
 export async function requireAdminSession() {
-  const jar = await cookies();
-  let payload: AdminSessionPayload | null;
-  try {
-    payload = verifyToken(jar.get(ADMIN_SESSION_COOKIE)?.value);
-  } catch {
-    payload = null;
-  }
-  if (!payload) {
-    redirect("/admin/login");
-  }
-
-  // DB 연결이 있을 때만 세션 버전(폐기) 검증. 개발 폴백에서는 건너뜀.
-  if (hasDatabase) {
-    let currentVersion: number | null = null;
-    try {
-      const [row] = await getDb().select().from(adminConfig).where(eq(adminConfig.id, 1)).limit(1);
-      currentVersion = row?.sessionVersion ?? 1;
-    } catch {
-      // 조회 실패 시 무상태 검증만으로 통과(가용성 우선).
-      currentVersion = null;
-    }
-    // redirect()는 예외를 던지므로 try 블록 밖에서 호출(catch에 삼켜지지 않도록).
-    if (currentVersion !== null && payload.ver !== currentVersion) {
-      redirect("/admin/login");
-    }
-  }
+  if (!(await isAdminSessionValid())) redirect("/admin/login");
 }

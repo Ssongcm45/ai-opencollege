@@ -1,0 +1,14 @@
+﻿.env*
+.vercel
+.git
+node_modules
+.next
+tmp/
+output/
+docs/
+*.log
+tsconfig.tsbuildinfo
+/ai_opencollege_v4_1.html
+/INITIAL_PROMPT.md
+/form-ai-agent-workflow-competency-diagnostic.md
+/*.pdf
