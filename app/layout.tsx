@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { NaverAnalytics } from "@/components/NaverAnalytics";
 import { getSiteSettings } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
@@ -109,6 +110,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([organizationLd, webSiteLd]) }} />
         {children}
         <NaverAnalytics accountId={naverAnalyticsId} />
+        <Analytics />
       </body>
     </html>
   );
