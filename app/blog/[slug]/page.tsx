@@ -5,14 +5,14 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getPostBySlug, getSiteSettings } from "@/lib/content";
 import { toHtmlBody } from "@/lib/html";
-import { siteUrl } from "@/lib/site";
+import { defaultOgImage, siteUrl } from "@/lib/site";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) return {};
   const settings = await getSiteSettings().catch(() => null);
-  const ogImage = post.thumbnailUrl ?? settings?.ogImageUrl ?? null;
+  const ogImage = post.thumbnailUrl || settings?.ogImageUrl || defaultOgImage;
   return {
     title: `${post.title} · AI OpenCollege`,
     description: post.excerpt,

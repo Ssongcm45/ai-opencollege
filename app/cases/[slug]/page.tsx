@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getCaseBySlug, getSiteSettings } from "@/lib/content";
 import { toHtmlBody } from "@/lib/html";
-import { siteUrl } from "@/lib/site";
+import { defaultOgImage, siteUrl } from "@/lib/site";
 import { getVideoEmbed } from "@/lib/video";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const item = await getCaseBySlug(slug);
   if (!item) return {};
   const settings = await getSiteSettings().catch(() => null);
-  const ogImage = item.thumbnailUrl ?? settings?.ogImageUrl ?? null;
+  const ogImage = item.thumbnailUrl || settings?.ogImageUrl || defaultOgImage;
   return {
     title: `${item.title} · AI OpenCollege`,
     description: item.summary,

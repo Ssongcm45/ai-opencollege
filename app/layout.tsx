@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { GoogleTagManagerNoscript, GoogleTags } from "@/components/GoogleTags";
 import { NaverAnalytics } from "@/components/NaverAnalytics";
 import { getSiteSettings } from "@/lib/content";
-import { siteUrl } from "@/lib/site";
+import { defaultOgImage, siteUrl } from "@/lib/site";
 import { BUSINESS_INFO } from "@/lib/business-info";
 import "./globals.css";
 
@@ -68,8 +68,9 @@ export async function generateMetadata(): Promise<Metadata> {
         title,
         description,
         type: "website",
-        ...(settings?.ogImageUrl ? { images: [settings.ogImageUrl] } : {})
+        images: [settings?.ogImageUrl || defaultOgImage]
       },
+      twitter: { card: "summary_large_image" },
       ...((googleVerification || naverVerification)
         ? {
             verification: {
@@ -99,8 +100,10 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: defaultTitle,
         description: defaultDescription,
-        type: "website"
+        type: "website",
+        images: [defaultOgImage]
       },
+      twitter: { card: "summary_large_image" },
       verification: {
         other: { "naver-site-verification": defaultNaverVerification }
       }

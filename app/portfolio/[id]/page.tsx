@@ -6,6 +6,7 @@ import { Header } from "@/components/Header";
 import { getPortfolioDetail, getSiteSettings } from "@/lib/content";
 import { toHtmlBody } from "@/lib/html";
 import { getVideoEmbed } from "@/lib/video";
+import { defaultOgImage } from "@/lib/site";
 
 function stripHtml(value: string): string {
   return value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!item) return {};
   const description = stripHtml(item.description);
   const settings = await getSiteSettings().catch(() => null);
-  const ogImage = item.thumbnailUrl ?? settings?.ogImageUrl ?? null;
+  const ogImage = item.thumbnailUrl || settings?.ogImageUrl || defaultOgImage;
 
   return {
     title: `${item.title} · AI OpenCollege`,
