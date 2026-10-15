@@ -108,17 +108,17 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-const GA4_IDS = ["G-LZPXFJ7BYQ", "G-G8N6XZQNMD"];
+const GA4_ID = "G-G8N6XZQNMD";
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko">
       <head>
         {/* Google tag (gtag.js) — GA4 */}
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_IDS[0]}`} />
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`} />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());${GA4_IDS.map((id) => `gtag('config','${id}');`).join("")}`
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA4_ID}');`
           }}
         />
       </head>
