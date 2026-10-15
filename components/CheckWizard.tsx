@@ -138,6 +138,7 @@ export function CheckWizard({ orgCode, orgName }: CheckWizardProps) {
                   <summary>자세히 보기</summary>
                   <p>수집 항목: 이름, 부서, 직급, 전화번호, 이메일, 응답 내용 · 목적: 조직 역량 진단 결과 확인 및 교육 설계 · 보유 기간: 진단 목적 달성 후 1년 이내 파기</p>
                 </details>
+                <p><a href="/privacy" target="_blank" rel="noopener noreferrer">개인정보처리방침 보기 (새 창)</a></p>
               </div>
             </div>
           </div>
@@ -526,6 +527,7 @@ function IndividualGate({ answers, background, containerRef, onDone }: Individua
               <summary>자세히 보기</summary>
               <p>수집 항목: 이름, 소속, 연락처, 이메일, 응답 내용 · 목적: 진단 결과 안내 및 맞춤 교육 제안 · 보유 기간: 목적 달성 후 1년 이내 파기</p>
             </details>
+            <p><a href="/privacy" target="_blank" rel="noopener noreferrer">개인정보처리방침 보기 (새 창)</a></p>
           </div>
         </div>
       </div>
@@ -622,6 +624,7 @@ function CheckInquiryCard({ answers }: { answers: Answers }) {
                     개인정보 수집 및 이용에 동의합니다. <em>(필수)</em>
                   </span>
                 </label>
+                <p><a href="/privacy" target="_blank" rel="noopener noreferrer">개인정보처리방침 보기 (새 창)</a></p>
               </div>
               <p className="check-sub-note">진단 결과 요약이 문의와 함께 관리자에게 전달됩니다.</p>
               <button className="btn bn btn-pill" disabled={pending} type="submit">

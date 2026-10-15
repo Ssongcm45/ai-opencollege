@@ -73,7 +73,8 @@ async function main() {
     const routes = [
       ['/', 'AI'], ['/blog', 'AI'], ['/cases', 'AI'],
       ['/check', 'AI 업무 실행 역량 진단'], ['/admin/login', 'CMS LOGIN'],
-      ['/guide', '<html'], ['/sitemap.xml', '<urlset']
+      ['/guide', '<html'], ['/privacy', '개인정보처리방침'], ['/terms', '이용약관'],
+      ['/sitemap.xml', '<urlset']
     ];
     const htmlText = (text) => text.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;' })[char]);
     if (live) {

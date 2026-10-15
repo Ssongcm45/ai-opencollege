@@ -1,3 +1,5 @@
+import { BUSINESS_INFO } from "@/lib/business-info";
+
 export function Footer() {
   return (
     <footer>
@@ -30,15 +32,21 @@ export function Footer() {
           <div className="fcol">
             <h4>연락처</h4>
             <ul>
-              <li><a href="tel:0507-1369-9224">0507-1369-9224</a></li>
-              <li><a href="mailto:edu@opencollege.co.kr">edu@opencollege.co.kr</a></li>
+              <li><a href={`tel:${BUSINESS_INFO.phone}`}>{BUSINESS_INFO.phone}</a></li>
+              <li><a href={`mailto:${BUSINESS_INFO.email}`}>{BUSINESS_INFO.email}</a></li>
               <li>경기도 평택시</li>
             </ul>
           </div>
         </div>
+        <section className="business-disclosure" aria-label="사업자 정보">
+          <strong>{BUSINESS_INFO.companyName}</strong><span>브랜드: {BUSINESS_INFO.brandName}</span>
+          <span>사업자등록번호: {BUSINESS_INFO.businessRegistrationNumber}</span>
+          <span>통신판매업 신고번호: {BUSINESS_INFO.ecommerceRegistrationNumber}</span>
+          <span>전화번호: <a href={`tel:${BUSINESS_INFO.phone}`}>{BUSINESS_INFO.phone}</a></span>
+        </section>
         <div className="foot-bot">
-          <span>© 2026 AI OpenCollege · opencollege.co.kr</span>
-          <div className="flinks"><a href="#">개인정보처리방침</a><a href="#">이용약관</a></div>
+          <span>© 2026 {BUSINESS_INFO.brandName} · opencollege.co.kr</span>
+          <div className="flinks"><a href="/privacy">개인정보처리방침</a><a href="/terms">이용약관</a></div>
         </div>
       </div>
     </footer>

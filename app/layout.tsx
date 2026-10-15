@@ -4,6 +4,7 @@ import { GoogleTagManagerNoscript, GoogleTags } from "@/components/GoogleTags";
 import { NaverAnalytics } from "@/components/NaverAnalytics";
 import { getSiteSettings } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
+import { BUSINESS_INFO } from "@/lib/business-info";
 import "./globals.css";
 
 export const maxDuration = 120;
@@ -20,13 +21,16 @@ const organizationLd = {
   "@context": "https://schema.org",
   "@type": "EducationalOrganization",
   name: "AI OpenCollege",
-  alternateName: "오픈컬리지",
+  legalName: BUSINESS_INFO.companyName,
+  alternateName: BUSINESS_INFO.brandName,
   url: siteUrl,
   logo: `${siteUrl}/logo.png`,
-  email: "edu@opencollege.co.kr",
+  email: BUSINESS_INFO.email,
+  telephone: BUSINESS_INFO.phone,
+  taxID: BUSINESS_INFO.businessRegistrationNumber,
   parentOrganization: {
     "@type": "Organization",
-    name: "(주)유에이지"
+    name: BUSINESS_INFO.companyName
   }
 };
 const webSiteLd = {

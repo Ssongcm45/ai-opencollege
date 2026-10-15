@@ -1,0 +1,96 @@
+.marquee {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  width: 100%;
+  padding-block: clamp(1rem, 2vw, 1.5rem);
+}
+
+.viewport {
+  overflow: hidden;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: travel 44s linear infinite;
+  will-change: transform;
+}
+
+.reverse {
+  animation-direction: reverse;
+}
+
+.viewport:hover .track,
+.viewport:focus-within .track {
+  animation-play-state: paused;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: clamp(3rem, 5vw, 5.5rem);
+  padding-right: clamp(3rem, 5vw, 5.5rem);
+}
+
+.item {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+}
+
+.item img {
+  display: block;
+  width: auto;
+  height: 48px;
+  object-fit: contain;
+}
+
+.viewport:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 3px;
+}
+
+@keyframes travel {
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (max-width: 640px) {
+  .group {
+    gap: 3rem;
+    padding-right: 3rem;
+  }
+
+  .item {
+    min-height: 64px;
+  }
+
+  .item img {
+    height: 40px;
+  }
+
+  .viewport {
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    overflow-x: auto;
+    mask-image: none;
+    scrollbar-width: thin;
+  }
+
+  .track {
+    animation: none;
+    will-change: auto;
+  }
+
+  .duplicate {
+    display: none;
+  }
+}

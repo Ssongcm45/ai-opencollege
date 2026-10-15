@@ -2,8 +2,10 @@ import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { InquiryForm } from "@/components/InquiryForm";
+import { InstitutionMarquee } from "@/components/InstitutionMarquee";
 import { CourseTabs, CurriculumTabs } from "@/components/Tabs";
 import { getPublishedCases, getPublishedPortfolio, getPublishedPosts } from "@/lib/content";
+import { additionalInstitutions, institutions } from "@/lib/institutions";
 import { getVideoEmbed } from "@/lib/video";
 
 export default async function HomePage() {
@@ -75,7 +77,7 @@ export default async function HomePage() {
                 },
                 {
                   title: "10개 트랙 맞춤 설계",
-                  desc: "사무직·크리에이터·리더·교육자·시니어·취준생까지. 역할에 맞는 AI 활용법을 배웁니다.",
+                  desc: "사무직·크리에이터·리더·교육자·취준생부터 AI 업무 운영 담당자까지. 역할에 맞는 AI 활용법을 배웁니다.",
                   icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/><rect x="11" y="2" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/><rect x="2" y="11" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/><rect x="11" y="11" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/></svg>
                 },
                 {
@@ -136,8 +138,8 @@ export default async function HomePage() {
 
         <section className="clients sec" id="clients">
           <div className="wrap">
-            <div className="sec-hd"><div className="ey">CLIENT CASES</div><h2 className="sh2">30+ 기관에서<br />검증된 AI 교육</h2><p className="sdesc">공공, 대학, 청년지원, 도시재생, 인재개발 현장에서 바로 쓰는 교육을 운영해 왔습니다.</p></div>
-            <div className="client-logos">{["경기도경제과학진흥원", "평택대학교", "청년지원센터", "도시재생현장센터", "인재개발원", "지역교육센터"].map((name) => <div className="client-logo" key={name}><span>{name}</span></div>)}</div>
+            <div className="sec-hd"><div className="ey">CLIENT CASES</div><h2 className="sh2">강사진 주요 출강 기관</h2><p className="sdesc">기업, 공공기관, 대학 등 다양한 현장에서 AI 교육을 진행해 왔습니다.</p></div>
+            <InstitutionMarquee />
           </div>
         </section>
 
@@ -232,7 +234,13 @@ export default async function HomePage() {
 
         <section className="ticker-bar">
           <div className="ticker">
-            {["경기도경제과학진흥원", "평택대학교", "청년지원센터", "도시재생현장센터", "인재개발원", "교육연수기관", "공공지원기관", "지역교육센터", "경기도경제과학진흥원", "평택대학교", "청년지원센터", "도시재생현장센터"].map((item, i) => <span className={i % 2 === 0 ? "hi" : ""} key={`${item}-${i}`}>{item}</span>)}
+            {[0, 1].map((copy) => (
+              <div className="ticker-group" aria-hidden={copy === 1} key={copy}>
+                {[...institutions, ...additionalInstitutions].map((institution, i) => (
+                  <span className={i % 2 === 0 ? "hi" : ""} key={institution.id}>{institution.name}</span>
+                ))}
+              </div>
+            ))}
           </div>
         </section>
 

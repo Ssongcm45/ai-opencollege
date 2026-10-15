@@ -48,6 +48,7 @@ export function InquiryForm() {
             보유 기간: 문의 처리 완료 후 1년, 이후 지체 없이 파기 · 동의를 거부할 수 있으나 거부 시 문의 접수가 제한됩니다.
           </p>
         </details>
+        <p><a href="/privacy" target="_blank" rel="noopener noreferrer">개인정보처리방침 보기 (새 창)</a></p>
       </div>
       <p style={{ fontSize: 12, color: "var(--t3)", marginTop: -4 }}>* 필수 입력 항목</p>
       <button className="btn bn btn-lg btn-pill" style={{ width: "100%" }} disabled={pending}>{pending ? "접수 중..." : "교육 문의 접수 →"}</button>

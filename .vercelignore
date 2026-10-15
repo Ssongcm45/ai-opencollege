@@ -6,6 +6,8 @@ node_modules
 tmp/
 output/
 docs/
+videos/track-intros/
+.playwright-cli/
 *.log
 tsconfig.tsbuildinfo
 /ai_opencollege_v4_1.html

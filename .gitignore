@@ -15,3 +15,8 @@ dist
 *.tsbuildinfo
 
 .env*
+
+# local work artifacts
+videos/
+output/
+.playwright-cli/
