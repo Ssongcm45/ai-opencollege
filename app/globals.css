@@ -776,3 +776,20 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 .guide-modal-close { background: rgba(255,255,255,.12); border: 0; border-radius: 8px; color: #fff; cursor: pointer; font-size: 18px; height: 30px; line-height: 1; width: 30px; }
 .guide-modal-close:hover { background: var(--verm); }
 .guide-modal-frame { border: 0; flex: 1; width: 100%; }
+
+.nf-hero { padding: 96px 0 88px; }
+.nf-code { color: var(--verm); font-size: clamp(88px, 14vw, 168px); font-weight: 900; letter-spacing: -.06em; line-height: .9; margin-bottom: 24px; }
+.nf-acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+.nf-links { padding: 72px 0 var(--sy); }
+.nf-grid { display: grid; gap: 16px; grid-template-columns: repeat(4, 1fr); list-style: none; }
+.nf-card { border: 1px solid var(--bd); border-radius: 12px; display: flex; flex-direction: column; gap: 8px; height: 100%; padding: 24px; transition: .18s ease; }
+.nf-card strong { color: var(--navy); font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
+.nf-card span { color: var(--t3); font-size: 14px; line-height: 1.6; }
+.nf-card:hover { border-color: var(--verm); transform: translateY(-2px); }
+.nf-card:hover strong { color: var(--verm); }
+@media (max-width: 900px) { .nf-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) {
+  .nf-hero { padding: 64px 0 56px; }
+  .nf-grid { grid-template-columns: 1fr; }
+  .nf-acts .btn { width: 100%; }
+}
