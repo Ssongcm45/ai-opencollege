@@ -1,7 +1,9 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { AttributionFields } from "@/components/AttributionFields";
 import { createInquiry } from "@/lib/actions";
+import { trackLead } from "@/lib/analytics";
 
 export function InquiryForm() {
   const [state, action, pending] = useActionState(createInquiry, null);
@@ -10,6 +12,7 @@ export function InquiryForm() {
 
   useEffect(() => {
     if (state?.ok) {
+      trackLead("home_contact", "section");
       setShowModal(true);
       formRef.current?.reset();
     }
@@ -18,6 +21,7 @@ export function InquiryForm() {
   return (
     <>
       <form ref={formRef} action={action} className="form-card form-grid">
+      <AttributionFields />
       <div className="field-wrap">
         <input className="input" name="name" placeholder="이름 *" maxLength={80} required />
       </div>
@@ -44,7 +48,7 @@ export function InquiryForm() {
         <details className="privacy-detail">
           <summary>자세히 보기</summary>
           <p>
-            수집 항목: 이름, 기관/회사명, 이메일, 연락처, 교육 목표, 문의 내용 · 수집 목적: 교육 문의 상담 및 회신 ·
+            수집 항목: 이름, 기관/회사명, 이메일, 연락처, 교육 목표, 문의 내용(유입 경로 정보는 자동 수집) ·수집 목적: 교육 문의 상담 및 회신 ·
             보유 기간: 문의 처리 완료 후 1년, 이후 지체 없이 파기 · 동의를 거부할 수 있으나 거부 시 문의 접수가 제한됩니다.
           </p>
         </details>

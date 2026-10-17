@@ -7,7 +7,7 @@ export function Header() {
         <div className="wrap">
           <div className="header-in">
             <a href="/" className="logo">
-              <div className="lmark"><img src="/logo.png" alt="AI OpenCollege 로고" style={{ width: "100%", height: "100%", objectFit: "contain" }} /></div>
+              <div className="lmark"><img src="/logo-96.png" alt="AI OpenCollege 로고" width={40} height={40} decoding="async" style={{ width: "100%", height: "100%", objectFit: "contain" }} /></div>
               <div>
                 <div className="lname">AI OpenCollege</div>
                 <div className="lsub">opencollege.co.kr</div>

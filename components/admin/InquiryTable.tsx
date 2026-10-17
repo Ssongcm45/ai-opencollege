@@ -30,8 +30,28 @@ export type InquiryRow = {
   notificationSentAt: string | null;
   notificationAttemptedAt: string | null;
   processingLeaseUntil: string | null;
+  source: string;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  utmTerm: string | null;
+  utmContent: string | null;
+  gclid: string | null;
+  landingPage: string | null;
+  referrer: string | null;
   notes: InquiryNote[];
 };
+
+const sourceLabels: Record<string, string> = {
+  contact: "홈 문의 폼", learning_check: "AI학습체크 결과", lp_public: "공공기관 랜딩", lp_company: "기업 출강 랜딩"
+};
+
+function attributionSummary(row: InquiryRow) {
+  const campaign = [row.utmSource, row.utmMedium, row.utmCampaign, row.utmTerm, row.utmContent].filter(Boolean).join(" / ");
+  if (campaign) return row.gclid ? `${campaign} (gclid 있음)` : campaign;
+  if (row.gclid) return "구글 광고 (gclid)";
+  return row.referrer || "직접·자연 유입";
+}
 
 type CourseCatalog = Record<"genai_intro" | "ai_basics" | "practical", { name: string; duration: string; description: string }>;
 
@@ -224,6 +244,7 @@ export function InquiryTable({ inquiries, catalog }: { inquiries: InquiryRow[]; 
                       <div className="inq-analysis-block"><h3>문의 원문</h3><div className="inq-msg">{row.message}</div></div>
                       <div className="inq-analysis-block"><h3>작성한 교육 목표</h3><div className="inq-msg">{row.educationGoal?.trim() || "입력되지 않았습니다."}</div></div>
                       <div className="inq-meta">대상: {row.audience ?? "-"}</div>
+                      <div className="inq-meta">접수 경로: {sourceLabels[row.source] ?? row.source} · 유입: {attributionSummary(row)}{row.landingPage ? ` · 랜딩: ${row.landingPage}` : ""}</div>
                       <div className="inq-processing-status" aria-label="처리 상태">
                         <div><strong>AI 분석</strong><span className={`inq-state inq-state-${row.analysisStatus}`}>{analysisLabels[row.analysisStatus] ?? row.analysisStatus}</span>{row.analysisAt && <small> {new Date(row.analysisAt).toLocaleString("ko-KR")}</small>}{row.analysisError && <p className="inq-state-error" role="alert">{row.analysisError}</p>}</div>
                         <div><strong>담당자 메일</strong><span className={`inq-state inq-state-${row.notificationStatus}`}>{notificationLabels[row.notificationStatus] ?? row.notificationStatus}</span>{row.notificationSentAt && <small> {new Date(row.notificationSentAt).toLocaleString("ko-KR")}</small>}{row.notificationError && <p className="inq-state-error" role="alert">{row.notificationError}</p>}</div>

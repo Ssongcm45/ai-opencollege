@@ -98,6 +98,14 @@ export const inquiries = pgTable("inquiries", {
   notificationAttemptedAt: timestamp("notification_attempted_at", { withTimezone: true }),
   processingToken: uuid("processing_token"),
   processingLeaseUntil: timestamp("processing_lease_until", { withTimezone: true }),
+  utmSource: varchar("utm_source", { length: 150 }),
+  utmMedium: varchar("utm_medium", { length: 150 }),
+  utmCampaign: varchar("utm_campaign", { length: 150 }),
+  utmTerm: varchar("utm_term", { length: 150 }),
+  utmContent: varchar("utm_content", { length: 150 }),
+  gclid: varchar("gclid", { length: 255 }),
+  landingPage: varchar("landing_page", { length: 500 }),
+  referrer: varchar("referrer", { length: 500 }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow()
 });
 

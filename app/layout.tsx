@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleTagManagerNoscript, GoogleTags } from "@/components/GoogleTags";
+import { LeadTracking } from "@/components/LeadTracking";
 import { NaverAnalytics } from "@/components/NaverAnalytics";
 import { getSiteSettings } from "@/lib/content";
 import { defaultOgImage, siteUrl } from "@/lib/site";
@@ -117,6 +118,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="ko">
       <head>
+        {/* Pretendard 셀프호스팅(동일 출처) + 히어로 한글 서브셋 preload: 폰트 스왑 CLS 완화 */}
+        <link rel="stylesheet" href="/fonts/pretendard.css" />
+        {[91, 90, 89, 88, 87].map((n) => (
+          <link key={n} rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" href={`/fonts/pretendard/PretendardVariable.subset.${n}.woff2`} />
+        ))}
         {/* Google tag (gtag.js) — GA4 */}
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`} />
         <script
@@ -129,6 +135,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <GoogleTagManagerNoscript />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([organizationLd, webSiteLd]) }} />
         {children}
+        <LeadTracking />
         <NaverAnalytics accountId={naverAnalyticsId} />
         <Analytics />
         <GoogleTags />

@@ -14,6 +14,7 @@ import { buildAiSummaryMessages } from "@/lib/ai-summary-prompt";
 import { getDb, hasDatabase } from "@/lib/db";
 import { checkCompletions, checkGroups, checkResponses } from "@/lib/db/schema";
 import { receiveInquiry } from "@/lib/inquiry-service";
+import { ATTRIBUTION_FIELDS } from "@/lib/attribution";
 import {
   AREAS,
   MATURITY_LEVELS,
@@ -370,7 +371,8 @@ export async function submitCheckInquiry(
     email: formData.get("email"), phone: formData.get("phone"),
     audience: "AI학습체크 문의", educationGoal: String(formData.get("educationGoal") ?? ""),
     message: (userMessage ? userMessage + "\n\n" : "") + resultSummary,
-    source: "learning_check", rateIdentity: String(formData.get("email") ?? "")
+    source: "learning_check", rateIdentity: String(formData.get("email") ?? ""),
+    attribution: Object.fromEntries(ATTRIBUTION_FIELDS.map((key) => [key, String(formData.get(key) ?? "")]))
   });
 }
 

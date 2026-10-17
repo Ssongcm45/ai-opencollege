@@ -13,6 +13,7 @@ import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } f
 import { getDb, hasDatabase } from "@/lib/db";
 import { adminConfig, categories, blogPosts, fieldCases, inquiries, inquiryNotes, portfolioItems, siteSettings } from "@/lib/db/schema";
 import { receiveInquiry } from "@/lib/inquiry-service";
+import { ATTRIBUTION_FIELDS } from "@/lib/attribution";
 
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com").trim();
 
@@ -72,7 +73,37 @@ export async function createInquiry(_: unknown, formData: FormData) {
     name: input.name, organization: input.organization, email: input.email,
     phone: input.phone, audience: input.audience, message: input.message,
     educationGoal: input.educationGoal, source: "contact",
-    rateIdentity: String(input.email ?? "")
+    rateIdentity: String(input.email ?? ""),
+    attribution: attributionFromForm(formData)
+  });
+}
+
+function attributionFromForm(formData: FormData) {
+  return Object.fromEntries(ATTRIBUTION_FIELDS.map((key) => [key, String(formData.get(key) ?? "")]));
+}
+
+const LANDING_LABELS = { public: "공공기관 교육 랜딩", company: "기업 출강 랜딩" } as const;
+
+// 광고 랜딩(/lp/public, /lp/company)의 짧은 폼: 이름·기관·연락처·인원·희망 시기(필수) + 이메일·요청사항(선택).
+export async function createLandingInquiry(_: unknown, formData: FormData) {
+  if (formData.get("privacy") !== "on") return { ok: false, message: "개인정보 수집 및 이용에 동의해 주세요." };
+  if (String(formData.get("website") ?? "").trim()) return { ok: false, message: "입력 내용을 확인해 주세요." };
+  const lp = formData.get("lp") === "company" ? "company" : "public";
+  const field = (key: string) => String(formData.get(key) ?? "").trim();
+  const organization = field("organization");
+  const headcount = field("headcount");
+  const timing = field("timing");
+  const request = field("request");
+  if (!organization || !headcount || !timing) return { ok: false, message: "필수 항목을 모두 입력해 주세요." };
+  if (headcount.length > 60 || timing.length > 100 || request.length > 1000) return { ok: false, message: "입력 내용을 줄여 주세요." };
+  return receiveInquiry({
+    name: field("name"), organization, email: field("email"), phone: field("phone"),
+    audience: `교육 인원: ${headcount}`,
+    message: [`[${LANDING_LABELS[lp]}]`, `희망 시기: ${timing}`, `교육 인원: ${headcount}`, request ? `요청사항: ${request}` : ""].filter(Boolean).join("\n"),
+    educationGoal: request || undefined,
+    source: lp === "company" ? "lp_company" : "lp_public",
+    rateIdentity: field("email") || field("phone"),
+    attribution: attributionFromForm(formData)
   });
 }
 

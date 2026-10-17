@@ -10,17 +10,34 @@ import { INQUIRY_COURSES, InquiryAnalysisSchema } from "@/lib/inquiry-analysis";
 const LEASE_MS = 150_000;
 const MAIL_TIMEOUT_MS = 20_000;
 const IDEMPOTENCY_HOURS = 24;
+// 광고 유입 정보(숨은 칸). 비어 있거나 형식이 이상하면 저장하지 않는다(문의 접수는 막지 않음).
+const attributionText = (max: number) => z.string().trim().max(max).optional().catch(undefined).transform(value => value || undefined);
+export const attributionSchema = z.object({
+  utm_source: attributionText(150),
+  utm_medium: attributionText(150),
+  utm_campaign: attributionText(150),
+  utm_term: attributionText(150),
+  utm_content: attributionText(150),
+  gclid: attributionText(255),
+  landing_page: attributionText(500),
+  referrer: attributionText(500),
+});
+export type AttributionInput = z.input<typeof attributionSchema>;
+
+// 광고 랜딩(/lp/*)의 짧은 폼은 이메일을 선택 항목으로 받는다.
+export const LANDING_SOURCES = ["lp_public", "lp_company"] as const;
 export const inquiryInputSchema = z.object({
   name: z.string().trim().min(1).max(80),
   organization: z.string().trim().max(140).optional(),
-  email: z.email().max(160),
+  email: z.union([z.email().max(160), z.literal("")]).optional().transform(value => value || undefined),
   phone: z.string().trim().min(1).max(60),
   audience: z.string().trim().max(120).optional(),
   message: z.string().trim().min(1).max(4000),
   educationGoal: z.string().trim().max(1000).optional(),
-  source: z.enum(["contact", "learning_check"]),
+  source: z.enum(["contact", "learning_check", ...LANDING_SOURCES]),
   rateIdentity: z.string().max(200).optional(),
-});
+  attribution: attributionSchema.optional(),
+}).refine(input => input.email || (LANDING_SOURCES as readonly string[]).includes(input.source), { path: ["email"] });
 export type InquiryInput = z.infer<typeof inquiryInputSchema>;
 type Result = { ok: boolean; message: string };
 const RECEIVED = "문의가 접수되었습니다. 담당자가 확인 후 연락드리겠습니다.";
@@ -41,7 +58,8 @@ function mailPayload(row: typeof inquiries.$inferSelect) {
   const analysis = parsed.success ? parsed.data : null;
   const analysisHtml = analysis ? `<h2>AI 분석</h2><table cellpadding="8">${htmlRow("요약", analysis.summary)}${htmlRow("명시된 교육 목표", analysis.educationGoal.stated)}${htmlRow("목표 해석·제안", analysis.educationGoal.interpretation)}${htmlRow("확인된 사실", analysis.confirmedFacts.map(f => `${f.label}: ${f.value} (근거: ${f.evidence})`).join("\n"))}${htmlRow("추천 과정", analysis.recommendedCourses.map(c => `${INQUIRY_COURSES[c.courseId].name}: ${c.reason}`).join("\n"))}${htmlRow("운영 제안", analysis.deliveryRecommendation)}${htmlRow("확인할 사항", analysis.missingInformation.join("\n"))}${htmlRow("다음 단계", analysis.nextActions.join("\n"))}${htmlRow("답장 초안", analysis.replyDraft)}</table>` : `<h2>AI 분석 실패</h2><p>문의 원문을 직접 확인해 주세요.</p>`;
   const safeName = row.name.replace(/[\r\n]/g, " ");
-  const body = `<h2>교육 문의 접수</h2><table cellpadding="8">${htmlRow("이름", row.name)}${htmlRow("소속", row.organization)}${htmlRow("이메일", row.email)}${htmlRow("전화", row.phone)}${htmlRow("대상", row.audience)}${htmlRow("교육 목표", row.educationGoal)}${htmlRow("문의 원문", row.message)}</table>${analysisHtml}<p><a href="${escapeHtml(adminUrl(row.id))}">관리자에서 문의 보기</a></p>`;
+  const campaign = [row.utmSource, row.utmMedium, row.utmCampaign, row.utmTerm].filter(Boolean).join(" / ");
+  const body = `<h2>교육 문의 접수</h2><table cellpadding="8">${htmlRow("이름", row.name)}${htmlRow("소속", row.organization)}${htmlRow("이메일", row.email)}${htmlRow("전화", row.phone)}${htmlRow("대상", row.audience)}${htmlRow("교육 목표", row.educationGoal)}${htmlRow("문의 원문", row.message)}${htmlRow("접수 경로", row.source)}${htmlRow("유입", campaign || (row.gclid ? "구글 광고(gclid)" : row.referrer || "직접·자연 유입"))}${htmlRow("랜딩", row.landingPage)}</table>${analysisHtml}<p><a href="${escapeHtml(adminUrl(row.id))}">관리자에서 문의 보기</a></p>`;
   return {
     from: process.env.RESEND_FROM ?? "AI OpenCollege <edu@opencollege.co.kr>",
     to: (process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com").trim(),
@@ -52,7 +70,7 @@ function mailPayload(row: typeof inquiries.$inferSelect) {
 }
 
 async function consumeRateLimit(input: InquiryInput) {
-  const identity = (input.rateIdentity || input.email).trim().toLowerCase();
+  const identity = (input.rateIdentity || input.email || input.phone).trim().toLowerCase();
   const key = crypto.createHash("sha256").update(identity).digest("hex");
   const result = await getDb().execute(sql`
     INSERT INTO inquiry_rate_limits (rate_key, window_start, attempts)
@@ -70,13 +88,16 @@ export async function receiveInquiry(raw: unknown): Promise<Result> {
   const parsed = inquiryInputSchema.safeParse(raw);
   if (!parsed.success) return { ok: false, message: "입력 내용을 확인해 주세요." };
   if (!hasDatabase) return { ok: false, message: UNAVAILABLE };
-  const { rateIdentity, ...input } = parsed.data;
+  const { rateIdentity, attribution, ...input } = parsed.data;
   try {
     const bucket = Math.floor(Date.now() / 600_000);
-    const intakeKey = crypto.createHash("sha256").update(JSON.stringify([input.name, input.organization, input.email.toLowerCase(), input.phone, input.audience, input.educationGoal, input.message, input.source, bucket])).digest("hex");
+    const intakeKey = crypto.createHash("sha256").update(JSON.stringify([input.name, input.organization, (input.email ?? "").toLowerCase(), input.phone, input.audience, input.educationGoal, input.message, input.source, bucket])).digest("hex");
     if (!(await consumeRateLimit(parsed.data))) return { ok: false, message: "잠시 후 다시 시도해 주세요." };
     const [row] = await getDb().insert(inquiries).values({
       ...input, intakeKey,
+      utmSource: attribution?.utm_source, utmMedium: attribution?.utm_medium, utmCampaign: attribution?.utm_campaign,
+      utmTerm: attribution?.utm_term, utmContent: attribution?.utm_content, gclid: attribution?.gclid,
+      landingPage: attribution?.landing_page, referrer: attribution?.referrer,
       analysisStatus: "pending",
       notificationStatus: "pending",
     }).onConflictDoNothing().returning({ id: inquiries.id });

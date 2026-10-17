@@ -20,6 +20,8 @@ export async function GET() {
     "## 주요 페이지",
     "",
     `- 홈페이지: ${siteUrl}`,
+    `- 공공기관 생성형 AI 교육(방문 출강): ${siteUrl}/lp/public`,
+    `- 기업 임직원 AI 실무 교육(사내 출강): ${siteUrl}/lp/company`,
     `- 블로그: ${siteUrl}/blog`,
     `- 시각 가이드북(웹 용어·AI 이미지·Claude Design): ${siteUrl}/guide`,
     `- 출강 사례: ${siteUrl}/cases`,

@@ -1,6 +1,8 @@
 "use client";
 
 import { useActionState, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { AttributionFields } from "@/components/AttributionFields";
+import { track, trackLead } from "@/lib/analytics";
 import { emailMyResult, submitCheckInquiry, submitIndividualCheckResponse, submitOrgCheckResponse } from "@/lib/check-actions";
 import {
   AREAS,
@@ -170,7 +172,10 @@ export function CheckWizard({ orgCode, orgName }: CheckWizardProps) {
           <button
             className="btn bp btn-pill"
             disabled={!canStart}
-            onClick={() => goTo(1)}
+            onClick={() => {
+              track("diagnosis_start", { mode: isOrgMode ? "org" : "individual" });
+              goTo(1);
+            }}
             type="button"
           >
             진단 시작 →
@@ -289,6 +294,14 @@ interface ResultViewProps {
 function ResultView({ answers, background, containerRef, identity, isOrgMode, onReset, orgCode, orgName }: ResultViewProps) {
   const result = useMemo(() => computeResult(answers), [answers]);
   const maturity = MATURITY_LEVELS[result.finalLevel];
+
+  // 결과 화면 진입 = 진단 완료(보조 지표). 한 번만 보낸다.
+  const completedRef = useRef(false);
+  useEffect(() => {
+    if (completedRef.current) return;
+    completedRef.current = true;
+    track("diagnosis_complete", { mode: isOrgMode ? "org" : "individual", level: result.finalLevel });
+  }, [isOrgMode, result.finalLevel]);
 
   // 조직 모드: 결과 화면 진입 시 한 번만 저장.
   const [orgStatus, setOrgStatus] = useState<{ ok: boolean; message: string } | null>(null);
@@ -591,7 +604,10 @@ function CheckInquiryCard({ answers }: { answers: Answers }) {
   const answersJson = useMemo(() => JSON.stringify(answers), [answers]);
 
   useEffect(() => {
-    if (state?.ok) setOpen(false);
+    if (state?.ok) {
+      trackLead("check_inquiry", "section");
+      setOpen(false);
+    }
   }, [state]);
 
   return (
@@ -610,6 +626,7 @@ function CheckInquiryCard({ answers }: { answers: Answers }) {
           ) : (
             <form action={action} className="check-inquiry-form">
               <input name="answersJson" type="hidden" value={answersJson} />
+              <AttributionFields />
               <label htmlFor="check-inquiry-education-goal">이 교육을 통해 이루고 싶은 목표 (선택)</label>
               <textarea className="textarea" id="check-inquiry-education-goal" name="educationGoal" maxLength={1000} placeholder="예: 팀원이 AI 도구를 업무에 적용하거나, 기초부터 공통 역량을 쌓고 싶어요." />
               <input className="input" name="name" placeholder="이름 *" required />

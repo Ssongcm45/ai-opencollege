@@ -24,16 +24,16 @@ export default async function HomePage() {
             <div className="hero-grid">
               <div className="hero-body">
                 <div style={{ marginBottom: 20 }}>
-                  <span className="badge bdw"><span className="dot" />정부·대학·기업을 위한 AI 실무교육</span>
+                  <span className="badge bdw"><span className="dot" />공공기관·기업 임직원을 위한 AI 실무교육</span>
                 </div>
                 <h1>AI 교육,<br />이제 <span className="ac">결과물</span>로<br />증명하세요.</h1>
-                <p className="hero-desc">완전 기초부터 리더십, 강사 양성, 정규 교육과정까지.<br />명확한 정보 구조와 AIRO 기반 실습으로 바로 쓰는 역량을 만듭니다.</p>
+                <p className="hero-desc">공공기관·기업 현장으로 찾아가는 실습형 AI 교육.<br />문서·보고·민원·회의 업무를 직접 실습하고, 교육이 끝나는 날 결과물을 가져갑니다.</p>
                 <div className="hero-acts">
                   <a href="#contact" className="btn bp btn-lg btn-pill">교육 문의하기</a>
-                  <a href="#curriculum" className="btn bow btn-lg btn-pill">트랙 보기</a>
+                  <a href="/lp/public" className="btn bow btn-lg btn-pill">공공기관 교육 안내</a>
                 </div>
                 <div className="hero-chips">
-                  {["출장 교육", "온라인 과정", "공공기관 특화", "맞춤 커리큘럼", "수료증 제공"].map((chip) => <span className="hero-chip" key={chip}>{chip}</span>)}
+                  {["공공기관 출강", "기업 맞춤 교육", "계층별 커리큘럼", "수료증 제공", "24시간 내 회신"].map((chip) => <span className="hero-chip" key={chip}>{chip}</span>)}
                 </div>
               </div>
               <div className="hero-motion" aria-hidden="true">
@@ -85,7 +85,7 @@ export default async function HomePage() {
                   desc: "LMS·앱·시각 가이드를 갖춘 AIRO 플랫폼으로 출강 후에도 학습을 이어갑니다.",
                   icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2C5.58 2 2 5.58 2 10C2 14.42 5.58 18 10 18" stroke="white" strokeWidth="1.6" strokeLinecap="round"/><path d="M10 18C14.42 18 18 14.42 18 10" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeDasharray="2 3"/><circle cx="10" cy="10" r="2" fill="white"/></svg>
                 }
-              ].map(({ title, desc, icon }) => <div className="wcard" key={title}><div className="wcard-icon">{icon}</div><div><h4>{title}</h4><p>{desc}</p></div></div>)}
+              ].map(({ title, desc, icon }) => <div className="wcard" key={title}><div className="wcard-icon">{icon}</div><div><h4 aria-level={3}>{title}</h4><p>{desc}</p></div></div>)}
             </div>
           </div>
         </section>
@@ -130,6 +130,7 @@ export default async function HomePage() {
                 <h4>AIRO 기반 교육 운영</h4>
                 <p>수준 진단, 실습 과제, 수료 관리까지 하나의 흐름으로 연결합니다. 교육 이후에도 복습과 심화 학습이 이어지도록 기관별 운영 흐름을 맞춥니다.</p>
                 <div className="airo-feats"><span className="af">AIRO LMS</span><span className="af">실습 과제</span><span className="af">수료증 제공</span><span className="af">기관 맞춤 리포트</span></div>
+                <p className="airo-gadia">실습 환경: 유료 AI 계정이 없는 기관은 <a href="https://gadia.ai" target="_blank" rel="noopener noreferrer">Gadia</a> 실습 환경을 함께 안내해 드립니다.</p>
               </div>
               <a href="#contact" className="btn bw btn-pill">교육 설계 문의</a>
             </div>
@@ -201,6 +202,8 @@ export default async function HomePage() {
                 ["AI를 처음 접하는 사람도 들을 수 있나요?", "가능합니다. 완전 기초과정은 계정 만들기, 질문 방법, 기본 문서 작성부터 시작합니다."],
                 ["기관 상황에 맞게 커리큘럼을 바꿀 수 있나요?", "가능합니다. 대상, 시간, 실습 산출물, 수료 방식에 맞춰 트랙을 조합해 설계합니다."],
                 ["온라인 교육과 출강 교육 모두 가능한가요?", "둘 다 가능합니다. 실습 집중도가 필요한 과정은 출강 또는 혼합형 운영을 권장합니다."],
+                ["직원들이 유료 AI 계정이 없어도 실습할 수 있나요?", "가능합니다. 기관에 유료 AI 계정이 없으면 실습용 AI 환경 Gadia(gadia.ai)를 함께 안내해 드립니다."],
+                ["교육 전에 직원들의 AI 활용 수준을 알 수 있나요?", "상단 메뉴의 AI학습체크(무료 업무 실행 역량 진단)로 참여자 수준을 먼저 확인하고, 결과에 맞춰 트랙과 시간을 설계할 수 있습니다."],
                 ["수료증이나 결과 리포트를 받을 수 있나요?", "과정별 수료증 제공이 가능하며, 기관 교육은 운영 결과와 참여 현황을 정리해 드릴 수 있습니다."]
               ].map(([q, a]) => <div className="faq-item" key={q}><div className="faq-q">{q}</div><div className="faq-a">{a}</div></div>)}
             </div>
@@ -213,7 +216,7 @@ export default async function HomePage() {
               <div className="ey">CERTIFICATION</div>
               <h2 className="sh2 sh2-lg">교육 이력과<br />AI 역량을<br />명확하게 남깁니다</h2>
               <p className="sdesc">자격 과정은 두 가지로 정리하고, 나머지 교육 트랙은 수료증 제공 형태로 운영합니다.</p>
-              <div className="infra-block"><h4>교육기관 인프라</h4><p>이러닝 인증, 온라인평생교육원 설립 준비, 평생교육사 보유를 기반으로 안정적인 교육 운영 체계를 갖추고 있습니다.</p><div className="infra-bs"><span className="ib">이러닝 인증</span><span className="ib">온라인평생교육원 설립중</span><span className="ib">평생교육사 보유</span></div></div>
+              <div className="infra-block"><h4 aria-level={3}>교육기관 인프라</h4><p>이러닝 인증, 온라인평생교육원 설립 준비, 평생교육사 보유를 기반으로 안정적인 교육 운영 체계를 갖추고 있습니다.</p><div className="infra-bs"><span className="ib">이러닝 인증</span><span className="ib">온라인평생교육원 설립중</span><span className="ib">평생교육사 보유</span></div></div>
             </div>
             <div className="cert-cards">{["AI퍼실리테이터 전문가과정", "AI업무활용능력", "트랙별 수료증 제공", "교육 이력 관리"].map((title) => <div className="cc" key={title}><div className="cc-lv">CERTIFICATE</div><div className="cc-title">{title}</div><div className="cc-desc">교육 이력과 실무 역량을 명확하게 남길 수 있도록 지원합니다.</div></div>)}</div>
           </div>
