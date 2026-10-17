@@ -18,6 +18,7 @@ export function Footer() {
               <li><a href="/lp/company">기업 맞춤 교육</a></li>
               <li><a href="/check">AI 업무 역량 진단</a></li>
               <li><a href="/#courses">개인·오픈 클래스</a></li>
+              <li><a href="/#courses">K-Digital (준비중)</a></li>
             </ul>
           </div>
           <div className="fcol">

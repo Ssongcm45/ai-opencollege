@@ -7,7 +7,8 @@ export function CourseTabs() {
   const tabs = [
     ["TYPE 01", "공공기관·지자체\n출강 교육", "공무원 · 공공법인"],
     ["TYPE 02", "기업·단체\n맞춤 교육", "B2B · 사내 출강"],
-    ["TYPE 03", "개인·오픈\n클래스", "온라인 · 오프라인"]
+    ["TYPE 03", "개인·오픈\n클래스", "온라인 · 오프라인"],
+    ["TYPE 04", "K-Digital\n국비 과정", "고용노동부 연계"]
   ];
   const panels = [
     {
@@ -52,6 +53,19 @@ export function CourseTabs() {
       ],
       cta: "수강 문의",
       more: null
+    },
+    {
+      badge: "준비 중",
+      title: "K-Digital 국비 과정은\n준비 중입니다",
+      desc: "실습형 AI 교육을 장기 과정으로 확장하기 위한 과정을 준비하고 있습니다.",
+      tags: ["장기 과정", "취업 준비", "프로젝트", "포트폴리오"],
+      rows: [
+        ["대상", "취업 준비생, 재직자"],
+        ["형태", "준비 중"],
+        ["수료증", "발급 예정"]
+      ],
+      cta: "준비 과정 문의",
+      more: null
     }
   ];
   const panel = panels[active];
@@ -64,6 +78,7 @@ export function CourseTabs() {
             <div className="tt-n">{tab[0]}</div>
             <div className="tt-t">{tab[1].split("\n").map((line) => <span key={line}>{line}<br /></span>)}</div>
             <div className="tt-s">{tab[2]}</div>
+            {index === 3 ? <span className="badge bdn">준비 중</span> : null}
           </button>
         ))}
       </div>
