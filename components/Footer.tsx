@@ -9,7 +9,7 @@ export function Footer() {
             <div className="fmark"><img src="/logo-96.png" alt="AI OpenCollege" width={48} height={48} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "contain" }} /></div>
             <div className="fname">AI OpenCollege</div>
             <div className="fsub">opencollege.co.kr</div>
-            <p className="fdesc">공공기관·기업·대학을 위한 AI 실무교육 전문기관. AIRO 플랫폼 기반 10개 트랙 교육. 이러닝 인증 보유 · 온라인평생교육원 설립 준비 중.</p>
+            <p className="fdesc">공공기관·기업·대학을 위한 AI 실무교육 전문기관. AIRO 플랫폼 기반 11개 트랙 교육. 이러닝 인증 보유 · 온라인평생교육원 설립 준비 중.</p>
           </div>
           <div className="fcol">
             <h4 aria-level={3}>교육과정</h4>
@@ -27,6 +27,7 @@ export function Footer() {
               <li><a href="/#curriculum">Track A~E</a></li>
               <li><a href="/#curriculum">시니어 트랙</a></li>
               <li><a href="/#curriculum">취업준비 트랙</a></li>
+              <li><a href="/#curriculum">연구 R&amp;D 트랙</a></li>
               <li><a href="/#cert">자격증 (준비중)</a></li>
             </ul>
           </div>

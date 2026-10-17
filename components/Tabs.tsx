@@ -103,6 +103,8 @@ export function CourseTabs() {
 }
 
 type TrackModule = { title: string; desc: string };
+type FlowStep = { t: string; s: string };
+type LevelBar = { code: string; name: string; hours: number; out: string };
 type Track = {
   id: string;
   color: string;
@@ -116,6 +118,7 @@ type Track = {
   mods: TrackModule[];
   hours: string;
   level: string;
+  levels?: LevelBar[];
 };
 
 const tracks: Track[] = [
@@ -246,6 +249,28 @@ const tracks: Track[] = [
     hours: "8~12시간", level: "입문 ~ 중급"
   },
   {
+    id: "RD", color: "#2563EB", navTitle: "연구 R&D 트랙", navSub: "연구원·연구실·구축 담당",
+    tag: "R&D TRACK · RESEARCH AI",
+    heading: "특허·논문 조사부터\n연구실 AI 시스템까지",
+    sub: "대상: 연구원, 연구실 실무 담당, 연구 지원·구축 담당 · 수준: 기초~고급",
+    desc: "AI로 특허·논문을 찾고 읽고 정리해 보고하는 기초에서 시작해, 연구 지식 파이프라인 자동화, 멀티에이전트 연구 보조, 연구원용 검색 화면, 기관 내부 로컬 sLLM 운영까지 단계별로 이어집니다. 레벨마다 모듈 단위로 나뉘어 필요한 부분만 골라 들을 수 있습니다.",
+    chips: ["특허·논문 조사", "용어 사전·라벨링", "연구 지식 파이프라인", "멀티에이전트", "로컬 sLLM"],
+    mods: [
+      { title: "연구원 일반 · L1 (30시간)", desc: "자기 연구 주제의 특허·논문을 찾고 정리해 요약 보고서로 만듭니다." },
+      { title: "연구실 실무 담당 · L1 → L2 → L3 (114시간)", desc: "검색 파이프라인과 역할별 에이전트 팀을 연구실에서 직접 운영합니다." },
+      { title: "구축 담당 · L2 → L4 → L5 (102시간)", desc: "연구원이 쓰는 검색 화면과 자료를 밖으로 내보내지 않는 기관 내부 AI 환경을 구축합니다." }
+    ],
+    hours: "198시간 (레벨별 선택)", level: "기초 ~ 고급",
+    levels: [
+      { code: "L1", name: "기초", hours: 30, out: "검색식·용어 사전·문헌 표·요약 보고서" },
+      { code: "L2", name: "실무", hours: 42, out: "수집→변환→색인→검색 자동 파이프라인" },
+      { code: "L3", name: "에이전트", hours: 42, out: "수집·정리·검수·보고 에이전트 팀 + 사람 승인" },
+      { code: "L4", name: "화면", hours: 30, out: "검색 화면·대시보드·검수 화면 3종" },
+      { code: "L5", name: "인프라", hours: 30, out: "기관 내부 로컬 sLLM·검색 운영 환경" },
+      { code: "C", name: "캡스톤", hours: 24, out: "실제 연구 과제 1건 적용·발표" }
+    ]
+  },
+  {
     id: "R", color: "#111827", navTitle: "정규교육과정", navSub: "기관 장기 과정",
     tag: "REGULAR PROGRAM",
     heading: "기관 교육과정으로\nAI 역량을 체계화합니다",
@@ -261,9 +286,120 @@ const tracks: Track[] = [
   }
 ];
 
+const trackFlows: Record<string, FlowStep[]> = {
+  A: [
+    { t: "계정·환경 준비", s: "도구 첫 접속" },
+    { t: "질문 구조 익히기", s: "목적·역할·형식" },
+    { t: "첫 결과물", s: "안내문·요약문" },
+    { t: "안전 기준", s: "보안·윤리 점검" }
+  ],
+  B: [
+    { t: "업무 정리", s: "반복 문서 찾기" },
+    { t: "프롬프트 템플릿", s: "재사용 요청문" },
+    { t: "초안·검토", s: "보고서·이메일" },
+    { t: "업무 자동화", s: "맞춤 GPT" }
+  ],
+  C: [
+    { t: "콘셉트", s: "타깃·톤앤매너" },
+    { t: "이미지 생성", s: "홍보 비주얼" },
+    { t: "영상·음성", s: "숏폼 제작" },
+    { t: "게시물 배포", s: "썸네일·본문·CTA" }
+  ],
+  D: [
+    { t: "AI 리서치", s: "시장·경쟁 조사" },
+    { t: "고객 분석", s: "문제 정의" },
+    { t: "사업계획서", s: "문서 구조화" },
+    { t: "실행 로드맵", s: "KPI·우선순위" }
+  ],
+  E: [
+    { t: "트렌드 이해", s: "조직 영향" },
+    { t: "우선순위", s: "도입 판단" },
+    { t: "리더 실습", s: "직접 써보기" },
+    { t: "확산 메시지", s: "변화관리" }
+  ],
+  F: [
+    { t: "교육 설계", s: "대상·목표" },
+    { t: "자료 제작", s: "강의안·실습지" },
+    { t: "마이크로 티칭", s: "시연" },
+    { t: "피드백", s: "평가 루브릭" }
+  ],
+  OS: [
+    { t: "도구·지식 연결", s: "업무 맥락" },
+    { t: "역할별 에이전트", s: "책임 정의" },
+    { t: "승인·예외 처리", s: "사람 검토" },
+    { t: "기록·개선", s: "운영 가이드" }
+  ],
+  J: [
+    { t: "직무 분석", s: "목표 직무" },
+    { t: "자기소개서", s: "경험 구조화" },
+    { t: "포트폴리오", s: "증거 정리" },
+    { t: "모의 면접", s: "AI 리허설" }
+  ],
+  G: [
+    { t: "개념 이해", s: "도구·역할" },
+    { t: "도구 실습", s: "오픈클로·헤르메스" },
+    { t: "직접 설계", s: "나만의 에이전트" },
+    { t: "검증", s: "실행 기준" }
+  ],
+  RD: [
+    { t: "찾기", s: "특허·논문 검색식" },
+    { t: "읽히기", s: "PDF·한글 변환" },
+    { t: "정리", s: "용어 사전·라벨링" },
+    { t: "보고서", s: "선행기술 요약" }
+  ],
+  R: [
+    { t: "수준 진단", s: "AI학습체크" },
+    { t: "모듈 설계", s: "목표 역량" },
+    { t: "프로젝트 운영", s: "산출물·발표" },
+    { t: "수료·성과", s: "결과 리포트" }
+  ]
+};
+
+function TrackFlow({ steps, color }: { steps: FlowStep[]; color: string }) {
+  return (
+    <ol className="cp-flow" style={{ ["--tc" as string]: color }} aria-label="학습 흐름">
+      {steps.map((step, i) => (
+        <li className="cpf-step" key={step.t}>
+          <span className="cpf-dot">{i + 1}</span>
+          <span className="cpf-t">{step.t}</span>
+          <span className="cpf-s">{step.s}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function LevelChart({ levels, color }: { levels: LevelBar[]; color: string }) {
+  const max = Math.max(...levels.map((l) => l.hours));
+  const total = levels.reduce((sum, l) => sum + l.hours, 0);
+  return (
+    <figure className="cp-levels" style={{ ["--tc" as string]: color }}>
+      <figcaption>
+        <strong>레벨별 과정 구성</strong>
+        <span>총 {total}시간 · 1회 3시간 · 레벨별 수강 가능</span>
+      </figcaption>
+      <div className="cpl-branch" aria-hidden="true">
+        <span>L1 기초</span><i>→</i><span>L2 실무</span><i>→</i>
+        <span className="split"><b>L3 에이전트</b><b>L4 화면 → L5 인프라</b></span><i>→</i><span>캡스톤</span>
+      </div>
+      <ul>
+        {levels.map((l) => (
+          <li key={l.code}>
+            <span className="cpl-code">{l.code}</span>
+            <span className="cpl-name">{l.name}</span>
+            <span className="cpl-bar"><span style={{ width: `${(l.hours / max) * 100}%` }}>{l.hours}h</span></span>
+            <span className="cpl-out">{l.out}</span>
+          </li>
+        ))}
+      </ul>
+    </figure>
+  );
+}
+
 export function CurriculumTabs() {
   const [active, setActive] = useState(0);
   const item = tracks[active];
+  const flow = trackFlows[item.id];
 
   return (
     <div className="curr-wrap">
@@ -285,7 +421,7 @@ export function CurriculumTabs() {
         ))}
       </div>
       <div className="curr-panel-zone">
-        <div className="cpanel on">
+        <div className="cpanel on" key={item.id}>
           <div className="cp-tag">{item.tag}</div>
           <h3 className="cp-h">
             {item.heading.split("\n").map((line) => <span key={line}>{line}<br /></span>)}
@@ -295,6 +431,9 @@ export function CurriculumTabs() {
           <div className="cp-chips">
             {item.chips.map((chip) => <span className="cp-chip" key={chip}>{chip}</span>)}
           </div>
+          {flow ? <TrackFlow steps={flow} color={item.color} /> : null}
+          {item.levels ? <LevelChart levels={item.levels} color={item.color} /> : null}
+          {item.levels ? <div className="cp-mods-h">수강 경로</div> : null}
           <div className="cp-mods">
             {item.mods.map((mod, i) => (
               <div className="cpmod" key={mod.title}>

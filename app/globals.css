@@ -171,6 +171,33 @@ button { border: 0; background: none; cursor: pointer; }
 .cpm2 { background: #fff; border: 1px solid var(--bd); border-radius: 8px; padding: 11px 13px; }
 .cpm2 .k { color: var(--t3); font-size: 10px; font-weight: 600; margin-bottom: 3px; }
 .cpm2 .v { color: var(--navy); font-size: 13px; font-weight: 700; }
+.cp-flow { counter-reset: none; display: grid; gap: 8px; grid-auto-columns: 1fr; grid-auto-flow: column; list-style: none; margin: 0 0 20px; padding: 16px 12px 14px; background: var(--cream); border-radius: 12px; }
+.cpf-step { align-items: center; display: flex; flex-direction: column; gap: 4px; position: relative; text-align: center; }
+.cpf-step + .cpf-step::before { background: color-mix(in srgb, var(--tc) 35%, transparent); content: ""; height: 2px; left: calc(-50% + 22px); position: absolute; right: calc(50% + 22px); top: 16px; }
+.cpf-dot { background: var(--tc); border-radius: 50%; box-shadow: 0 0 0 4px color-mix(in srgb, var(--tc) 14%, transparent); color: #fff; display: grid; font-size: 13px; font-weight: 800; height: 32px; place-items: center; width: 32px; }
+.cpf-t { color: var(--navy); font-size: 13px; font-weight: 700; line-height: 1.3; margin-top: 4px; }
+.cpf-s { color: var(--t3); font-size: 11px; line-height: 1.35; }
+.cp-levels { background: #fff; border: 1px solid var(--bd); border-radius: 12px; margin: 0 0 20px; padding: 16px 18px; }
+.cp-levels figcaption { align-items: baseline; display: flex; flex-wrap: wrap; gap: 4px 10px; justify-content: space-between; margin-bottom: 12px; }
+.cp-levels figcaption strong { color: var(--navy); font-size: 14px; }
+.cp-levels figcaption span { color: var(--t3); font-size: 11px; }
+.cpl-branch { align-items: center; display: flex; flex-wrap: wrap; font-size: 11px; font-weight: 700; gap: 6px; margin-bottom: 14px; }
+.cpl-branch span, .cpl-branch b { background: color-mix(in srgb, var(--tc) 10%, #fff); border: 1px solid color-mix(in srgb, var(--tc) 30%, transparent); border-radius: 999px; color: var(--tc); padding: 4px 10px; white-space: nowrap; }
+.cpl-branch span.split { background: none; border: none; display: inline-flex; flex-direction: column; gap: 4px; padding: 0; }
+.cpl-branch i { color: var(--t3); font-style: normal; }
+.cp-levels ul { display: flex; flex-direction: column; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.cp-levels li { align-items: center; display: grid; gap: 4px 10px; grid-template-columns: 28px 58px 1fr; }
+.cpl-code { background: var(--tc); border-radius: 4px; color: #fff; font-size: 11px; font-weight: 800; padding: 3px 0; text-align: center; }
+.cpl-name { color: var(--navy); font-size: 12px; font-weight: 700; }
+.cpl-bar { background: var(--cream); border-radius: 4px; display: block; height: 20px; overflow: hidden; }
+.cpl-bar span { background: linear-gradient(90deg, color-mix(in srgb, var(--tc) 70%, #fff), var(--tc)); border-radius: 4px; color: #fff; display: block; font-size: 11px; font-weight: 700; height: 100%; line-height: 20px; padding-right: 8px; text-align: right; }
+.cpl-out { color: var(--t2); font-size: 11.5px; grid-column: 3; line-height: 1.4; }
+.cp-mods-h { color: var(--t3); font-size: 11px; font-weight: 700; letter-spacing: .04em; margin-bottom: 8px; }
+@media (max-width: 560px) {
+  .cp-flow { grid-auto-flow: row; grid-template-columns: 1fr 1fr; row-gap: 14px; }
+  .cpf-step + .cpf-step::before { display: none; }
+  .cpanel { padding: 26px 18px; }
+}
 .airo-banner { align-items: center; background: var(--navy); border-radius: 16px; display: grid; gap: 24px; grid-template-columns: 1fr auto; margin-top: 28px; padding: 32px 36px; }
 .airo-banner h4 { color: #fff; font-size: 20px; font-weight: 900; margin-bottom: 8px; }
 .airo-banner p { color: rgba(255,255,255,.72); font-size: 14px; line-height: 1.6; }
