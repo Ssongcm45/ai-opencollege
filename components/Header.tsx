@@ -14,11 +14,11 @@ export function Header() {
               </div>
             </a>
             <nav className="nav-links">
-              <a href="/#courses">교육과정</a>
-              <a href="/#curriculum">커리큘럼</a>
-              <a href="/#clients">출강사례</a>
-              <a href="/#blog">블로그</a>
-              <a href="/#portfolio">수강생작품</a>
+              <a href="/courses">과정소개</a>
+              <a href="/airo">AIRO 시스템</a>
+              <a href="/cases">출강사례</a>
+              <a href="/portfolio">수강생작품</a>
+              <a href="/blog">블로그</a>
               <GuideModal />
               <a href="/#faq">FAQ</a>
             </nav>

@@ -1,8 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getPublishedCases } from "@/lib/content";
 import { getVideoEmbed } from "@/lib/video";
+
+export const metadata: Metadata = {
+  title: "출강사례 · 오픈컬리지",
+  description: "기관의 목적과 참여자 수준에 맞춰 커리큘럼, 실습 난이도, 결과물을 조정한 AI 교육 출강사례를 소개합니다.",
+  alternates: { canonical: "/cases" }
+};
 
 export default async function CasesPage() {
   const cases = await getPublishedCases();
@@ -20,6 +27,7 @@ export default async function CasesPage() {
         </section>
         <section className="field-sec sec">
           <div className="wrap field-list">
+            {cases.length === 0 ? <p className="sdesc">등록된 출강사례가 없습니다.</p> : null}
             {cases.map((item, index) => {
               const embed = getVideoEmbed(item.videoUrl);
 

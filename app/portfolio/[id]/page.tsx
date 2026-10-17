@@ -67,7 +67,7 @@ export default async function PortfolioDetailPage({ params }: { params: Promise<
           <div className="wrap" style={{ maxWidth: 860 }}>
             <div className="article-body" dangerouslySetInnerHTML={{ __html: toHtmlBody(item.description) }} />
             <div className="detail-back">
-              <Link href="/#portfolio" className="btn bo btn-pill">← 포트폴리오 목록으로</Link>
+              <Link href="/portfolio" className="btn bo btn-pill">← 수강생작품 목록으로</Link>
             </div>
           </div>
         </article>

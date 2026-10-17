@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getPublishedCases, getPublishedPortfolio, getPublishedPosts } from "@/lib/content";
+import { tracks } from "@/lib/courses";
 import { siteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -10,11 +11,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0
     },
     {
+      url: `${baseUrl}/courses`,
+      priority: 0.9
+    },
+    ...tracks.map((track) => ({
+      url: `${baseUrl}/courses/${track.slug}`,
+      priority: 0.8
+    })),
+    {
       url: `${baseUrl}/blog`,
       priority: 0.8
     },
     {
       url: `${baseUrl}/cases`,
+      priority: 0.8
+    },
+    {
+      url: `${baseUrl}/portfolio`,
+      priority: 0.8
+    },
+    {
+      url: `${baseUrl}/airo`,
       priority: 0.8
     },
     {

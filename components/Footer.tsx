@@ -17,17 +17,17 @@ export function Footer() {
               <li><a href="/lp/public">공공기관 출강</a></li>
               <li><a href="/lp/company">기업 맞춤 교육</a></li>
               <li><a href="/check">AI 업무 역량 진단</a></li>
-              <li><a href="/#courses">개인·오픈 클래스</a></li>
-              <li><a href="/#courses">K-Digital (준비중)</a></li>
+              <li><a href="/courses#types">개인·오픈 클래스</a></li>
+              <li><a href="/courses#types">K-Digital (준비중)</a></li>
             </ul>
           </div>
           <div className="fcol">
             <h4 aria-level={3}>트랙·자격증</h4>
             <ul>
-              <li><a href="/#curriculum">Track A~E</a></li>
-              <li><a href="/#curriculum">시니어 트랙</a></li>
-              <li><a href="/#curriculum">취업준비 트랙</a></li>
-              <li><a href="/#curriculum">연구 R&amp;D 트랙</a></li>
+              <li><a href="/courses#tracks">Track A~E</a></li>
+              <li><a href="/courses/foundation">시니어 트랙</a></li>
+              <li><a href="/courses/job">취업준비 트랙</a></li>
+              <li><a href="/courses/research-rnd">연구 R&amp;D 트랙</a></li>
               <li><a href="/#cert">자격증 (준비중)</a></li>
             </ul>
           </div>

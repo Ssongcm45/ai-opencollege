@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import { BlogExplorer } from "@/components/BlogExplorer";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { getPublishedPosts } from "@/lib/content";
+
+export const metadata: Metadata = {
+  title: "블로그 · 오픈컬리지",
+  description: "교육 방법론, 출강 준비, 운영 회고, 기술 문서 등 AI 교육 현장을 기록한 글을 모았습니다.",
+  alternates: { canonical: "/blog" }
+};
 
 export default async function BlogPage() {
   const posts = await getPublishedPosts();

@@ -5,7 +5,7 @@
 
 export const BRAND = "opencollege";
 
-export type CtaLocation = "hero" | "header" | "section" | "footer" | "lp";
+export type CtaLocation = "hero" | "header" | "section" | "footer" | "lp" | "courses_index" | "course_detail";
 
 type EventParams = Record<string, string | number | boolean | undefined>;
 

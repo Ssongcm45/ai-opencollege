@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const shortcuts = [
-  { href: "/#courses", label: "교육과정", desc: "기업·공공기관·대학 맞춤 AI 실무교육" },
+  { href: "/courses", label: "과정소개", desc: "기업·공공기관·대학 맞춤 AI 실무교육" },
   { href: "/check", label: "AI학습체크", desc: "30문항으로 보는 AI 활용 역량 진단" },
   { href: "/blog", label: "블로그", desc: "AI 실무 인사이트와 교육 소식" },
   { href: "/#contact", label: "교육 문의", desc: "담당자가 직접 확인 후 회신드립니다" },
