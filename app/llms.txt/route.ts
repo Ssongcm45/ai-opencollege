@@ -21,7 +21,7 @@ export async function GET() {
     "## 주요 페이지",
     "",
     `- 홈페이지: ${siteUrl}`,
-    `- 과정소개(11개 AI 교육 트랙): ${siteUrl}/courses`,
+    `- 과정소개(12개 AI 교육 트랙): ${siteUrl}/courses`,
     `- 공공기관 생성형 AI 교육(방문 출강): ${siteUrl}/lp/public`,
     `- 기업 임직원 AI 실무 교육(사내 출강): ${siteUrl}/lp/company`,
     `- 블로그: ${siteUrl}/blog`,

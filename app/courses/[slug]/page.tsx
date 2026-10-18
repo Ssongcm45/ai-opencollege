@@ -104,10 +104,10 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
             <div className="crs-sec-hd">
               <div className="ey">STRUCTURE</div>
               <h2 className="crs-h2">과정 구성</h2>
-              <p className="crs-sec-desc">단계별 시간과 각 단계에서 만드는 결과물입니다. 기관 일정과 참여자 수준에 맞춰 시간과 구성을 조정합니다.</p>
+              <p className="crs-sec-desc">단계별 시간과 각 단계에서 만드는 결과물입니다. 교육 시간은 대상 수준·과정 기획 등에 따라 변동될 수 있습니다.</p>
             </div>
             {track.paths ? <BranchDiagram stages={track.stages} color={track.color} /> : null}
-            <StageChart stages={track.stages} color={track.color} note={track.stageNote} title={track.paths ? "레벨별 과정 구성" : "단계별 과정 구성"} />
+            <StageChart stages={track.stages} color={track.color} title={track.paths ? "레벨별 과정 구성" : "단계별 과정 구성"} />
             {track.paths ? (
               <>
                 <div className="crs-sub-h">맡은 일에 따른 수강 경로</div>

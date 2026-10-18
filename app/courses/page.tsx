@@ -8,7 +8,7 @@ import { defaultOgImage, siteUrl } from "@/lib/site";
 
 const title = "과정소개 · 오픈컬리지";
 const description =
-  "공공기관·기업·개인을 위한 AI 실무교육 과정소개. 완전 기초부터 사무직·크리에이티브·전략기획·리더십·강사·AI OS·취업·에이전트·연구 R&D·정규교육과정까지 11개 트랙의 구성과 세부 커리큘럼을 확인하세요.";
+  "공공기관·기업·개인을 위한 AI 실무교육 과정소개. 완전 기초·시니어부터 사무직·크리에이티브·전략기획·리더십·강사·AI OS·취업·에이전트·연구 R&D·정규교육과정까지 12개 트랙의 구성과 세부 커리큘럼을 확인하세요.";
 
 export const metadata: Metadata = {
   title,
@@ -41,7 +41,7 @@ export default function CoursesPage() {
           <div className="wrap">
             <div className="ey">COURSES</div>
             <h1 className="sh2 sh2-lg">과정소개</h1>
-            <p className="sdesc">교육 대상과 방식, 수준과 목적에 맞는 11개 트랙. 모든 과정은 실습으로 진행하고, 교육이 끝나는 날 내 업무에 쓸 결과물을 가져갑니다.</p>
+            <p className="sdesc">교육 대상과 방식, 수준과 목적에 맞는 12개 트랙. 모든 과정은 실습으로 진행하고, 교육이 끝나는 날 내 업무에 쓸 결과물을 가져갑니다.</p>
             <div className="crs-hero-acts">
               <a href="#types" className="btn bo btn-pill">교육 대상별 안내</a>
               <a href="#tracks" className="btn bo btn-pill">트랙 한눈에 보기</a>
@@ -64,7 +64,7 @@ export default function CoursesPage() {
           <div className="wrap">
             <div className="sec-hd">
               <div className="ey">CURRICULUM · AIRO TRACKS</div>
-              <h2 className="sh2">수준과 목적에 맞는<br />11개 AI 교육 트랙</h2>
+              <h2 className="sh2">수준과 목적에 맞는<br />12개 AI 교육 트랙</h2>
               <p className="sdesc">트랙을 누르면 학습 흐름, 단계별 과정 구성, 세부 커리큘럼과 결과물을 확인할 수 있습니다.</p>
             </div>
 

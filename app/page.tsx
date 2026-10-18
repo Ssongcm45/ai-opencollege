@@ -49,7 +49,7 @@ export default async function HomePage() {
             </div>
             <div className="hero-stats">
               <div className="hs-item"><div className="hs-n">30<span className="hs-u">+</span></div><div className="hs-l">교육 기관·기업</div></div>
-              <div className="hs-item"><div className="hs-n">11<span className="hs-u">개</span></div><div className="hs-l">수준별 교육 트랙</div></div>
+              <div className="hs-item"><div className="hs-n">12<span className="hs-u">개</span></div><div className="hs-l">수준별 교육 트랙</div></div>
               <div className="hs-item"><div className="hs-n">100<span className="hs-u">%</span></div><div className="hs-l">실습 기반 수업</div></div>
               <div className="hs-item"><div className="hs-n">1:1</div><div className="hs-l">기관 맞춤 설계</div></div>
             </div>
@@ -76,8 +76,8 @@ export default async function HomePage() {
                   icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L12 7H17L13.5 10L15 15L10 12L5 15L6.5 10L3 7H8L10 2Z" stroke="white" strokeWidth="1.6" strokeLinejoin="round"/></svg>
                 },
                 {
-                  title: "11개 트랙 맞춤 설계",
-                  desc: "사무직·크리에이터·리더·교육자·취준생·연구원부터 AI 업무 운영 담당자까지. 역할에 맞는 AI 활용법을 배웁니다.",
+                  title: "12개 트랙 맞춤 설계",
+                  desc: "사무직·크리에이터·리더·교육자·취준생·연구원·시니어부터 AI 업무 운영 담당자까지. 역할에 맞는 AI 활용법을 배웁니다.",
                   icon: <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/><rect x="11" y="2" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/><rect x="2" y="11" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/><rect x="11" y="11" width="7" height="7" rx="1.5" stroke="white" strokeWidth="1.6"/></svg>
                 },
                 {

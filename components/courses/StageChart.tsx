@@ -1,14 +1,14 @@
 import { formatHours, type CoursePath, type Stage } from "@/lib/courses";
 
 // 단계별 과정 구성 막대 차트(막대 길이 = 시간). 홈의 레벨 차트를 모든 트랙용으로 일반화했다.
-export function StageChart({ stages, color, note, title = "과정 구성" }: { stages: Stage[]; color: string; note: string; title?: string }) {
+export function StageChart({ stages, color, title = "과정 구성" }: { stages: Stage[]; color: string; title?: string }) {
   const max = Math.max(...stages.map((s) => s.hours));
   const total = stages.reduce((sum, s) => sum + s.hours, 0);
   return (
     <figure className="cp-levels crs-stages" style={{ ["--tc" as string]: color }}>
       <figcaption>
         <strong>{title}</strong>
-        <span>총 {formatHours(total)}시간 · {note}</span>
+        <span>총 {formatHours(total)}시간 · 대상 수준·과정 기획에 따라 변동 가능</span>
       </figcaption>
       <ul>
         {stages.map((s) => (
