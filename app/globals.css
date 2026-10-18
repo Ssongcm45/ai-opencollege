@@ -931,7 +931,7 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 .crs-deep-card em { color: var(--tc); font-size: 12px; font-style: normal; font-weight: 700; }
 .crs-deep-card p { color: var(--t2); font-size: 13px; line-height: 1.6; margin-top: 4px; }
 .crs-deep-steps { display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); list-style: none; margin-top: 14px; }
-.crs-deep-steps li { border-top: 2px solid var(--tc); color: var(--t2); font-size: 13px; line-height: 1.6; padding-top: 10px; }
+.crs-deep-steps li { border-top: 1px solid var(--bd); color: var(--t2); font-size: 13px; line-height: 1.6; padding-top: 10px; }
 .crs-deep-steps b { color: var(--navy); display: block; font-size: 13px; font-weight: 800; }
 
 /* 세부 커리큘럼 */
