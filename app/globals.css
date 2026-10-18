@@ -845,7 +845,7 @@ a.work-card:hover { box-shadow: 0 12px 32px rgba(14,27,60,.12); transform: trans
 
 /* 트랙 카드 */
 .crs-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); }
-.crs-card { background: #fff; border: 1px solid var(--bd); border-radius: 14px; border-top: 4px solid var(--tc); display: flex; flex-direction: column; gap: 8px; padding: 22px 22px 20px; transition: transform .18s ease, box-shadow .18s ease; }
+.crs-card { background: #fff; border: 1px solid var(--bd); border-radius: 14px; display: flex; flex-direction: column; gap: 8px; padding: 22px 22px 20px; transition: transform .18s ease, box-shadow .18s ease; }
 .crs-card:hover { box-shadow: 0 10px 28px rgba(14,27,60,.1); transform: translateY(-2px); }
 .crs-card-top { align-items: center; display: flex; gap: 8px; min-width: 0; }
 .crs-id { background: var(--tc); border-radius: 4px; color: #fff; display: inline-grid; font-size: 11px; font-weight: 800; letter-spacing: 0; min-width: 28px; padding: 3px 5px; place-items: center; }
