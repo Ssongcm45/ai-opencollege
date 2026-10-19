@@ -5,6 +5,7 @@ import { getPostById, getCategories } from "@/lib/content";
 import { TuiEditor } from "@/components/admin/TuiEditor";
 import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
 import { DeleteButton } from "@/components/admin/DeleteButton";
+import { BlogSeoFields } from "@/components/admin/BlogSeoFields";
 
 export default async function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -19,10 +20,18 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
       <div className="cms-header">
         <h1 className="cms-page-title">블로그 수정</h1>
         <div style={{ display: "flex", gap: 8 }}>
+          <Link href={`/admin/preview/blog/${post.id}`} className="cms-btn cms-btn-cancel" target="_blank">미리보기</Link>
           <DeleteButton action={deleteAction} label="글 삭제" />
           <Link href="/admin/blog" className="cms-btn cms-btn-cancel">← 목록으로</Link>
         </div>
       </div>
+
+      {post.createdByAgent ? (
+        <p style={{ margin: "0 0 12px", fontSize: 13, color: "#9a3412" }}>
+          <span className="badge badge-gray">에이전트 등록: {post.createdByAgent}</span>{" "}
+          외부 AI 에이전트가 등록한 글입니다. 미리보기로 내용과 이미지를 확인한 뒤 공개하세요. 이 화면에서 저장하거나 공개하면 에이전트는 더 이상 이 글을 고칠 수 없습니다.
+        </p>
+      ) : null}
 
       <form action={updateAction} className="cms-card cms-form">
         <div className="cms-row2">
@@ -59,9 +68,11 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
           <TuiEditor name="content" defaultValue={post.content} />
         </div>
 
+        <BlogSeoFields post={post} />
+
         <div className="cms-checks">
           <label className="cms-check">
-            <input type="checkbox" name="published" defaultChecked={post.published} /> 공개
+            <input type="checkbox" name="published" defaultChecked={post.published} /> 공개 <span style={{ color: "#9ca3af" }}>(해제하면 초안)</span>
           </label>
           <label className="cms-check">
             <input type="checkbox" name="featured" defaultChecked={post.featured} /> 대표 글

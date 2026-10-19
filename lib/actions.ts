@@ -6,7 +6,6 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Resend } from "resend";
-import sanitizeHtml from "sanitize-html";
 import { z } from "zod";
 import { audit } from "@/lib/audit";
 import { clearAdminSessionCookie, requireAdminSession, setAdminSessionCookie } from "@/lib/auth";
@@ -14,6 +13,8 @@ import { getDb, hasDatabase } from "@/lib/db";
 import { adminConfig, categories, blogPosts, fieldCases, inquiries, inquiryNotes, portfolioItems, siteSettings } from "@/lib/db/schema";
 import { receiveInquiry } from "@/lib/inquiry-service";
 import { ATTRIBUTION_FIELDS } from "@/lib/attribution";
+import { normalizeCanonicalUrl, normalizeKeywords } from "@/lib/blog-seo";
+import { sanitizeContent } from "@/lib/sanitize";
 
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL ?? "jamescm8445@gmail.com").trim();
 
@@ -41,15 +42,6 @@ function escapeHtml(value: string | undefined): string {
 
 function safeSubject(value: string): string {
   return value.replace(/[\r\n]/g, " ").trim();
-}
-
-function sanitizeContent(html: string): string {
-  return sanitizeHtml(html, {
-    allowedTags: ["p", "br", "hr", "h1", "h2", "h3", "h4", "h5", "h6", "strong", "b", "em", "i", "del", "s", "u", "ul", "ol", "li", "blockquote", "a", "code", "pre", "span", "table", "thead", "tbody", "tr", "th", "td", "img"],
-    allowedAttributes: { a: ["href", "target", "rel"], img: ["src", "alt"], "*": ["class"] },
-    allowedSchemes: ["http", "https", "mailto"],
-    disallowedTagsMode: "discard"
-  });
 }
 
 function ensureDb() {
@@ -257,6 +249,20 @@ export async function changeAdminPassword(formData: FormData) {
 }
 
 // ── Admin: Blog ──────────────────────────────────────────
+// 편집 화면의 SEO 설정 카드 값. 빈 칸은 null(제목·요약·썸네일을 그대로 씀), 길이는 열 크기에 맞춰 자른다.
+// canonical 은 우리 사이트 https 주소만 받고, 그 밖의 값은 비운다.
+function seoFromForm(formData: FormData) {
+  const text = (key: string, max: number) => String(formData.get(key) ?? "").trim().slice(0, max) || null;
+  return {
+    seoTitle: text("seoTitle", 200),
+    seoDescription: text("seoDescription", 500),
+    seoKeywords: normalizeKeywords(String(formData.get("seoKeywords") ?? "").split(","))?.slice(0, 500) ?? null,
+    ogImage: text("ogImage", 500),
+    canonicalUrl: normalizeCanonicalUrl(String(formData.get("canonicalUrl") ?? "")) ?? null,
+    noindex: formData.get("noindex") === "on"
+  };
+}
+
 export async function createPost(formData: FormData) {
   await requireAdminSession();
   ensureDb();
@@ -269,6 +275,7 @@ export async function createPost(formData: FormData) {
     excerpt: String(formData.get("excerpt") ?? ""),
     content: sanitizeContent(String(formData.get("content") ?? "")),
     thumbnailUrl: String(formData.get("thumbnailUrl") ?? "").trim() || null,
+    ...seoFromForm(formData),
     published,
     featured: formData.get("featured") === "on",
     publishedAt: published ? now : null,
@@ -291,9 +298,12 @@ export async function updatePost(id: string, formData: FormData) {
     excerpt: String(formData.get("excerpt") ?? ""),
     content: sanitizeContent(String(formData.get("content") ?? "")),
     thumbnailUrl: String(formData.get("thumbnailUrl") ?? "").trim() || null,
+    ...seoFromForm(formData),
     published,
     featured: formData.get("featured") === "on",
     publishedAt: published ? (existing?.publishedAt ?? new Date()) : null,
+    // 관리자가 저장한 글은 에이전트 손을 떠난다 (공개 해제해도 에이전트가 다시 고칠 수 없음)
+    createdByAgentKeyId: null,
     updatedAt: new Date()
   }).where(eq(blogPosts.id, id));
   await audit("post.update", String(formData.get("title") ?? id));

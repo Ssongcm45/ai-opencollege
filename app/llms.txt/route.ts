@@ -38,7 +38,8 @@ export async function GET() {
   ];
 
   if (posts.length > 0) {
-    lines.push(...posts.map((post) => `- [${post.title}](${siteUrl}/blog/${post.slug}): ${post.excerpt}`));
+    // 검색 제외(noindex) 글은 빼고 소개한다
+    lines.push(...posts.filter((post) => !post.noindex).map((post) => `- [${post.title}](${siteUrl}/blog/${post.slug}): ${post.excerpt}`));
   }
 
   lines.push("", "## 출강 사례");

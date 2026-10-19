@@ -1,25 +1,36 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BlogArticle } from "@/components/BlogArticle";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { seoOf } from "@/lib/blog-seo";
 import { getPostBySlug, getSiteSettings } from "@/lib/content";
-import { toHtmlBody } from "@/lib/html";
 import { defaultOgImage, siteUrl } from "@/lib/site";
+
+// 공개 글만 보여 준다. 초안(비공개)은 제목·요약이 메타데이터로도 새지 않게 빈 메타데이터를 돌려준다.
+async function getPublicPost(slug: string) {
+  const post = await getPostBySlug(slug);
+  return post?.published ? post : null;
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const post = await getPublicPost(slug);
   if (!post) return {};
   const settings = await getSiteSettings().catch(() => null);
-  const ogImage = post.thumbnailUrl || settings?.ogImageUrl || defaultOgImage;
+  const seo = seoOf(post);
+  const ogImage = seo.ogImage || settings?.ogImageUrl || defaultOgImage;
   return {
-    title: `${post.title} · AI OpenCollege`,
-    description: post.excerpt,
+    title: `${seo.title} · AI OpenCollege`,
+    description: seo.description,
+    ...(seo.keywords.length ? { keywords: seo.keywords } : {}),
+    alternates: { canonical: seo.canonical },
+    ...(seo.noindex ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      title: seo.title,
+      description: seo.description,
       type: "article",
+      url: seo.canonical,
       publishedTime: post.publishedAt?.toISOString(),
       ...(ogImage ? { images: [ogImage] } : {})
     }
@@ -28,17 +39,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  if (!post || !post.published) notFound();
+  const post = await getPublicPost(slug);
+  if (!post) notFound();
+  const seo = seoOf(post);
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: post.title,
-    description: post.excerpt,
+    description: seo.description,
     datePublished: post.publishedAt?.toISOString(),
     dateModified: post.updatedAt?.toISOString?.() ?? undefined,
     image: post.thumbnailUrl ?? undefined,
     mainEntityOfPage: `${siteUrl}/blog/${post.slug}`,
+    ...(seo.keywords.length ? { keywords: seo.keywords.join(", ") } : {}),
     author: { "@type": "Organization", name: "AI OpenCollege" },
     publisher: {
       "@type": "Organization",
@@ -52,29 +65,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
     <>
       <Header />
       <main>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
-        <section className="page-hero">
-          <div className="wrap">
-            <div className="ey">{post.category}</div>
-            <h1 className="sh2 sh2-lg">{post.title}</h1>
-            <p className="sdesc">{post.excerpt}</p>
-          </div>
-        </section>
-        {post.thumbnailUrl ? (
-          <section className="sec video-sec">
-            <div className="wrap" style={{ maxWidth: 860 }}>
-              <img className="detail-thumb" src={post.thumbnailUrl} alt={post.title} />
-            </div>
-          </section>
-        ) : null}
-        <article className="sec">
-          <div className="wrap" style={{ maxWidth: 860 }}>
-            <div className="article-body" dangerouslySetInnerHTML={{ __html: toHtmlBody(post.content) }} />
-            <div className="detail-back">
-              <Link href="/blog" className="btn bo btn-pill">← 블로그 목록으로</Link>
-            </div>
-          </div>
-        </article>
+        {/* 제목 등에 </script> 가 들어 있어도 스크립트가 끊기지 않도록 < 를 이스케이프한다 */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd).replace(/</g, "\\u003c") }} />
+        <BlogArticle post={post} />
       </main>
       <Footer />
     </>
