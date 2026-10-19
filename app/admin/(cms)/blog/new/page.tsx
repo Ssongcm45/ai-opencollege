@@ -3,6 +3,7 @@ import { createPost } from "@/lib/actions";
 import { getCategories } from "@/lib/content";
 import { TuiEditor } from "@/components/admin/TuiEditor";
 import { ThumbnailUpload } from "@/components/admin/ThumbnailUpload";
+import { BlogSeoFields } from "@/components/admin/BlogSeoFields";
 
 export default async function NewPostPage() {
   const categories = await getCategories("blog");
@@ -47,6 +48,8 @@ export default async function NewPostPage() {
           <label className="cms-label">본문 <em>*</em></label>
           <TuiEditor name="content" />
         </div>
+
+        <BlogSeoFields />
 
         <div className="cms-checks">
           <label className="cms-check">

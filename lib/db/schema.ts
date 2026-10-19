@@ -39,8 +39,29 @@ export const blogPosts = pgTable("blog_posts", {
   published: boolean("published").notNull().default(false),
   featured: boolean("featured").notNull().default(false),
   publishedAt: timestamp("published_at", { withTimezone: true }),
+  // SEO 덮어쓰기 값. 비어 있으면 제목·요약·썸네일·기본 주소를 그대로 쓴다.
+  seoTitle: varchar("seo_title", { length: 200 }),
+  seoDescription: varchar("seo_description", { length: 500 }),
+  seoKeywords: varchar("seo_keywords", { length: 500 }),
+  ogImage: varchar("og_image", { length: 500 }),
+  canonicalUrl: varchar("canonical_url", { length: 500 }),
+  noindex: boolean("noindex").notNull().default(false),
+  // 외부 AI 에이전트가 등록한 초안이면 에이전트 키 이름(관리자가 쓴 글은 null).
+  createdByAgent: varchar("created_by_agent", { length: 100 }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
+});
+
+// 외부 AI 에이전트 API 키. 원문 키는 저장하지 않고 SHA-256 해시(hex 64자)만 보관한다.
+export const agentKeys = pgTable("agent_keys", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 100 }).notNull(),
+  keyPrefix: varchar("key_prefix", { length: 16 }).notNull(),
+  keyHash: varchar("key_hash", { length: 64 }).notNull().unique(),
+  scopes: varchar("scopes", { length: 200 }).notNull().default("blog:draft"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
+  revokedAt: timestamp("revoked_at", { withTimezone: true })
 });
 
 export const fieldCases = pgTable("field_cases", {
@@ -191,3 +212,4 @@ export type PortfolioItem = typeof portfolioItems.$inferSelect;
 export type Inquiry = typeof inquiries.$inferSelect;
 export type SiteSettings = typeof siteSettings.$inferSelect;
 export type AdminAuditLog = typeof adminAuditLog.$inferSelect;
+export type AgentKey = typeof agentKeys.$inferSelect;

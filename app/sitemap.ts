@@ -65,7 +65,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [
       ...staticEntries,
-      ...posts.map((post) => ({
+      // 검색 제외(noindex) 글은 사이트맵에 넣지 않는다 (초안은 getPublishedPosts 에서 이미 빠진다)
+      ...posts.filter((post) => !post.noindex).map((post) => ({
         url: `${baseUrl}/blog/${post.slug}`,
         lastModified: post.updatedAt
       })),

@@ -33,17 +33,27 @@ export default async function BlogAdminPage() {
                     <td>
                       <Link href={`/admin/blog/${post.id}`}>{post.title}</Link>
                       <div style={{ color: "#9ca3af", fontSize: 12, marginTop: 2 }}>{post.slug}</div>
+                      {post.createdByAgent ? (
+                        <div style={{ marginTop: 4 }}><span className="badge badge-gray">에이전트 등록: {post.createdByAgent}</span></div>
+                      ) : null}
                     </td>
                     <td><span className="badge badge-gray">{post.category}</span></td>
                     <td>
                       <span className={`badge ${post.published ? "badge-green" : "badge-gray"}`}>
-                        {post.published ? "공개" : "비공개"}
+                        {post.published ? "공개" : "초안(비공개)"}
                       </span>
                     </td>
                     <td style={{ color: "#6b7280", fontSize: 13 }}>
                       {post.createdAt ? new Date(post.createdAt).toLocaleDateString("ko-KR") : "-"}
                     </td>
-                    <td><DeleteButton action={deleteAction} /></td>
+                    <td>
+                      <div style={{ display: "flex", gap: 8, alignItems: "center", justifyContent: "flex-end" }}>
+                        {/^[0-9a-f]{8}-/.test(post.id) ? (
+                          <Link href={`/admin/preview/blog/${post.id}`} className="cms-link" target="_blank">미리보기</Link>
+                        ) : null}
+                        <DeleteButton action={deleteAction} />
+                      </div>
+                    </td>
                   </tr>
                 );
               })}
