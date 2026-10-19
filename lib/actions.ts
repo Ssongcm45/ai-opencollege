@@ -302,6 +302,8 @@ export async function updatePost(id: string, formData: FormData) {
     published,
     featured: formData.get("featured") === "on",
     publishedAt: published ? (existing?.publishedAt ?? new Date()) : null,
+    // 관리자가 저장한 글은 에이전트 손을 떠난다 (공개 해제해도 에이전트가 다시 고칠 수 없음)
+    createdByAgentKeyId: null,
     updatedAt: new Date()
   }).where(eq(blogPosts.id, id));
   await audit("post.update", String(formData.get("title") ?? id));

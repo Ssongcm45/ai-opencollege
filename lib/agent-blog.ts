@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { and, desc, eq, isNotNull, like, or } from "drizzle-orm";
+import { and, desc, eq, like, or } from "drizzle-orm";
 import sanitizeHtml from "sanitize-html";
 import { audit } from "@/lib/audit";
 import type { AgentIdentity } from "@/lib/agent-auth";
@@ -416,18 +416,23 @@ function draftDetail(row: BlogPost) {
   };
 }
 
-const editableDraft = (id: string) => and(eq(blogPosts.id, id), eq(blogPosts.published, false), isNotNull(blogPosts.createdByAgent));
+// 이 키가 만든 미발행 초안만. 관리자가 한 번 저장한 글은 키가 비워져 에이전트가 고칠 수 없다.
+const editableDraft = (id: string, agentId: string) =>
+  and(eq(blogPosts.id, id), eq(blogPosts.published, false), eq(blogPosts.createdByAgentKeyId, agentId));
 
 function ensureDb() {
   if (!hasDatabase) throw new AgentError(503, "데이터베이스가 연결되어 있지 않습니다.");
 }
 
-async function loadEditable(id: string) {
+async function loadEditable(agent: AgentIdentity, id: string) {
   ensureDb();
   const [row] = await getDb().select().from(blogPosts).where(eq(blogPosts.id, id)).limit(1);
   if (!row) throw new AgentError(404, `id ${id} 글을 찾을 수 없습니다.`);
   if (row.published) throw new AgentError(403, "이미 발행된 글은 에이전트가 조회·수정할 수 없습니다. 관리자에게 요청해 주세요.");
   if (!row.createdByAgent) throw new AgentError(403, "관리자가 작성한 글은 에이전트가 조회·수정할 수 없습니다.");
+  if (row.createdByAgentKeyId !== agent.id) {
+    throw new AgentError(403, "이 키로 등록한 초안이 아니거나 관리자가 넘겨받아 고친 글이라 조회·수정할 수 없습니다.");
+  }
   return row;
 }
 
@@ -468,6 +473,7 @@ export async function createBlogDraft(agent: AgentIdentity, input: unknown) {
         featured: false,
         publishedAt: null,
         createdByAgent: agent.name,
+        createdByAgentKeyId: agent.id,
         updatedAt: new Date()
       }).returning();
     } catch (error) {
@@ -483,7 +489,7 @@ export async function createBlogDraft(agent: AgentIdentity, input: unknown) {
 }
 
 export async function updateBlogDraft(agent: AgentIdentity, id: string, input: unknown) {
-  const before = await loadEditable(id);
+  const before = await loadEditable(agent, id);
   const fields = parseDraftInput(input, "update");
   const category = fields.category !== undefined ? await resolveCategory(fields.category) : undefined;
   const images: ImageRecord[] = [];
@@ -506,22 +512,22 @@ export async function updateBlogDraft(agent: AgentIdentity, id: string, input: u
   // 검사와 저장 사이에 관리자가 발행했으면 고치지 않는다
   let row: BlogPost | undefined;
   try {
-    [row] = await getDb().update(blogPosts).set(set).where(editableDraft(id)).returning();
+    [row] = await getDb().update(blogPosts).set(set).where(editableDraft(id, agent.id)).returning();
   } catch (error) {
     if (isSlugConflict(error)) throw new AgentError(409, "slug 가 다른 글과 겹쳤습니다. 다른 slug 로 다시 시도해 주세요.");
     throw error;
   }
-  if (!row) throw new AgentError(409, "그 사이 관리자가 이 글을 발행해 더 이상 수정할 수 없습니다.");
+  if (!row) throw new AgentError(409, "그 사이 관리자가 이 글을 발행했거나 넘겨받아 더 이상 수정할 수 없습니다.");
 
   await audit("agent.draft-update", `${agent.name}: ${row.title}`);
   return draftResult(row, images);
 }
 
-export async function getBlogDraft(_agent: AgentIdentity, id: string) {
-  return draftDetail(await loadEditable(id));
+export async function getBlogDraft(agent: AgentIdentity, id: string) {
+  return draftDetail(await loadEditable(agent, id));
 }
 
-export async function listBlogDrafts(_agent: AgentIdentity) {
+export async function listBlogDrafts(agent: AgentIdentity) {
   ensureDb();
   const rows = await getDb()
     .select({
@@ -534,7 +540,7 @@ export async function listBlogDrafts(_agent: AgentIdentity) {
       updatedAt: blogPosts.updatedAt
     })
     .from(blogPosts)
-    .where(and(eq(blogPosts.published, false), isNotNull(blogPosts.createdByAgent)))
+    .where(and(eq(blogPosts.published, false), eq(blogPosts.createdByAgentKeyId, agent.id)))
     .orderBy(desc(blogPosts.createdAt))
     .limit(100);
   return {

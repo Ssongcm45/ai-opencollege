@@ -31,14 +31,14 @@ function renderInline(source: string): string {
   s = s.replace(/\\([\\`*_{}[\]()#+\-.!~|<>])/g, (_m, c: string) => keep(escapeText(c)));
   // 인라인 코드
   s = s.replace(/(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/g, (_m, _t, code: string) => keep(`<code>${escapeText(code.trim())}</code>`));
-  // 이미지
+  // 이미지 (이미지·링크 모두 길이 상한: 닫는 괄호 없는 긴 입력의 역추적 방지)
   s = s.replace(
-    /!\[([^\]\n]*)\]\(\s*(<[^>\n]+>|[^\s)]+)(?:\s+(?:"[^"\n]*"|'[^'\n]*'))?\s*\)/g,
+    /!\[([^\]\n]{0,500})\]\(\s*(<[^>\n]{1,2000}>|[^\s)]{1,2000})(?:\s+(?:"[^"\n]*"|'[^'\n]*'))?\s*\)/g,
     (_m, alt: string, src: string) => keep(`<img src="${escapeAttr(cleanUrl(src))}" alt="${escapeAttr(alt)}">`)
   );
   // 링크 — 글자 부분은 계속 인라인 처리한다
   s = s.replace(
-    /\[([^\]\n]+)\]\(\s*(<[^>\n]+>|[^\s)]+)(?:\s+(?:"[^"\n]*"|'[^'\n]*'))?\s*\)/g,
+    /\[([^\]\n]{1,500})\]\(\s*(<[^>\n]{1,2000}>|[^\s)]{1,2000})(?:\s+(?:"[^"\n]*"|'[^'\n]*'))?\s*\)/g,
     (_m, text: string, href: string) => `${keep(`<a href="${escapeAttr(cleanUrl(href))}">`)}${text}${keep("</a>")}`
   );
   // 자동 링크
@@ -47,12 +47,12 @@ function renderInline(source: string): string {
   s = s.replace(/<\/?[a-zA-Z][^<>]*>/g, (tag) => keep(tag));
   // 나머지 글자 이스케이프
   s = s.replace(/&(?!#?[a-zA-Z0-9]+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  // 강조
+  // 강조 — 반복 길이를 묶어 닫는 기호가 없는 긴 입력에서도 느려지지 않게 한다
   s = s
-    .replace(/\*\*(?=\S)([\s\S]*?\S)\*\*/g, "<strong>$1</strong>")
-    .replace(/(^|[^\w])__(?=\S)([\s\S]*?\S)__(?![\w])/g, "$1<strong>$2</strong>")
-    .replace(/~~(?=\S)([\s\S]*?\S)~~/g, "<del>$1</del>")
-    .replace(/\*(?=[^\s*])([^*]*?[^\s*])\*/g, "<em>$1</em>")
+    .replace(/\*\*(?=\S)([\s\S]{0,2000}?\S)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[^\w])__(?=\S)([\s\S]{0,2000}?\S)__(?![\w])/g, "$1<strong>$2</strong>")
+    .replace(/~~(?=\S)([\s\S]{0,2000}?\S)~~/g, "<del>$1</del>")
+    .replace(/\*(?=[^\s*])([^*]{0,2000}?[^\s*])\*/g, "<em>$1</em>")
     .replace(/\*(?=[^\s*])([^*])\*/g, "<em>$1</em>")
     .replace(/(^|[^\w])_(?=\S)([^_]*?\S)_(?![\w])/g, "$1<em>$2</em>");
   // 줄 끝 공백 2칸 → 줄바꿈

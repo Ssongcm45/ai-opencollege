@@ -29,7 +29,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
       {post.createdByAgent ? (
         <p style={{ margin: "0 0 12px", fontSize: 13, color: "#9a3412" }}>
           <span className="badge badge-gray">에이전트 등록: {post.createdByAgent}</span>{" "}
-          외부 AI 에이전트가 등록한 글입니다. 미리보기로 내용과 이미지를 확인한 뒤 공개하세요. 공개하면 에이전트는 더 이상 이 글을 고칠 수 없습니다.
+          외부 AI 에이전트가 등록한 글입니다. 미리보기로 내용과 이미지를 확인한 뒤 공개하세요. 이 화면에서 저장하거나 공개하면 에이전트는 더 이상 이 글을 고칠 수 없습니다.
         </p>
       ) : null}
 

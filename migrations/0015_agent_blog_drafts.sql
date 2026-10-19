@@ -8,6 +8,8 @@ ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS og_image varchar(500);
 ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS canonical_url varchar(500);
 ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS noindex boolean NOT NULL DEFAULT false;
 ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS created_by_agent varchar(100);
+-- 초안을 만든 키. 그 키만 초안을 조회·수정할 수 있고, 관리자가 저장하면 null 이 되어 에이전트 손을 떠난다.
+ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS created_by_agent_key_id uuid;
 
 -- 원문 키는 저장하지 않는다. key_hash 는 SHA-256 hex.
 CREATE TABLE IF NOT EXISTS agent_keys (

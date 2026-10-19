@@ -48,6 +48,8 @@ export const blogPosts = pgTable("blog_posts", {
   noindex: boolean("noindex").notNull().default(false),
   // 외부 AI 에이전트가 등록한 초안이면 에이전트 키 이름(관리자가 쓴 글은 null).
   createdByAgent: varchar("created_by_agent", { length: 100 }),
+  // 초안을 만든 에이전트 키. 그 키만 고칠 수 있고, 관리자가 저장하면 null 이 된다.
+  createdByAgentKeyId: uuid("created_by_agent_key_id"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow()
 });

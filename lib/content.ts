@@ -21,6 +21,7 @@ export const fallbackPosts = [
     canonicalUrl: null,
     noindex: false,
     createdByAgent: null,
+    createdByAgentKeyId: null,
     createdAt: new Date("2026-01-10"),
     updatedAt: new Date("2026-01-10")
   },
@@ -42,6 +43,7 @@ export const fallbackPosts = [
     canonicalUrl: null,
     noindex: false,
     createdByAgent: null,
+    createdByAgentKeyId: null,
     createdAt: new Date("2026-01-18"),
     updatedAt: new Date("2026-01-18")
   },
@@ -63,6 +65,7 @@ export const fallbackPosts = [
     canonicalUrl: null,
     noindex: false,
     createdByAgent: null,
+    createdByAgentKeyId: null,
     createdAt: new Date("2026-01-24"),
     updatedAt: new Date("2026-01-24")
   }

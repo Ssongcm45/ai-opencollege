@@ -261,15 +261,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    if (Array.isArray(payload)) {
-      if (!payload.length) return httpError(400, -32600, "Invalid Request: 빈 배치입니다.");
-      const responses: object[] = [];
-      for (const msg of payload) {
-        const res = await handleMessage(agent, msg);
-        if (res) responses.push(res);
-      }
-      return responses.length ? NextResponse.json(responses) : new Response(null, { status: 202 });
-    }
+    // 배치는 받지 않는다 (MCP 2025-06-18 에서 빠졌고, 요청 한 번에 여러 호출을 묶어 횟수 제한을 피할 수 있다)
+    if (Array.isArray(payload)) return httpError(400, -32600, "Invalid Request: JSON-RPC 배치는 지원하지 않습니다. 메시지를 하나씩 보내 주세요.");
     const res = await handleMessage(agent, payload);
     return res ? NextResponse.json(res) : new Response(null, { status: 202 });
   } catch (err) {

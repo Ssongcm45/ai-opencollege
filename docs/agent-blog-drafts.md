@@ -51,7 +51,7 @@ claude mcp add --transport http opencollege-blog https://opencollege.co.kr/api/m
 | `create_blog_draft` | 초안 등록 (`title`, `content`, `category` 필수) |
 | `update_blog_draft` | 초안 부분 수정 (`id` + 바꿀 필드만) |
 | `get_blog_draft` | 초안 하나 전체 조회 |
-| `list_blog_drafts` | 에이전트가 등록한 미발행 초안 목록 (최근 100개) |
+| `list_blog_drafts` | 이 키로 등록한 미발행 초안 목록 (최근 100개) |
 | `upload_blog_image` | 이미지를 먼저 올리고 주소·마크다운 조각 받기 (`image`, `alt?`) |
 
 도구 실패(검사 오류 등)는 `isError: true` 결과로, 알 수 없는 메서드·잘못된 JSON 은 JSON-RPC 오류(-32601, -32700, -32602)로 돌려줍니다.
@@ -119,7 +119,7 @@ curl -X PATCH $BASE/api/agent/blog/drafts/<id> \
 | (고정) | `published=false`, `featured=false`, `published_at=null` | 에이전트가 바꿀 수 없음 (`published`·`featured` 를 보내면 403) |
 
 수정(`PATCH`, `update_blog_draft`)은 보낸 필드만 바꿉니다. 선택 필드(`thumbnail`, `seo.*`)에 `null` 을 보내면 비웁니다.
-에이전트는 **에이전트가 만든 미발행 초안만** 조회·수정할 수 있습니다 (발행된 글, 관리자가 쓴 글은 403).
+에이전트는 **자기 키로 만든 미발행 초안만** 조회·수정할 수 있습니다 (다른 키의 초안, 발행된 글, 관리자가 쓴 글, 관리자가 한 번이라도 저장한 글은 403). MCP JSON-RPC 배치(배열) 요청은 받지 않습니다.
 `get_blog_draft` 의 `content` 는 저장된 HTML 입니다 (`contentFormat: "html"`). 이어서 고칠 때는 `contentFormat: "html"` 로 보내거나 마크다운 전체를 다시 보내세요.
 
 ## 5. 이미지 규칙
