@@ -3,6 +3,10 @@ import { getPublishedCases, getPublishedPortfolio, getPublishedPosts } from "@/l
 import { tracks } from "@/lib/courses";
 import { siteUrl } from "@/lib/site";
 
+// 빌드 때 한 번 만든 사이트맵이 계속 나가지 않도록 요청마다 DB에서 새로 만든다.
+// (정적 사이트맵은 revalidatePath("/sitemap.xml") 로도 갱신되지 않았다 — 2026-10-23 운영 확인)
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteUrl;
   const staticEntries: MetadataRoute.Sitemap = [
@@ -60,28 +64,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   ];
 
-  try {
-    const [posts, cases, portfolio] = await Promise.all([getPublishedPosts(), getPublishedCases(), getPublishedPortfolio()]);
+  // 섹션별로 따로 받는다. 한 쿼리가 실패해도 나머지 항목은 그대로 싣는다.
+  const [posts, cases, portfolio] = await Promise.allSettled([
+    getPublishedPosts(),
+    getPublishedCases(),
+    getPublishedPortfolio()
+  ]);
 
-    return [
-      ...staticEntries,
-      // 검색 제외(noindex) 글은 사이트맵에 넣지 않는다 (초안은 getPublishedPosts 에서 이미 빠진다)
-      ...posts.filter((post) => !post.noindex).map((post) => ({
+  return [
+    ...staticEntries,
+    // 작성 주체(관리자·에이전트)와 상관없이 발행된 글은 모두 싣는다.
+    // 검색 제외(noindex) 글만 뺀다 (초안은 getPublishedPosts 에서 이미 빠진다)
+    ...(posts.status === "fulfilled" ? posts.value : [])
+      .filter((post) => !post.noindex)
+      .map((post) => ({
         url: `${baseUrl}/blog/${post.slug}`,
-        lastModified: post.updatedAt
+        lastModified: post.updatedAt ?? post.publishedAt ?? undefined
       })),
-      ...cases.map((item) => ({
-        url: `${baseUrl}/cases/${item.slug}`,
+    ...(cases.status === "fulfilled" ? cases.value : []).map((item) => ({
+      url: `${baseUrl}/cases/${item.slug}`,
+      lastModified: item.updatedAt
+    })),
+    ...(portfolio.status === "fulfilled" ? portfolio.value : [])
+      .filter((item) => /^[0-9a-f]{8}-/.test(item.id))
+      .map((item) => ({
+        url: `${baseUrl}/portfolio/${item.id}`,
         lastModified: item.updatedAt
-      })),
-      ...portfolio
-        .filter((item) => /^[0-9a-f]{8}-/.test(item.id))
-        .map((item) => ({
-          url: `${baseUrl}/portfolio/${item.id}`,
-          lastModified: item.updatedAt
-        }))
-    ];
-  } catch {
-    return staticEntries;
-  }
+      }))
+  ];
 }

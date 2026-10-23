@@ -60,10 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
       },
       metadataBase: new URL(siteUrl),
       alternates: {
-        canonical: siteUrl,
-        types: {
-          "application/rss+xml": `${siteUrl}/rss.xml`
-        }
+        canonical: siteUrl
       },
       openGraph: {
         title,
@@ -93,10 +90,7 @@ export async function generateMetadata(): Promise<Metadata> {
       },
       metadataBase: new URL(siteUrl),
       alternates: {
-        canonical: siteUrl,
-        types: {
-          "application/rss+xml": `${siteUrl}/rss.xml`
-        }
+        canonical: siteUrl
       },
       openGraph: {
         title: defaultTitle,
@@ -120,6 +114,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         {/* Pretendard 셀프호스팅(동일 출처) + 히어로 한글 서브셋 preload: 폰트 스왑 CLS 완화 */}
         <link rel="stylesheet" href="/fonts/pretendard.css" />
+        {/* RSS 링크는 metadata.alternates 대신 여기 둔다. 하위 페이지가 alternates(canonical)를 정하면 레이아웃 값이 통째로 덮여 빠지기 때문. */}
+        <link rel="alternate" type="application/rss+xml" title="AI OpenCollege 블로그" href={`${siteUrl}/rss.xml`} />
         {[91, 90, 89, 88, 87].map((n) => (
           <link key={n} rel="preload" as="font" type="font/woff2" crossOrigin="anonymous" href={`/fonts/pretendard/PretendardVariable.subset.${n}.woff2`} />
         ))}

@@ -1,6 +1,9 @@
 import { getPublishedPosts } from "@/lib/content";
 import { siteUrl } from "@/lib/site";
 
+// 사이트맵과 같이 요청마다 새로 만든다 (발행 즉시 반영).
+export const dynamic = "force-dynamic";
+
 function escapeXml(value: string): string {
   return value.replace(/[&<>"']/g, (character) => {
     const entities: Record<string, string> = {
